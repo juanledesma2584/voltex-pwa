@@ -85,7 +85,6 @@
 
     .container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
 
-    /* BANDEROLA GLOBAL DE CRÍTICO */
     .global-alert-banner {
       display: none;
       background: var(--red);
@@ -228,6 +227,23 @@
       margin-top: 20px; padding: 16px; background: rgba(255,255,255,0.02);
       border: 1px dashed var(--border); border-radius: 12px; text-align: center;
     }
+
+    /* ESTILOS DEL MODAL DE CONFIGURACIÓN DE NODO */
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-content {
+      background: var(--card-bg); border: 1px solid var(--border); padding: 24px;
+      border-radius: 16px; width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px;
+    }
+    .checkbox-group {
+      display: flex; flex-direction: column; gap: 10px; text-align: left; margin: 10px 0;
+    }
+    .checkbox-item {
+      display: flex; align-items: center; gap: 10px; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid var(--border);
+    }
+    .checkbox-item input { width: 18px; height: 18px; accent-color: var(--accent); }
   </style>
 </head>
 <body>
@@ -247,21 +263,21 @@
   <div class="container">
     <!-- BANNER DE ALERTA GLOBAL -->
     <div class="global-alert-banner" id="bannerAlerta">
-      <span><i class="fa-solid fa-triangle-exclamation"></i> <span id="textoAlertaGlobal">¡FALLA DETECTADA EN EL SISTEMA!</span></span>
+      <span><i class="fa-solid fa-triangle-exclamation"></i> <span id="textoAlertaGlobal">¡FALLA CRÍTICA DETECTADA!</span></span>
       <button onclick="silenciarAlarma()" style="background: rgba(0,0,0,0.3); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight:700; cursor:pointer;">Silenciar</button>
     </div>
 
-    <!-- BARRA NAVEGADORA DE MÓDULOS -->
-    <div class="module-nav">
-      <button class="tab-btn active" id="tab-agua" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Agua</button>
+    <!-- PESTAÑAS DINÁMICAS (SE MOSTRARÁN U OCULTARÁN SEGÚN EL CLIENTE) -->
+    <div class="module-nav" id="navegacionModulos">
+      <button class="tab-btn" id="tab-agua" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Agua</button>
       <button class="tab-btn" id="tab-ascensor" onclick="verModulo('ascensor', event)"><i class="fa-solid fa-elevator"></i> Ascensores</button>
       <button class="tab-btn" id="tab-frio" onclick="verModulo('frio', event)"><i class="fa-solid fa-snowflake"></i> Frío Industrial</button>
       <button class="tab-btn" id="tab-energia" onclick="verModulo('energia', event)"><i class="fa-solid fa-plug"></i> Energía</button>
-      <button class="tab-btn" onclick="verModulo('hardware', event)"><i class="fa-solid fa-microchip"></i> Hardware ESP32</button>
+      <button class="tab-btn" id="tab-hardware" onclick="verModulo('hardware', event)"><i class="fa-solid fa-microchip"></i> Hardware ESP32</button>
     </div>
 
     <!-- 1. MÓDULO AGUA -->
-    <div id="mod-agua">
+    <div id="mod-agua" style="display: none;">
       <div class="card" id="tarjetaAgua">
         <div class="card-header">
           <div class="card-title"><i class="fa-solid fa-water"></i> Tanque de Agua (Boya)</div>
@@ -270,7 +286,7 @@
         <div class="status-box">
           <div class="status-icon" id="iconoBoya"><i class="fa-solid fa-circle-check status-ok"></i></div>
           <h2 id="textoAgua">Suministro Normal</h2>
-          <p id="subtextoAgua" style="color: var(--subtext); font-size: 0.9rem;">Nivel de agua por encima del 50%</p>
+          <p id="subtextoAgua" style="color: var(--subtext); font-size: 0.9rem;">Nivel por encima del 50%</p>
         </div>
         <button id="btnBomba" class="btn btn-off" onclick="toggleBomba()">CARGANDO...</button>
       </div>
@@ -352,12 +368,46 @@
       </div>
     </div>
 
-    <!-- ADMINISTRACIÓN -->
+    <!-- PANEL ADMINISTRATIVO -->
     <div class="admin-panel">
       <small style="color: var(--subtext);">Gestión de Infraestructura</small>
       <div style="display: flex; gap: 10px; margin-top: 10px;">
-        <button class="btn btn-secondary" style="margin:0;" onclick="nuevoCliente()"><i class="fa-solid fa-plus"></i> Nuevo Cliente</button>
+        <button class="btn btn-secondary" style="margin:0;" onclick="abrirModalNuevoCliente()"><i class="fa-solid fa-plus"></i> Nuevo Cliente / Edificio</button>
         <button class="btn btn-danger" style="margin:0;" onclick="eliminarClienteActual()"><i class="fa-solid fa-trash"></i> Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE ALTA DE CLIENTES CON SELECCIÓN DE MÓDULOS -->
+  <div class="modal" id="modalCliente">
+    <div class="modal-content">
+      <h3>Registrar Nueva Infraestructura</h3>
+      <input type="text" id="inputNombreCliente" placeholder="Ej: Pollos Don Juan" style="background:#0f172a; border:1px solid var(--border); padding:12px; color:white; border-radius:8px; outline:none;">
+      
+      <p style="font-size:0.9rem; color:var(--subtext);">Seleccioná los módulos contratados/instalados:</p>
+      
+      <div class="checkbox-group">
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkAgua" checked>
+          <span><i class="fa-solid fa-droplet"></i> Control Suministro de Agua</span>
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkAscensor">
+          <span><i class="fa-solid fa-elevator"></i> Monitoreo de Ascensores</span>
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkFrio">
+          <span><i class="fa-solid fa-snowflake"></i> Cámaras Frigoríficas</span>
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkEnergia">
+          <span><i class="fa-solid fa-plug"></i> Telemetría Eléctrica (PZEM)</span>
+        </label>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-on" onclick="guardarNuevoCliente()">Guardar Cliente</button>
+        <button class="btn btn-secondary" onclick="cerrarModalNuevoCliente()">Cancelar</button>
       </div>
     </div>
   </div>
@@ -374,7 +424,6 @@
     let alarmInterval = null;
     let alarmaSilenciada = false;
 
-    // Estado global de fallas para la sirena en 2do plano
     let fallaAgua = false;
     let fallaAscensor = false;
 
@@ -399,18 +448,13 @@
       if (fallaAgua || fallaAscensor) {
         banner.style.display = 'flex';
         if (fallaAgua && fallaAscensor) textoBanner.innerText = "¡CRÍTICO: FALLA EN AGUA Y ASCENSOR!";
-        else if (fallaAgua) textoBanner.innerText = "¡ALERTA CRÍTICA: NIVEL DE AGUA BAJO (BOYA)!";
+        else if (fallaAgua) textoBanner.innerText = "¡ALERTA CRÍTICA: NIVEL DE AGUA BAJO!";
         else if (fallaAscensor) textoBanner.innerText = "¡ALERTA TÉCNICA: PARADA DE ASCENSOR!";
 
-        if (!alarmInterval && !alarmaSilenciada) {
-          alarmInterval = setInterval(sonarAlarma, 800);
-        }
+        if (!alarmInterval && !alarmaSilenciada) alarmInterval = setInterval(sonarAlarma, 800);
       } else {
         banner.style.display = 'none';
-        if (alarmInterval) {
-          clearInterval(alarmInterval);
-          alarmInterval = null;
-        }
+        if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
       }
     }
 
@@ -442,7 +486,25 @@
       clienteActual = clienteId;
       alarmaSilenciada = false;
 
-      // 1. Telemetría de Agua (Boya)
+      // Cargar permisos de Módulos
+      db.ref(`/clientes/${clienteActual}/modulos`).once('value', (snap) => {
+        const mods = snap.val() || { agua: true, ascensor: false, frio: false, energia: false };
+
+        // Mostrar u ocultar pestañas según la configuración
+        document.getElementById('tab-agua').style.display = mods.agua ? 'flex' : 'none';
+        document.getElementById('tab-ascensor').style.display = mods.ascensor ? 'flex' : 'none';
+        document.getElementById('tab-frio').style.display = mods.frio ? 'flex' : 'none';
+        document.getElementById('tab-energia').style.display = mods.energia ? 'flex' : 'none';
+
+        // Seleccionar automáticamente la primera pestaña disponible
+        if (mods.agua) verModulo('agua');
+        else if (mods.ascensor) verModulo('ascensor');
+        else if (mods.frio) verModulo('frio');
+        else if (mods.energia) verModulo('energia');
+        else verModulo('hardware');
+      });
+
+      // 1. Agua
       db.ref(`/clientes/${clienteActual}/telemetria/agua/boya_bajo_50`).on('value', (snap) => {
         fallaAgua = snap.val() || false;
         const tarjeta = document.getElementById('tarjetaAgua');
@@ -466,11 +528,10 @@
         evaluarAlertasGlobales();
       });
 
-      // 2. Telemetría de Ascensor
+      // 2. Ascensor
       db.ref(`/clientes/${clienteActual}/telemetria/ascensor`).on('value', (snap) => {
         const data = snap.val() || {};
         fallaAscensor = data.falla || false;
-        
         document.getElementById('pisoActual').innerText = data.piso !== undefined ? data.piso : 'PB';
         document.getElementById('dirMovimiento').innerText = data.movimiento || 'Detenido';
         document.getElementById('estadoPuerta').innerText = data.puertas || 'CERRADAS';
@@ -492,7 +553,7 @@
         evaluarAlertasGlobales();
       });
 
-      // 3. Bomba de Agua
+      // 3. Bomba
       db.ref(`/clientes/${clienteActual}/telemetria/agua/bomba_1_estado`).on('value', (snap) => {
         estadoBomba = snap.val();
         const btn = document.getElementById('btnBomba');
@@ -505,7 +566,7 @@
         }
       });
 
-      // 4. Cámaras Frigoríficas
+      // 4. Frío
       db.ref(`/clientes/${clienteActual}/telemetria/frio/camara_1_temp`).on('value', snap => {
         document.getElementById('tempCamara1').innerText = snap.val() || '2.4';
       });
@@ -525,22 +586,37 @@
       document.getElementById('mod-hardware').style.display = mod === 'hardware' ? 'block' : 'none';
 
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      if(e) e.currentTarget.classList.add('active');
+      
+      let targetTab = e ? e.currentTarget : document.getElementById(`tab-${mod}`);
+      if(targetTab) targetTab.classList.add('active');
     }
 
-    function nuevoCliente() {
-      const nombre = prompt("Nombre de la nueva empresa o edificio:");
-      if (nombre) {
-        const id = nombre.toLowerCase().replace(/ /g, '_');
-        db.ref(`/clientes/${id}`).set({
-          nombre: nombre,
-          telemetria: {
-            agua: { boya_bajo_50: false, bomba_1_estado: false },
-            ascensor: { piso: "PB", movimiento: "Detenido", puertas: "CERRADAS", falla: false },
-            frio: { camara_1_temp: 3.0, camara_2_temp: -20.0 }
-          }
-        });
-      }
+    // GESTIÓN DE MODAL Y CLIENTES
+    function abrirModalNuevoCliente() { document.getElementById('modalCliente').style.display = 'flex'; }
+    function cerrarModalNuevoCliente() { document.getElementById('modalCliente').style.display = 'none'; }
+
+    function guardarNuevoCliente() {
+      const nombre = document.getElementById('inputNombreCliente').value.trim();
+      if (!nombre) return alert("Por favor ingresá un nombre válido.");
+
+      const id = nombre.toLowerCase().replace(/ /g, '_');
+      const modAgua = document.getElementById('chkAgua').checked;
+      const modAscensor = document.getElementById('chkAscensor').checked;
+      const modFrio = document.getElementById('chkFrio').checked;
+      const modEnergia = document.getElementById('chkEnergia').checked;
+
+      db.ref(`/clientes/${id}`).set({
+        nombre: nombre,
+        modulos: { agua: modAgua, ascensor: modAscensor, frio: modFrio, energia: modEnergia },
+        telemetria: {
+          agua: { boya_bajo_50: false, bomba_1_estado: false },
+          ascensor: { piso: "PB", movimiento: "Detenido", puertas: "CERRADAS", falla: false },
+          frio: { camara_1_temp: 3.0, camara_2_temp: -20.0 }
+        }
+      }).then(() => {
+        cerrarModalNuevoCliente();
+        document.getElementById('inputNombreCliente').value = '';
+      });
     }
 
     function eliminarClienteActual() {
