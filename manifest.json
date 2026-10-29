@@ -8,7 +8,7 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://lh3.googleusercontent.com/d/1Cj75t_iXjB0_S4kC8f15_gqZpQ9s7M8A",
+      "src": "./icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
