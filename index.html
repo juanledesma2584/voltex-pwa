@@ -3,31 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VOLTEX - IoT Monitoring</title>
+  <title>VOLTEX Enterprise IoT</title>
   
-  <!-- Manifest & PWA settings -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- FontAwesome & Firebase -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <style>
     :root {
-      --bg: #0b1329;
-      --card-bg: #1c2541;
-      --accent: #3a86ff;
+      --bg: #090d16;
+      --card-bg: #151c2e;
+      --border: #232d42;
+      --accent: #38bdf8;
       --green: #10b981;
       --red: #ef4444;
+      --warning: #f59e0b;
       --text: #f8fafc;
-      --subtext: #94a3b8;
+      --subtext: #64748b;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
 
     body {
       background-color: var(--bg);
@@ -39,181 +37,255 @@
       padding: 16px;
     }
 
-    .navbar {
+    .top-bar {
       width: 100%;
-      max-width: 480px;
+      max-width: 600px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 0;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
-    .brand { font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; color: var(--accent); display: flex; align-items: center; gap: 8px; }
-    .client-select {
+    .brand { font-size: 1.5rem; font-weight: 900; color: var(--accent); letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+
+    .client-picker {
       background: var(--card-bg);
       color: var(--text);
-      border: 1px solid #334155;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-weight: 600;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      outline: none;
     }
 
-    .container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 16px; }
+    .container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
+
+    .module-nav {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+
+    .tab-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--subtext);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+    }
 
     .card {
       background-color: var(--card-bg);
       border-radius: 16px;
       padding: 20px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
     }
 
-    .card-title {
-      font-size: 0.95rem;
-      color: var(--subtext);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 12px;
+    .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
     }
 
-    .water-level-box {
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      margin: 10px 0;
-    }
+    .card-title { font-weight: 700; font-size: 1.1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
 
-    .tank-visual {
-      width: 80px;
-      height: 120px;
-      border: 3px solid #475569;
-      border-radius: 12px;
-      position: relative;
-      overflow: hidden;
-      background: #0f172a;
+    /* Estilos Agua */
+    .water-box { display: flex; align-items: center; justify-content: space-around; }
+    .tank {
+      width: 70px; height: 100px; border: 3px solid #334155; border-radius: 8px;
+      position: relative; overflow: hidden; background: #0f172a;
     }
-
-    .water-fill {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
+    .water-level {
+      position: absolute; bottom: 0; width: 100%;
       background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
-      transition: height 0.8s ease-in-out;
+      transition: height 0.8s ease;
     }
+    .big-stat { font-size: 3rem; font-weight: 800; color: var(--accent); }
 
-    .gauge-number { font-size: 3.2rem; font-weight: 800; color: #38bdf8; }
+    /* Estilos Refrigeración */
+    .temp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .temp-card {
+      background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid var(--border);
+      text-align: center;
+    }
+    .temp-val { font-size: 2.2rem; font-weight: 800; }
+    .temp-cold { color: #38bdf8; }
+    .temp-freeze { color: #818cf8; }
 
-    .controls-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .btn {
+      width: 100%; padding: 14px; border: none; border-radius: 10px;
+      font-weight: 700; cursor: pointer; margin-top: 15px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-on { background: var(--green); color: white; }
+    .btn-off { background: var(--red); color: white; }
+    .btn-secondary { background: #334155; color: white; margin-top: 10px; }
 
-    .btn-action {
-      width: 100%;
+    .admin-panel {
+      margin-top: 20px;
       padding: 16px;
-      border: none;
+      background: rgba(255,255,255,0.02);
+      border: 1px dashed var(--border);
       border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: transform 0.1s, background 0.2s;
+      text-align: center;
     }
-
-    .btn-action:active { transform: scale(0.98); }
-    .btn-on { background-color: var(--green); color: white; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
-    .btn-off { background-color: var(--red); color: white; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
-
-    .status-badge {
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-weight: 600;
-    }
-    .badge-online { background: rgba(16, 185, 129, 0.2); color: var(--green); }
   </style>
 </head>
 <body>
 
-  <div class="navbar">
-    <div class="brand"><i class="fa-solid => fa-bolt"></i> VOLTEX</div>
-    <select class="client-select" id="selectCliente">
+  <div class="top-bar">
+    <div class="brand"><i class="fa-solid fa-bolt"></i> VOLTEX</div>
+    <select class="client-picker" id="selectCliente" onchange="cargarCliente(this.value)">
       <option value="don_felix">Don Félix</option>
+      <option value="frigorifico_centro">Frigorífico Centro</option>
     </select>
   </div>
 
   <div class="container">
-    <!-- Nivel de Agua -->
-    <div class="card">
-      <div class="card-title">
-        <span><i class="fa-solid fa-water"></i> Tanque Superior</span>
-        <span class="status-badge badge-online">TELEMETRÍA EN VIVO</span>
-      </div>
-      <div class="water-level-box">
-        <div class="tank-visual">
-          <div class="water-fill" id="waterFill" style="height: 0%;"></div>
+    <!-- Navegación Módulos -->
+    <div class="module-nav">
+      <button class="tab-btn active" onclick="verModulo('agua')"><i class="fa-solid fa-droplet"></i> Agua</button>
+      <button class="tab-btn" onclick="verModulo('frio')"><i class="fa-solid fa-snowflake"></i> Cámaras Frigoríficas</button>
+      <button class="tab-btn" onclick="verModulo('energia')"><i class="fa-solid fa-plug"></i> Energía / Red</button>
+    </div>
+
+    <!-- VISTA AGUA -->
+    <div id="mod-agua">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-water"></i> Tanque Superior</div>
+          <small style="color: var(--green); font-weight:700;">EN VIVO</small>
         </div>
-        <div>
-          <div class="gauge-number"><span id="nivelAgua">--</span>%</div>
-          <small style="color: var(--subtext);">Estado del Suministro</small>
+        <div class="water-box">
+          <div class="tank"><div class="water-level" id="waterFill" style="height: 0%;"></div></div>
+          <div>
+            <div class="big-stat"><span id="nivelAgua">--</span>%</div>
+            <small style="color: var(--subtext);">Volumen Suministro</small>
+          </div>
         </div>
+        <button id="btnBomba" class="btn btn-off" onclick="toggleBomba()">CARGANDO...</button>
       </div>
     </div>
 
-    <!-- Control de Actuadores -->
-    <div class="card">
-      <div class="card-title">
-        <span><i class="fa-solid fa-gears"></i> Control de Bombas</span>
-      </div>
-      <div class="controls-grid">
-        <button id="btnBomba" class="btn-action btn-off" onclick="toggleBomba()">
-          <i class="fa-solid fa-power-off"></i> CARGANDO ESTADO...
-        </button>
+    <!-- VISTA FRÍO -->
+    <div id="mod-frio" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-temperature-arrow-down"></i> Monitoreo Térmico</div>
+          <small style="color: var(--accent); font-weight:700;">4 SENSRORES</small>
+        </div>
+        <div class="temp-grid">
+          <div class="temp-card">
+            <small style="color: var(--subtext);">Cámara Lácteos</small>
+            <div class="temp-val temp-cold"><span id="tempCamara1">2.4</span>°C</div>
+            <small style="color: var(--green);">Set: 3.0°C</small>
+          </div>
+          <div class="temp-card">
+            <small style="color: var(--subtext);">Congelados</small>
+            <div class="temp-val temp-freeze"><span id="tempCamara2">-18.2</span>°C</div>
+            <small style="color: var(--green);">Set: -20.0°C</small>
+          </div>
+        </div>
+        <button class="btn btn-secondary"><i class="fa-solid fa-sliders"></i> Ajustar Parametros Térmicos</button>
       </div>
     </div>
+
+    <!-- VISTA ENERGÍA -->
+    <div id="mod-energia" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-gauge-high"></i> Telemetría Eléctrica</div>
+        </div>
+        <p style="color: var(--subtext); text-align: center; padding: 20px;">Red Trifásica 220V/380V en Rango Normal.</p>
+      </div>
+    </div>
+
+    <!-- Panel para agregar nuevos clientes -->
+    <div class="admin-panel">
+      <small style="color: var(--subtext);">¿Querés dar de alta una nueva infraestructura?</small>
+      <button class="btn btn-secondary" onclick="nuevoCliente()"><i class="fa-solid fa-plus"></i> Registrar Nuevo Edificio / Empresa</button>
+    </div>
+
   </div>
 
   <script>
-    const firebaseConfig = {
-      databaseURL: "https://voltex-iot-default-rtdb.firebaseio.com/"
-    };
+    const firebaseConfig = { databaseURL: "https://voltex-iot-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let estadoActual = false;
+    let clienteActual = 'don_felix';
+    let estadoBomba = false;
 
-    // Escuchar Nivel
-    db.ref('/clientes/don_felix/telemetria/agua/tanque_superior_pct').on('value', (snapshot) => {
-      const val = snapshot.val() || 0;
-      document.getElementById('nivelAgua').innerText = val;
-      document.getElementById('waterFill').style.height = val + '%';
-    });
+    // Conectar eventos dinámicos
+    function cargarCliente(clienteId) {
+      clienteActual = clienteId;
+      
+      // Escuchar Telemetría de Agua
+      db.ref(`/clientes/${clienteActual}/telemetria/agua/tanque_superior_pct`).on('value', (snap) => {
+        const val = snap.val() || 0;
+        document.getElementById('nivelAgua').innerText = val;
+        document.getElementById('waterFill').style.height = val + '%';
+      });
 
-    // Escuchar Relé
-    db.ref('/clientes/don_felix/telemetria/agua/bomba_1_estado').on('value', (snapshot) => {
-      estadoActual = snapshot.val();
-      const btn = document.getElementById('btnBomba');
-      if (estadoActual) {
-        btn.innerHTML = '<i class="fa-solid fa-pump-soap"></i> BOMBA 1: ENCENDIDA';
-        btn.className = "btn-action btn-on";
-      } else {
-        btn.innerHTML = '<i class="fa-solid fa-power-off"></i> BOMBA 1: APAGADA';
-        btn.className = "btn-action btn-off";
-      }
-    });
+      // Escuchar Bomba
+      db.ref(`/clientes/${clienteActual}/telemetria/agua/bomba_1_estado`).on('value', (snap) => {
+        estadoBomba = snap.val();
+        const btn = document.getElementById('btnBomba');
+        if(estadoBomba) {
+          btn.className = "btn btn-on";
+          btn.innerHTML = '<i class="fa-solid fa-power-off"></i> BOMBA ACTIVADA';
+        } else {
+          btn.className = "btn btn-off";
+          btn.innerHTML = '<i class="fa-solid fa-power-off"></i> BOMBA APAGADA';
+        }
+      });
+    }
 
     function toggleBomba() {
-      db.ref('/clientes/don_felix/telemetria/agua/bomba_1_estado').set(!estadoActual);
+      db.ref(`/clientes/${clienteActual}/telemetria/agua/bomba_1_estado`).set(!estadoBomba);
     }
 
-    // Registrar Service Worker para PWA
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Error:', err));
+    function verModulo(mod) {
+      document.getElementById('mod-agua').style.display = mod === 'agua' ? 'block' : 'none';
+      document.getElementById('mod-frio').style.display = mod === 'frio' ? 'block' : 'none';
+      document.getElementById('mod-energia').style.display = mod === 'energia' ? 'block' : 'none';
+
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      event.currentTarget.classList.add('active');
     }
+
+    function nuevoCliente() {
+      const nombre = prompt("Nombre del nuevo edificio o empresa:");
+      if(nombre) {
+        const id = nombre.toLowerCase().replace(/ /g, '_');
+        db.ref(`/clientes/${id}`).set({
+          nombre: nombre,
+          telemetria: { agua: { tanque_superior_pct: 100, bomba_1_estado: false } }
+        });
+        alert("Cliente registrado en Firebase. Agregando al selector...");
+        location.reload();
+      }
+    }
+
+    // Inicializar
+    cargarCliente('don_felix');
   </script>
 </body>
 </html>
