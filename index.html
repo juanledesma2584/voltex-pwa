@@ -3,80 +3,181 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VOLTEX - Panel de Control</title>
-  <!-- Firebase SDKs -->
+  <title>VOLTEX - IoT Monitoring</title>
+  
+  <!-- Manifest & PWA settings -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- FontAwesome & Firebase -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
   <style>
+    :root {
+      --bg: #0b1329;
+      --card-bg: #1c2541;
+      --accent: #3a86ff;
+      --green: #10b981;
+      --red: #ef4444;
+      --text: #f8fafc;
+      --subtext: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+
     body {
-      background-color: #0f172a;
-      color: #f8fafc;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
-      margin: 0;
+      min-height: 100vh;
+      padding: 16px;
     }
-    .card {
-      background-color: #1e293b;
-      border-radius: 12px;
-      padding: 24px;
+
+    .navbar {
       width: 100%;
-      max-width: 400px;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-      margin-bottom: 20px;
-      box-sizing: border-box;
-    }
-    .header {
+      max-width: 480px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #334155;
-      padding-bottom: 12px;
-      margin-bottom: 20px;
+      padding: 12px 0;
+      margin-bottom: 16px;
     }
-    .title { font-size: 1.2rem; font-weight: bold; color: #38bdf8; }
-    .status { font-size: 0.85rem; padding: 4px 8px; border-radius: 6px; background: #065f46; color: #34d399; }
-    .gauge-container { text-align: center; margin: 20px 0; }
-    .gauge-value { font-size: 3rem; font-weight: bold; color: #38bdf8; }
-    .btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
+
+    .brand { font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+    .client-select {
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid #334155;
+      padding: 6px 12px;
       border-radius: 8px;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
+      font-weight: 600;
     }
-    .btn-on { background-color: #22c55e; color: white; }
-    .btn-off { background-color: #ef4444; color: white; }
+
+    .container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 16px; }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      color: var(--subtext);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .water-level-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      margin: 10px 0;
+    }
+
+    .tank-visual {
+      width: 80px;
+      height: 120px;
+      border: 3px solid #475569;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      background: #0f172a;
+    }
+
+    .water-fill {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+      transition: height 0.8s ease-in-out;
+    }
+
+    .gauge-number { font-size: 3.2rem; font-weight: 800; color: #38bdf8; }
+
+    .controls-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+
+    .btn-action {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 0.1s, background 0.2s;
+    }
+
+    .btn-action:active { transform: scale(0.98); }
+    .btn-on { background-color: var(--green); color: white; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+    .btn-off { background-color: var(--red); color: white; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+
+    .status-badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .badge-online { background: rgba(16, 185, 129, 0.2); color: var(--green); }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <div class="header">
-      <span class="title">VOLTEX | Don Félix</span>
-      <span class="status">EN LÍNEA</span>
+  <div class="navbar">
+    <div class="brand"><i class="fa-solid => fa-bolt"></i> VOLTEX</div>
+    <select class="client-select" id="selectCliente">
+      <option value="don_felix">Don Félix</option>
+    </select>
+  </div>
+
+  <div class="container">
+    <!-- Nivel de Agua -->
+    <div class="card">
+      <div class="card-title">
+        <span><i class="fa-solid fa-water"></i> Tanque Superior</span>
+        <span class="status-badge badge-online">TELEMETRÍA EN VIVO</span>
+      </div>
+      <div class="water-level-box">
+        <div class="tank-visual">
+          <div class="water-fill" id="waterFill" style="height: 0%;"></div>
+        </div>
+        <div>
+          <div class="gauge-number"><span id="nivelAgua">--</span>%</div>
+          <small style="color: var(--subtext);">Estado del Suministro</small>
+        </div>
+      </div>
     </div>
 
-    <!-- Módulo Agua -->
-    <h3>Tanque Superior</h3>
-    <div class="gauge-container">
-      <div class="gauge-value"><span id="nivelAgua">--</span>%</div>
-      <small style="color: #94a3b8;">Nivel de Agua en Tiempo Real</small>
+    <!-- Control de Actuadores -->
+    <div class="card">
+      <div class="card-title">
+        <span><i class="fa-solid fa-gears"></i> Control de Bombas</span>
+      </div>
+      <div class="controls-grid">
+        <button id="btnBomba" class="btn-action btn-off" onclick="toggleBomba()">
+          <i class="fa-solid fa-power-off"></i> CARGANDO ESTADO...
+        </button>
+      </div>
     </div>
-
-    <hr style="border-color: #334155; margin: 20px 0;">
-
-    <h3>Control de Bomba 1</h3>
-    <button id="btnBomba" class="btn btn-off" onclick="toggleBomba()">CARGANDO...</button>
   </div>
 
   <script>
-    // Configuración de tu Firebase
     const firebaseConfig = {
       databaseURL: "https://voltex-iot-default-rtdb.firebaseio.com/"
     };
@@ -85,27 +186,33 @@
 
     let estadoActual = false;
 
-    // Escuchar Nivel de Agua en vivo
+    // Escuchar Nivel
     db.ref('/clientes/don_felix/telemetria/agua/tanque_superior_pct').on('value', (snapshot) => {
-      document.getElementById('nivelAgua').innerText = snapshot.val() || '0';
+      const val = snapshot.val() || 0;
+      document.getElementById('nivelAgua').innerText = val;
+      document.getElementById('waterFill').style.height = val + '%';
     });
 
-    // Escuchar Estado de la Bomba en vivo
+    // Escuchar Relé
     db.ref('/clientes/don_felix/telemetria/agua/bomba_1_estado').on('value', (snapshot) => {
       estadoActual = snapshot.val();
       const btn = document.getElementById('btnBomba');
       if (estadoActual) {
-        btn.innerText = "ENCENDIDO (Tocar para Apagar)";
-        btn.className = "btn btn-on";
+        btn.innerHTML = '<i class="fa-solid fa-pump-soap"></i> BOMBA 1: ENCENDIDA';
+        btn.className = "btn-action btn-on";
       } else {
-        btn.innerText = "APAGADO (Tocar para Encender)";
-        btn.className = "btn btn-off";
+        btn.innerHTML = '<i class="fa-solid fa-power-off"></i> BOMBA 1: APAGADA';
+        btn.className = "btn-action btn-off";
       }
     });
 
-    // Cambiar estado desde la app
     function toggleBomba() {
       db.ref('/clientes/don_felix/telemetria/agua/bomba_1_estado').set(!estadoActual);
+    }
+
+    // Registrar Service Worker para PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Error:', err));
     }
   </script>
 </body>
