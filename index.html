@@ -118,6 +118,19 @@
       padding: 20px;
       border: 1px solid var(--border);
       box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+
+    /* Estilos de Alerta Crítica */
+    .card-alarm {
+      background-color: #3b0707 !important;
+      border: 2px solid var(--red) !important;
+      animation: pulse-red 1s infinite alternate;
+    }
+
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+      100% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.9); }
     }
 
     .card-header {
@@ -131,27 +144,25 @@
 
     .card-title { font-weight: 700; font-size: 1.1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
 
-    .water-box { display: flex; align-items: center; justify-content: space-around; }
-    .tank {
-      width: 70px; height: 100px; border: 3px solid #334155; border-radius: 8px;
-      position: relative; overflow: hidden; background: #0f172a;
-    }
-    .water-level {
-      position: absolute; bottom: 0; width: 100%;
-      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
-      transition: height 0.8s ease;
-    }
-    .big-stat { font-size: 3rem; font-weight: 800; color: var(--accent); }
-
-    .temp-grid, .energy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .stat-card {
-      background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid var(--border);
+    .status-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      border-radius: 12px;
+      background: #0f172a;
+      border: 1px solid var(--border);
       text-align: center;
+      gap: 10px;
     }
-    .stat-val { font-size: 2.2rem; font-weight: 800; }
-    .temp-cold { color: #38bdf8; }
-    .temp-freeze { color: #818cf8; }
-    .energy-val { color: #f59e0b; }
+
+    .status-icon {
+      font-size: 3.5rem;
+    }
+
+    .status-ok { color: var(--green); }
+    .status-critico { color: var(--red); }
 
     .btn {
       width: 100%; padding: 14px; border: none; border-radius: 10px;
@@ -161,16 +172,7 @@
     .btn-on { background: var(--green); color: white; }
     .btn-off { background: var(--red); color: white; }
     .btn-secondary { background: #334155; color: white; margin-top: 10px; }
-    .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--red); border: 1px solid var(--red); margin-top: 10px; }
-
-    .device-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-    .device-item {
-      display: flex; justify-content: space-between; align-items: center;
-      background: #0f172a; padding: 10px 14px; border-radius: 8px; font-size: 0.9rem;
-    }
-    .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-    .dot-online { background: var(--green); box-shadow: 0 0 8px var(--green); }
-    .dot-offline { background: var(--red); }
+    .btn-danger { background: var(--red); color: white; margin-top: 10px; }
 
     .admin-panel {
       margin-top: 20px;
@@ -198,90 +200,48 @@
 
   <div class="container">
     <div class="module-nav">
-      <button class="tab-btn active" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Agua</button>
-      <button class="tab-btn" onclick="verModulo('frio', event)"><i class="fa-solid fa-snowflake"></i> Cámaras Frigoríficas</button>
-      <button class="tab-btn" onclick="verModulo('energia', event)"><i class="fa-solid fa-plug"></i> Energía / Red</button>
+      <button class="tab-btn active" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Suministro Agua</button>
       <button class="tab-btn" onclick="verModulo('hardware', event)"><i class="fa-solid fa-microchip"></i> Hardware ESP32</button>
     </div>
 
-    <!-- MÓDULO AGUA -->
+    <!-- MÓDULO AGUA CON ALERTA DE BOYA -->
     <div id="mod-agua">
-      <div class="card">
+      <div class="card" id="tarjetaAgua">
         <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-water"></i> Tanque Superior</div>
-          <small style="color: var(--green); font-weight:700;">EN VIVO</small>
+          <div class="card-title"><i class="fa-solid fa-water"></i> Nivel Tanque (Boya)</div>
+          <small id="badgeEstado" style="color: var(--green); font-weight:700;">SISTEMA OK</small>
         </div>
-        <div class="water-box">
-          <div class="tank"><div class="water-level" id="waterFill" style="height: 0%;"></div></div>
-          <div>
-            <div class="big-stat"><span id="nivelAgua">--</span>%</div>
-            <small style="color: var(--subtext);">Volumen Suministro</small>
-          </div>
+        
+        <div class="status-box">
+          <div class="status-icon" id="iconoBoya"><i class="fa-solid fa-circle-check status-ok"></i></div>
+          <h2 id="textoEstado">Suministro Normal</h2>
+          <p id="subtextoEstado" style="color: var(--subtext); font-size: 0.9rem;">Nivel por encima del 50%</p>
         </div>
+
+        <!-- Botón para apagar la alarma sonora si está disparada -->
+        <button id="btnMute" class="btn btn-secondary" style="display: none;" onclick="silenciarAlarma()">
+          <i class="fa-solid fa-volume-xmark"></i> Silenciar Alarma Sonora
+        </button>
+
         <button id="btnBomba" class="btn btn-off" onclick="toggleBomba()">CARGANDO...</button>
       </div>
     </div>
 
-    <!-- MÓDULO CÁMARAS FRIGORÍFICAS -->
-    <div id="mod-frio" style="display: none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-temperature-arrow-down"></i> Monitoreo Térmico</div>
-          <small style="color: var(--accent); font-weight:700;">SENSORES DS18B20</small>
-        </div>
-        <div class="temp-grid">
-          <div class="stat-card">
-            <small style="color: var(--subtext);">Cámara Lácteos</small>
-            <div class="stat-val temp-cold"><span id="tempCamara1">--</span>°C</div>
-            <small style="color: var(--green);">Set: 3.0°C</small>
-          </div>
-          <div class="stat-card">
-            <small style="color: var(--subtext);">Congelados</small>
-            <div class="stat-val temp-freeze"><span id="tempCamara2">--</span>°C</div>
-            <small style="color: var(--green);">Set: -20.0°C</small>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MÓDULO ENERGÍA -->
-    <div id="mod-energia" style="display: none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-bolt"></i> Telemetría Eléctrica (PZEM-004T)</div>
-        </div>
-        <div class="energy-grid">
-          <div class="stat-card">
-            <small style="color: var(--subtext);">Tensión Red</small>
-            <div class="stat-val energy-val"><span id="voltaje">--</span>V</div>
-          </div>
-          <div class="stat-card">
-            <small style="color: var(--subtext);">Potencia Total</small>
-            <div class="stat-val energy-val"><span id="potencia">--</span>kW</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MÓDULO HARDWARE (ESP32) -->
+    <!-- HARDWARE -->
     <div id="mod-hardware" style="display: none;">
       <div class="card">
         <div class="card-header">
           <div class="card-title"><i class="fa-solid fa-microchip"></i> Dispositivos Asignados</div>
-          <button class="btn-secondary" style="width: auto; padding: 6px 12px; margin: 0;" onclick="agregarESP32()">+ Nuevo ESP32</button>
         </div>
-        <div class="device-list" id="listaDispositivos">
-          <p style="color: var(--subtext); text-align: center;">Cargando lista de hardware...</p>
-        </div>
+        <div id="listaDispositivos"><p style="color: var(--subtext); text-align: center;">Cargando...</p></div>
       </div>
     </div>
 
-    <!-- PANEL DE ADMINISTRACIÓN DE CLIENTES -->
     <div class="admin-panel">
       <small style="color: var(--subtext);">Gestión de Infraestructura</small>
-      <div style="display: flex; gap: 10px;">
-        <button class="btn btn-secondary" onclick="nuevoCliente()"><i class="fa-solid fa-plus"></i> Nuevo Cliente</button>
-        <button class="btn btn-danger" onclick="eliminarClienteActual()"><i class="fa-solid fa-trash"></i> Borrar Cliente</button>
+      <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button class="btn btn-secondary" style="margin:0;" onclick="nuevoCliente()"><i class="fa-solid fa-plus"></i> Nuevo Cliente</button>
+        <button class="btn btn-danger" style="margin:0;" onclick="eliminarClienteActual()"><i class="fa-solid fa-trash"></i> Eliminar</button>
       </div>
     </div>
   </div>
@@ -293,17 +253,52 @@
 
     let clienteActual = '';
     let estadoBomba = false;
+    let audioCtx = null;
+    let alarmInterval = null;
+    let alarmaSilenciada = false;
 
-    // Escuchar la lista de todos los clientes de Firebase
+    // Generador de Sirena Sonora usando Web Audio API
+    function sonarAlarma() {
+      if (alarmaSilenciada) return;
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime); // Tono de alerta (La)
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.3);
+    }
+
+    function iniciarSirena() {
+      if (!alarmInterval) {
+        alarmInterval = setInterval(sonarAlarma, 800);
+      }
+    }
+
+    function detenerSirena() {
+      if (alarmInterval) {
+        clearInterval(alarmInterval);
+        alarmInterval = null;
+      }
+    }
+
+    function silenciarAlarma() {
+      alarmaSilenciada = true;
+      detenerSirena();
+      document.getElementById('btnMute').style.display = 'none';
+    }
+
     db.ref('/clientes').on('value', (snapshot) => {
       const picker = document.getElementById('selectCliente');
       picker.innerHTML = '';
       const clientes = snapshot.val();
 
-      if (!clientes) {
-        picker.innerHTML = '<option value="">Sin Clientes</option>';
-        return;
-      }
+      if (!clientes) return;
 
       Object.keys(clientes).forEach(id => {
         const option = document.createElement('option');
@@ -315,7 +310,6 @@
       if (!clienteActual || !clientes[clienteActual]) {
         clienteActual = Object.keys(clientes)[0];
       }
-      
       picker.value = clienteActual;
       cargarCliente(clienteActual);
     });
@@ -323,14 +317,40 @@
     function cargarCliente(clienteId) {
       if(!clienteId) return;
       clienteActual = clienteId;
-      
-      // 1. Telemetría de Agua
-      db.ref(`/clientes/${clienteActual}/telemetria/agua/tanque_superior_pct`).on('value', (snap) => {
-        const val = snap.val() || 0;
-        document.getElementById('nivelAgua').innerText = val;
-        document.getElementById('waterFill').style.height = val + '%';
+      alarmaSilenciada = false;
+
+      // Escuchar estado de la BOYA (boya_bajo_50: true/false)
+      db.ref(`/clientes/${clienteActual}/telemetria/agua/boya_bajo_50`).on('value', (snap) => {
+        const enAlerta = snap.val(); // true = Bajo 50% (Crítico)
+        const tarjeta = document.getElementById('tarjetaAgua');
+        const icono = document.getElementById('iconoBoya');
+        const texto = document.getElementById('textoEstado');
+        const subtexto = document.getElementById('subtextoEstado');
+        const badge = document.getElementById('badgeEstado');
+        const btnMute = document.getElementById('btnMute');
+
+        if (enAlerta) {
+          tarjeta.className = "card card-alarm";
+          icono.innerHTML = '<i class="fa-solid fa-triangle-exclamation status-critico"></i>';
+          texto.innerText = "¡ALERTA DE NIVEL BAJO!";
+          subtexto.innerText = "Nivel cayó por debajo del 50%. Inspeccionar bombas/llaves.";
+          badge.innerText = "CRÍTICO";
+          badge.style.color = "var(--red)";
+          btnMute.style.display = 'flex';
+          iniciarSirena();
+        } else {
+          tarjeta.className = "card";
+          icono.innerHTML = '<i class="fa-solid fa-circle-check status-ok"></i>';
+          texto.innerText = "Suministro Normal";
+          subtexto.innerText = "Nivel por encima del 50%";
+          badge.innerText = "SISTEMA OK";
+          badge.style.color = "var(--green)";
+          btnMute.style.display = 'none';
+          detenerSirena();
+        }
       });
 
+      // Escuchar Bomba
       db.ref(`/clientes/${clienteActual}/telemetria/agua/bomba_1_estado`).on('value', (snap) => {
         estadoBomba = snap.val();
         const btn = document.getElementById('btnBomba');
@@ -342,51 +362,6 @@
           btn.innerHTML = '<i class="fa-solid fa-power-off"></i> BOMBA APAGADA';
         }
       });
-
-      // 2. Telemetría Térmica
-      db.ref(`/clientes/${clienteActual}/telemetria/frio/camara_1_temp`).on('value', snap => {
-        document.getElementById('tempCamara1').innerText = snap.val() || '2.4';
-      });
-      db.ref(`/clientes/${clienteActual}/telemetria/frio/camara_2_temp`).on('value', snap => {
-        document.getElementById('tempCamara2').innerText = snap.val() || '-18.2';
-      });
-
-      // 3. Telemetría Eléctrica
-      db.ref(`/clientes/${clienteActual}/telemetria/energia/voltaje`).on('value', snap => {
-        document.getElementById('voltaje').innerText = snap.val() || '220';
-      });
-      db.ref(`/clientes/${clienteActual}/telemetria/energia/potencia_kw`).on('value', snap => {
-        document.getElementById('potencia').innerText = snap.val() || '3.5';
-      });
-
-      // 4. Cargar lista de ESP32 asignados
-      db.ref(`/clientes/${clienteActual}/dispositivos`).on('value', (snap) => {
-        const contenedor = document.getElementById('listaDispositivos');
-        contenedor.innerHTML = '';
-        const devs = snap.val();
-
-        if (!devs) {
-          contenedor.innerHTML = '<p style="color: var(--subtext); text-align: center;">No hay ESP32 registrados en este nodo.</p>';
-          return;
-        }
-
-        Object.keys(devs).forEach(devId => {
-          const dev = devs[devId];
-          const isOnline = dev.status === 'online';
-          contenedor.innerHTML += `
-            <div class="device-item">
-              <div>
-                <strong>${dev.nombre || devId}</strong><br>
-                <small style="color: var(--subtext);">ID: ${devId} | IP: ${dev.ip || '192.168.1.X'}</small>
-              </div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="status-dot ${isOnline ? 'dot-online' : 'dot-offline'}"></span>
-                <small style="color: ${isOnline ? 'var(--green)' : 'var(--red)'}">${isOnline ? 'ONLINE' : 'OFFLINE'}</small>
-              </div>
-            </div>
-          `;
-        });
-      });
     }
 
     function toggleBomba() {
@@ -395,58 +370,27 @@
 
     function verModulo(mod, e) {
       document.getElementById('mod-agua').style.display = mod === 'agua' ? 'block' : 'none';
-      document.getElementById('mod-frio').style.display = mod === 'frio' ? 'block' : 'none';
-      document.getElementById('mod-energia').style.display = mod === 'energia' ? 'block' : 'none';
       document.getElementById('mod-hardware').style.display = mod === 'hardware' ? 'block' : 'none';
 
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       if(e) e.currentTarget.classList.add('active');
     }
 
-    // Funciones de administración (Crear / Eliminar)
     function nuevoCliente() {
       const nombre = prompt("Nombre de la nueva empresa o cliente:");
       if (nombre) {
         const id = nombre.toLowerCase().replace(/ /g, '_');
         db.ref(`/clientes/${id}`).set({
           nombre: nombre,
-          telemetria: {
-            agua: { tanque_superior_pct: 100, bomba_1_estado: false },
-            frio: { camara_1_temp: 3.0, camara_2_temp: -20.0 },
-            energia: { voltaje: 220, potencia_kw: 0.0 }
-          },
-          dispositivos: {
-            esp32_principal: { nombre: "ESP32 Maestro", status: "online", ip: "192.168.1.100" }
-          }
+          telemetria: { agua: { boya_bajo_50: false, bomba_1_estado: false } }
         });
-        alert("Cliente creado exitosamente.");
       }
     }
 
     function eliminarClienteActual() {
-      if (!clienteActual) return;
-      if (confirm(`¿Estás seguro de que querés eliminar el cliente "${clienteActual}" y toda su telemetría?`)) {
-        db.ref(`/clientes/${clienteActual}`).remove()
-          .then(() => alert("Cliente eliminado de la base de datos."))
-          .catch(err => alert("Error al eliminar: " + err.message));
+      if (confirm(`¿Borrar "${clienteActual}"?`)) {
+        db.ref(`/clientes/${clienteActual}`).remove();
       }
-    }
-
-    function agregarESP32() {
-      if (!clienteActual) return;
-      const idESP = prompt("Identificador del nuevo ESP32 (ej: esp32_tanque2):");
-      if (idESP) {
-        const devId = idESP.toLowerCase().replace(/ /g, '_');
-        db.ref(`/clientes/${clienteActual}/dispositivos/${devId}`).set({
-          nombre: idESP,
-          status: "online",
-          ip: "192.168.1.105"
-        });
-      }
-    }
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Error:', err));
     }
   </script>
 </body>
