@@ -1,0 +1,16 @@
+{
+  "name": "VOLTEX IoT Platform",
+  "short_name": "VOLTEX",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1329",
+  "theme_color": "#0b1329",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/915/915993.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
