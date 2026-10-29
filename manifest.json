@@ -1,16 +1,17 @@
 {
-  "name": "VOLTEX IoT Platform",
+  "name": "VOLTEX Industrial IoT",
   "short_name": "VOLTEX",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0b1329",
-  "theme_color": "#0b1329",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/915/915993.png",
+      "src": "https://lh3.googleusercontent.com/d/1Cj75t_iXjB0_S4kC8f15_gqZpQ9s7M8A",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
