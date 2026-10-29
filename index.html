@@ -21,6 +21,7 @@
       --accent: #38bdf8;
       --green: #10b981;
       --red: #ef4444;
+      --warning: #f59e0b;
       --text: #f8fafc;
       --subtext: #64748b;
     }
@@ -142,14 +143,15 @@
     }
     .big-stat { font-size: 3rem; font-weight: 800; color: var(--accent); }
 
-    .temp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .temp-card {
+    .temp-grid, .energy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .stat-card {
       background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid var(--border);
       text-align: center;
     }
-    .temp-val { font-size: 2.2rem; font-weight: 800; }
+    .stat-val { font-size: 2.2rem; font-weight: 800; }
     .temp-cold { color: #38bdf8; }
     .temp-freeze { color: #818cf8; }
+    .energy-val { color: #f59e0b; }
 
     .btn {
       width: 100%; padding: 14px; border: none; border-radius: 10px;
@@ -159,6 +161,16 @@
     .btn-on { background: var(--green); color: white; }
     .btn-off { background: var(--red); color: white; }
     .btn-secondary { background: #334155; color: white; margin-top: 10px; }
+    .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--red); border: 1px solid var(--red); margin-top: 10px; }
+
+    .device-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .device-item {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #0f172a; padding: 10px 14px; border-radius: 8px; font-size: 0.9rem;
+    }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .dot-online { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .dot-offline { background: var(--red); }
 
     .admin-panel {
       margin-top: 20px;
@@ -181,10 +193,7 @@
       </div>
       <span>VOLTEX</span>
     </div>
-    <select class="client-picker" id="selectCliente" onchange="cargarCliente(this.value)">
-      <option value="don_felix">Don Félix</option>
-      <option value="frigorifico_centro">Frigorífico Centro</option>
-    </select>
+    <select class="client-picker" id="selectCliente" onchange="cargarCliente(this.value)"></select>
   </div>
 
   <div class="container">
@@ -192,8 +201,10 @@
       <button class="tab-btn active" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Agua</button>
       <button class="tab-btn" onclick="verModulo('frio', event)"><i class="fa-solid fa-snowflake"></i> Cámaras Frigoríficas</button>
       <button class="tab-btn" onclick="verModulo('energia', event)"><i class="fa-solid fa-plug"></i> Energía / Red</button>
+      <button class="tab-btn" onclick="verModulo('hardware', event)"><i class="fa-solid fa-microchip"></i> Hardware ESP32</button>
     </div>
 
+    <!-- MÓDULO AGUA -->
     <div id="mod-agua">
       <div class="card">
         <div class="card-header">
@@ -211,40 +222,67 @@
       </div>
     </div>
 
+    <!-- MÓDULO CÁMARAS FRIGORÍFICAS -->
     <div id="mod-frio" style="display: none;">
       <div class="card">
         <div class="card-header">
           <div class="card-title"><i class="fa-solid fa-temperature-arrow-down"></i> Monitoreo Térmico</div>
-          <small style="color: var(--accent); font-weight:700;">4 SENSORES</small>
+          <small style="color: var(--accent); font-weight:700;">SENSORES DS18B20</small>
         </div>
         <div class="temp-grid">
-          <div class="temp-card">
+          <div class="stat-card">
             <small style="color: var(--subtext);">Cámara Lácteos</small>
-            <div class="temp-val temp-cold"><span id="tempCamara1">2.4</span>°C</div>
+            <div class="stat-val temp-cold"><span id="tempCamara1">--</span>°C</div>
             <small style="color: var(--green);">Set: 3.0°C</small>
           </div>
-          <div class="temp-card">
+          <div class="stat-card">
             <small style="color: var(--subtext);">Congelados</small>
-            <div class="temp-val temp-freeze"><span id="tempCamara2">-18.2</span>°C</div>
+            <div class="stat-val temp-freeze"><span id="tempCamara2">--</span>°C</div>
             <small style="color: var(--green);">Set: -20.0°C</small>
           </div>
         </div>
-        <button class="btn btn-secondary"><i class="fa-solid fa-sliders"></i> Ajustar Parámetros Térmicos</button>
       </div>
     </div>
 
+    <!-- MÓDULO ENERGÍA -->
     <div id="mod-energia" style="display: none;">
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-gauge-high"></i> Telemetría Eléctrica</div>
+          <div class="card-title"><i class="fa-solid fa-bolt"></i> Telemetría Eléctrica (PZEM-004T)</div>
         </div>
-        <p style="color: var(--subtext); text-align: center; padding: 20px;">Red Trifásica 220V/380V en Rango Normal.</p>
+        <div class="energy-grid">
+          <div class="stat-card">
+            <small style="color: var(--subtext);">Tensión Red</small>
+            <div class="stat-val energy-val"><span id="voltaje">--</span>V</div>
+          </div>
+          <div class="stat-card">
+            <small style="color: var(--subtext);">Potencia Total</small>
+            <div class="stat-val energy-val"><span id="potencia">--</span>kW</div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- MÓDULO HARDWARE (ESP32) -->
+    <div id="mod-hardware" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-microchip"></i> Dispositivos Asignados</div>
+          <button class="btn-secondary" style="width: auto; padding: 6px 12px; margin: 0;" onclick="agregarESP32()">+ Nuevo ESP32</button>
+        </div>
+        <div class="device-list" id="listaDispositivos">
+          <p style="color: var(--subtext); text-align: center;">Cargando lista de hardware...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL DE ADMINISTRACIÓN DE CLIENTES -->
     <div class="admin-panel">
-      <small style="color: var(--subtext);">¿Querés dar de alta una nueva infraestructura?</small>
-      <button class="btn btn-secondary" onclick="nuevoCliente()"><i class="fa-solid fa-plus"></i> Registrar Nuevo Edificio / Empresa</button>
+      <small style="color: var(--subtext);">Gestión de Infraestructura</small>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-secondary" onclick="nuevoCliente()"><i class="fa-solid fa-plus"></i> Nuevo Cliente</button>
+        <button class="btn btn-danger" onclick="eliminarClienteActual()"><i class="fa-solid fa-trash"></i> Borrar Cliente</button>
+      </div>
     </div>
   </div>
 
@@ -253,12 +291,40 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let clienteActual = 'don_felix';
+    let clienteActual = '';
     let estadoBomba = false;
 
+    // Escuchar la lista de todos los clientes de Firebase
+    db.ref('/clientes').on('value', (snapshot) => {
+      const picker = document.getElementById('selectCliente');
+      picker.innerHTML = '';
+      const clientes = snapshot.val();
+
+      if (!clientes) {
+        picker.innerHTML = '<option value="">Sin Clientes</option>';
+        return;
+      }
+
+      Object.keys(clientes).forEach(id => {
+        const option = document.createElement('option');
+        option.value = id;
+        option.innerText = clientes[id].nombre || id;
+        picker.appendChild(option);
+      });
+
+      if (!clienteActual || !clientes[clienteActual]) {
+        clienteActual = Object.keys(clientes)[0];
+      }
+      
+      picker.value = clienteActual;
+      cargarCliente(clienteActual);
+    });
+
     function cargarCliente(clienteId) {
+      if(!clienteId) return;
       clienteActual = clienteId;
       
+      // 1. Telemetría de Agua
       db.ref(`/clientes/${clienteActual}/telemetria/agua/tanque_superior_pct`).on('value', (snap) => {
         const val = snap.val() || 0;
         document.getElementById('nivelAgua').innerText = val;
@@ -276,6 +342,51 @@
           btn.innerHTML = '<i class="fa-solid fa-power-off"></i> BOMBA APAGADA';
         }
       });
+
+      // 2. Telemetría Térmica
+      db.ref(`/clientes/${clienteActual}/telemetria/frio/camara_1_temp`).on('value', snap => {
+        document.getElementById('tempCamara1').innerText = snap.val() || '2.4';
+      });
+      db.ref(`/clientes/${clienteActual}/telemetria/frio/camara_2_temp`).on('value', snap => {
+        document.getElementById('tempCamara2').innerText = snap.val() || '-18.2';
+      });
+
+      // 3. Telemetría Eléctrica
+      db.ref(`/clientes/${clienteActual}/telemetria/energia/voltaje`).on('value', snap => {
+        document.getElementById('voltaje').innerText = snap.val() || '220';
+      });
+      db.ref(`/clientes/${clienteActual}/telemetria/energia/potencia_kw`).on('value', snap => {
+        document.getElementById('potencia').innerText = snap.val() || '3.5';
+      });
+
+      // 4. Cargar lista de ESP32 asignados
+      db.ref(`/clientes/${clienteActual}/dispositivos`).on('value', (snap) => {
+        const contenedor = document.getElementById('listaDispositivos');
+        contenedor.innerHTML = '';
+        const devs = snap.val();
+
+        if (!devs) {
+          contenedor.innerHTML = '<p style="color: var(--subtext); text-align: center;">No hay ESP32 registrados en este nodo.</p>';
+          return;
+        }
+
+        Object.keys(devs).forEach(devId => {
+          const dev = devs[devId];
+          const isOnline = dev.status === 'online';
+          contenedor.innerHTML += `
+            <div class="device-item">
+              <div>
+                <strong>${dev.nombre || devId}</strong><br>
+                <small style="color: var(--subtext);">ID: ${devId} | IP: ${dev.ip || '192.168.1.X'}</small>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="status-dot ${isOnline ? 'dot-online' : 'dot-offline'}"></span>
+                <small style="color: ${isOnline ? 'var(--green)' : 'var(--red)'}">${isOnline ? 'ONLINE' : 'OFFLINE'}</small>
+              </div>
+            </div>
+          `;
+        });
+      });
     }
 
     function toggleBomba() {
@@ -286,29 +397,57 @@
       document.getElementById('mod-agua').style.display = mod === 'agua' ? 'block' : 'none';
       document.getElementById('mod-frio').style.display = mod === 'frio' ? 'block' : 'none';
       document.getElementById('mod-energia').style.display = mod === 'energia' ? 'block' : 'none';
+      document.getElementById('mod-hardware').style.display = mod === 'hardware' ? 'block' : 'none';
 
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       if(e) e.currentTarget.classList.add('active');
     }
 
+    // Funciones de administración (Crear / Eliminar)
     function nuevoCliente() {
-      const nombre = prompt("Nombre del nuevo edificio o empresa:");
-      if(nombre) {
+      const nombre = prompt("Nombre de la nueva empresa o cliente:");
+      if (nombre) {
         const id = nombre.toLowerCase().replace(/ /g, '_');
         db.ref(`/clientes/${id}`).set({
           nombre: nombre,
-          telemetria: { agua: { tanque_superior_pct: 100, bomba_1_estado: false } }
+          telemetria: {
+            agua: { tanque_superior_pct: 100, bomba_1_estado: false },
+            frio: { camara_1_temp: 3.0, camara_2_temp: -20.0 },
+            energia: { voltaje: 220, potencia_kw: 0.0 }
+          },
+          dispositivos: {
+            esp32_principal: { nombre: "ESP32 Maestro", status: "online", ip: "192.168.1.100" }
+          }
         });
-        alert("Cliente registrado en Firebase.");
-        location.reload();
+        alert("Cliente creado exitosamente.");
+      }
+    }
+
+    function eliminarClienteActual() {
+      if (!clienteActual) return;
+      if (confirm(`¿Estás seguro de que querés eliminar el cliente "${clienteActual}" y toda su telemetría?`)) {
+        db.ref(`/clientes/${clienteActual}`).remove()
+          .then(() => alert("Cliente eliminado de la base de datos."))
+          .catch(err => alert("Error al eliminar: " + err.message));
+      }
+    }
+
+    function agregarESP32() {
+      if (!clienteActual) return;
+      const idESP = prompt("Identificador del nuevo ESP32 (ej: esp32_tanque2):");
+      if (idESP) {
+        const devId = idESP.toLowerCase().replace(/ /g, '_');
+        db.ref(`/clientes/${clienteActual}/dispositivos/${devId}`).set({
+          nombre: idESP,
+          status: "online",
+          ip: "192.168.1.105"
+        });
       }
     }
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Error:', err));
     }
-
-    cargarCliente('don_felix');
   </script>
 </body>
 </html>
