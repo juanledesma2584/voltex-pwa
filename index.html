@@ -1,0 +1,31 @@
+};
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let estadoActual = false;
+
+    // Escuchar Nivel de Agua en vivo
+    db.ref('/clientes/don_felix/telemetria/agua/tanque_superior_pct').on('value', (snapshot) => {
+      document.getElementById('nivelAgua').innerText = snapshot.val() || '0';
+    });
+
+    // Escuchar Estado de la Bomba en vivo
+    db.ref('/clientes/don_felix/telemetria/agua/bomba_1_estado').on('value', (snapshot) => {
+      estadoActual = snapshot.val();
+      const btn = document.getElementById('btnBomba');
+      if (estadoActual) {
+        btn.innerText = "ENCENDIDO (Tocar para Apagar)";
+        btn.className = "btn btn-on";
+      } else {
+        btn.innerText = "APAGADO (Tocar para Encender)";
+        btn.className = "btn btn-off";
+      }
+    });
+
+    // Cambiar estado desde la app
+    function toggleBomba() {
+      db.ref('/clientes/don_felix/telemetria/agua/bomba_1_estado').set(!estadoActual);
+    }
+  </script>
+</body>
+</html>index.
