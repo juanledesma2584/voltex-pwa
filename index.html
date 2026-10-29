@@ -5,13 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VOLTEX Enterprise IoT</title>
   
-  <!-- Manifest & PWA settings -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#090d16">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- FontAwesome & Firebase -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -24,7 +21,6 @@
       --accent: #38bdf8;
       --green: #10b981;
       --red: #ef4444;
-      --warning: #f59e0b;
       --text: #f8fafc;
       --subtext: #64748b;
     }
@@ -58,19 +54,22 @@
       font-size: 1.4rem; 
       font-weight: 900; 
       color: var(--accent); 
-      letter-spacing: 1px; 
+      letter-spacing: 1.5px; 
       display: flex; 
       align-items: center; 
-      gap: 12px; 
+      gap: 10px; 
     }
 
-    .brand img {
-      height: 42px;
-      width: 42px;
-      border-radius: 50%;
-      border: 2px solid var(--accent);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
-      object-fit: cover;
+    .brand-logo-svg {
+      width: 38px;
+      height: 38px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
     }
 
     .client-picker {
@@ -131,7 +130,6 @@
 
     .card-title { font-weight: 700; font-size: 1.1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
 
-    /* Estilos Agua */
     .water-box { display: flex; align-items: center; justify-content: space-around; }
     .tank {
       width: 70px; height: 100px; border: 3px solid #334155; border-radius: 8px;
@@ -144,7 +142,6 @@
     }
     .big-stat { font-size: 3rem; font-weight: 800; color: var(--accent); }
 
-    /* Estilos Refrigeración */
     .temp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .temp-card {
       background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid var(--border);
@@ -175,10 +172,13 @@
 </head>
 <body>
 
-  <!-- Encabezado con Logo Oficial de VOLTEX -->
   <div class="top-bar">
     <div class="brand">
-      <img src="https://lh3.googleusercontent.com/d/1Cj75t_iXjB0_S4kC8f15_gqZpQ9s7M8A" alt="VOLTEX Logo">
+      <div class="brand-logo-svg">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+        </svg>
+      </div>
       <span>VOLTEX</span>
     </div>
     <select class="client-picker" id="selectCliente" onchange="cargarCliente(this.value)">
@@ -188,14 +188,12 @@
   </div>
 
   <div class="container">
-    <!-- Navegación Módulos -->
     <div class="module-nav">
       <button class="tab-btn active" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Agua</button>
       <button class="tab-btn" onclick="verModulo('frio', event)"><i class="fa-solid fa-snowflake"></i> Cámaras Frigoríficas</button>
       <button class="tab-btn" onclick="verModulo('energia', event)"><i class="fa-solid fa-plug"></i> Energía / Red</button>
     </div>
 
-    <!-- VISTA AGUA -->
     <div id="mod-agua">
       <div class="card">
         <div class="card-header">
@@ -213,7 +211,6 @@
       </div>
     </div>
 
-    <!-- VISTA FRÍO -->
     <div id="mod-frio" style="display: none;">
       <div class="card">
         <div class="card-header">
@@ -236,7 +233,6 @@
       </div>
     </div>
 
-    <!-- VISTA ENERGÍA -->
     <div id="mod-energia" style="display: none;">
       <div class="card">
         <div class="card-header">
@@ -246,12 +242,10 @@
       </div>
     </div>
 
-    <!-- Panel de Gestión Administrador -->
     <div class="admin-panel">
       <small style="color: var(--subtext);">¿Querés dar de alta una nueva infraestructura?</small>
       <button class="btn btn-secondary" onclick="nuevoCliente()"><i class="fa-solid fa-plus"></i> Registrar Nuevo Edificio / Empresa</button>
     </div>
-
   </div>
 
   <script>
@@ -265,14 +259,12 @@
     function cargarCliente(clienteId) {
       clienteActual = clienteId;
       
-      // Escuchar Nivel de Agua
       db.ref(`/clientes/${clienteActual}/telemetria/agua/tanque_superior_pct`).on('value', (snap) => {
         const val = snap.val() || 0;
         document.getElementById('nivelAgua').innerText = val;
         document.getElementById('waterFill').style.height = val + '%';
       });
 
-      // Escuchar Estado Bomba
       db.ref(`/clientes/${clienteActual}/telemetria/agua/bomba_1_estado`).on('value', (snap) => {
         estadoBomba = snap.val();
         const btn = document.getElementById('btnBomba');
@@ -307,17 +299,15 @@
           nombre: nombre,
           telemetria: { agua: { tanque_superior_pct: 100, bomba_1_estado: false } }
         });
-        alert("Cliente registrado en Firebase. Agregando al selector...");
+        alert("Cliente registrado en Firebase.");
         location.reload();
       }
     }
 
-    // Registrar Service Worker para PWA instalable
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Error:', err));
     }
 
-    // Carga Inicial
     cargarCliente('don_felix');
   </script>
 </body>
