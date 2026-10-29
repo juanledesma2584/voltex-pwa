@@ -1,14 +1,14 @@
 {
   "name": "VOLTEX Industrial IoT",
   "short_name": "VOLTEX",
-  "start_url": "./index.html",
+  "start_url": "./index.html?v=4",
   "display": "standalone",
   "background_color": "#090d16",
   "theme_color": "#090d16",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "./icon.png",
+      "src": "./logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
