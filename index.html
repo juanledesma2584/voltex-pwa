@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VOLTEX Enterprise IoT</title>
+  
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -24,43 +27,191 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 16px; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
 
     .top-bar {
-      width: 100%; max-width: 600px; display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 20px; background: var(--card-bg); padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border);
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      background: var(--card-bg);
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
     }
-    .brand { font-size: 1.4rem; font-weight: 900; color: var(--accent); letter-spacing: 1.5px; display: flex; align-items: center; gap: 10px; }
-    .brand-logo-svg { width: 38px; height: 38px; background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-    .client-picker { background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 8px 14px; border-radius: 10px; font-weight: 700; outline: none; }
+
+    .brand { 
+      font-size: 1.4rem; 
+      font-weight: 900; 
+      color: var(--accent); 
+      letter-spacing: 1.5px; 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+    }
+
+    .brand-logo-svg {
+      width: 38px;
+      height: 38px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    .client-picker {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      outline: none;
+    }
 
     .container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
-    .module-nav { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
-    .tab-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--subtext); padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
-    .tab-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(56, 189, 248, 0.1); }
 
-    .card { background-color: var(--card-bg); border-radius: 16px; padding: 20px; border: 1px solid var(--border); box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-bottom: 15px; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    /* BANNER ALERTA GLOBAL */
+    .global-alert-banner {
+      display: none;
+      background: var(--red);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 800;
+      text-align: center;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+      animation: pulse-red 1s infinite alternate;
+    }
+
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+      100% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.9); }
+    }
+
+    .module-nav {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+
+    .tab-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--subtext);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      margin-bottom: 15px;
+    }
+
+    .card-alarm {
+      background-color: #3b0707 !important;
+      border: 2px solid var(--red) !important;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
     .card-title { font-weight: 700; font-size: 1.1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
 
-    /* Estilos para listas de bombas/tanques/ascensores */
-    .pump-item, .elevator-item {
-      background: #0f172a; border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px;
-      display: flex; justify-content: space-between; align-items: center;
+    .status-box {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 20px; border-radius: 12px; background: #0f172a; border: 1px solid var(--border); text-align: center; gap: 10px;
     }
-    .pump-info h4 { font-size: 1rem; color: var(--text); }
-    .pump-info p { font-size: 0.85rem; color: var(--subtext); margin-top: 2px; }
-    .amp-badge { font-size: 1.1rem; font-weight: 800; color: var(--warning); background: rgba(245, 158, 11, 0.1); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.3); }
 
-    .stat-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-    .stat-box { background: #0f172a; border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; }
-    .stat-box .val { font-size: 1.8rem; font-weight: 800; color: var(--accent); }
+    /* FILA DE POZOS / MEDIDORES DE AMPERAJE */
+    .pozo-card {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-    .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .amp-display {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--warning);
+      background: rgba(245, 158, 11, 0.1);
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .elevator-grid, .temp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .stat-card {
+      background: #0f172a;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .btn {
+      width: 100%; padding: 14px; border: none; border-radius: 10px;
+      font-weight: 700; cursor: pointer; margin-top: 15px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
     .btn-on { background: var(--green); color: white; }
     .btn-off { background: var(--red); color: white; }
     .btn-secondary { background: #334155; color: white; }
-    .admin-panel { margin-top: 20px; padding: 16px; background: rgba(255,255,255,0.02); border: 1px dashed var(--border); border-radius: 12px; text-align: center; }
+    .btn-danger { background: var(--red); color: white; }
+
+    .admin-panel {
+      margin-top: 20px; padding: 16px; background: rgba(255,255,255,0.02);
+      border: 1px dashed var(--border); border-radius: 12px; text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -76,50 +227,90 @@
   </div>
 
   <div class="container">
+    <!-- BANNER DE ALERTA GLOBAL -->
+    <div class="global-alert-banner" id="bannerAlerta">
+      <span><i class="fa-solid fa-triangle-exclamation"></i> <span id="textoAlertaGlobal">¡ALERTA TÉCNICA DETECTADA!</span></span>
+      <button onclick="silenciarAlarma()" style="background: rgba(0,0,0,0.3); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight:700; cursor:pointer;">Silenciar</button>
+    </div>
+
+    <!-- PESTAÑAS -->
     <div class="module-nav" id="navegacionModulos">
-      <button class="tab-btn active" id="tab-agua" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Sistema Agua</button>
+      <button class="tab-btn active" id="tab-agua" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Control de Agua y Pozos</button>
       <button class="tab-btn" id="tab-ascensor" onclick="verModulo('ascensor', event)"><i class="fa-solid fa-elevator"></i> Ascensores</button>
+      <button class="tab-btn" id="tab-frio" onclick="verModulo('frio', event)"><i class="fa-solid fa-snowflake"></i> Frío Industrial</button>
+      <button class="tab-btn" onclick="verModulo('hardware', event)"><i class="fa-solid fa-microchip"></i> Hardware ESP32</button>
     </div>
 
-    <!-- MÓDULO AGUA MULTI-BOMBA Y MULTI-TANQUE -->
+    <!-- 1. MÓDULO AGUA Y POZOS CON MEDIDORES DE AMPERAJE -->
     <div id="mod-agua">
-      <!-- Resumen General -->
-      <div class="stat-summary">
-        <div class="stat-box">
-          <small style="color: var(--subtext);">Bombas En Marcha</small>
-          <div class="val" id="totalBombasActivas">0 / 0</div>
+      <!-- Estado de la Boya NO/NC -->
+      <div class="card" id="tarjetaBoya">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-water"></i> Estado de Reservorio (Boya NO/NC)</div>
+          <small id="badgeBoya" style="color: var(--green); font-weight:700;">NORMAL</small>
         </div>
-        <div class="stat-box">
-          <small style="color: var(--subtext);">Amperaje Total</small>
-          <div class="val" style="color: var(--warning);" id="totalAmperaje">0.0 A</div>
+        <div class="status-box">
+          <div style="font-size:3rem;" id="iconoBoya"><i class="fa-solid fa-circle-check" style="color: var(--green);"></i></div>
+          <h2 id="textoBoya">Nivel de Agua Conforme</h2>
+          <p id="subtextoBoya" style="color: var(--subtext); font-size: 0.9rem;">Contacto Boya Estado Normal</p>
         </div>
       </div>
 
-      <!-- Lista de Tanques / Boyas -->
+      <!-- Medidores de Amperaje de Pozos / Bombas -->
       <div class="card">
-        <div class="card-header"><div class="card-title"><i class="fa-solid fa-water"></i> Monitoreo de Tanques</div></div>
-        <div id="listaTanques"><p style="color: var(--subtext); text-align: center;">Cargando tanques...</p></div>
-      </div>
-
-      <!-- Lista de Bombas / Amperaje -->
-      <div class="card">
-        <div class="card-header"><div class="card-title"><i class="fa-solid fa-gears"></i> Grupo de Bombeo y Amperaje</div></div>
-        <div id="listaBombas"><p style="color: var(--subtext); text-align: center;">Cargando bombas...</p></div>
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-bolt"></i> Telemetría de Pozos (3 Amperímetros)</div>
+          <button class="btn-secondary" style="width:auto; padding: 4px 10px; font-size: 0.8rem;" onclick="agregarPozo()">+ Pozo</button>
+        </div>
+        <div id="contenedorPozos"><p style="color: var(--subtext); text-align: center;">Cargando medidores de amperaje...</p></div>
       </div>
     </div>
 
-    <!-- MÓDULO MULTI-ASCENSOR -->
+    <!-- 2. MÓDULO ASCENSORES -->
     <div id="mod-ascensor" style="display: none;">
-      <div class="card">
-        <div class="card-header"><div class="card-title"><i class="fa-solid fa-elevator"></i> Red de Ascensores</div></div>
-        <div id="listaAscensores"><p style="color: var(--subtext); text-align: center;">Cargando ascensores...</p></div>
+      <div class="card" id="tarjetaAscensor">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-elevator"></i> Ascensor Principal</div>
+          <small id="badgeAscensor" style="color: var(--green); font-weight:700;">OPERATIVO</small>
+        </div>
+        <div class="elevator-grid">
+          <div class="stat-card">
+            <small style="color: var(--subtext);">PISO ACTUAL</small>
+            <div style="font-size: 2.8rem; font-weight: 900; color: var(--accent);" id="pisoActual">PB</div>
+          </div>
+          <div class="stat-card">
+            <small style="color: var(--subtext);">Serie Puertas</small>
+            <div style="font-weight: 800; margin-top: 10px; color: var(--green);" id="estadoPuerta">CERRADAS</div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- 3. MÓDULO CÁMARAS FRIGORÍFICAS (DINÁMICO PARA POLLO DON JUAN) -->
+    <div id="mod-frio" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-temperature-arrow-down"></i> Monitoreo de Cámaras Frigoríficas</div>
+          <button class="btn-secondary" style="width:auto; padding: 4px 10px; font-size: 0.8rem;" onclick="agregarCamara()">+ Cámara</button>
+        </div>
+        <div class="temp-grid" id="contenedorCamaras"><p style="color: var(--subtext); text-align: center;">Cargando sensores DS18B20...</p></div>
+      </div>
+    </div>
+
+    <!-- 4. HARDWARE -->
+    <div id="mod-hardware" style="display: none;">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i class="fa-solid fa-microchip"></i> Hardware ESP32</div></div>
+        <div id="listaDispositivos"><p style="color: var(--subtext); text-align: center;">Cargando...</p></div>
+      </div>
+    </div>
+
+    <!-- PANEL ADMINISTRATIVO -->
     <div class="admin-panel">
       <small style="color: var(--subtext);">Gestión de Infraestructura</small>
       <div style="display: flex; gap: 10px; margin-top: 10px;">
-        <button class="btn btn-secondary" onclick="nuevoCliente()"><i class="fa-solid fa-plus"></i> Cargar Cliente Multi-Nodo</button>
+        <button class="btn btn-secondary" style="margin:0;" onclick="nuevoCliente()"><i class="fa-solid fa-plus"></i> Nuevo Edificio / Cliente</button>
+        <button class="btn btn-danger" style="margin:0;" onclick="eliminarClienteActual()"><i class="fa-solid fa-trash"></i> Eliminar</button>
       </div>
     </div>
   </div>
@@ -130,6 +321,40 @@
     const db = firebase.database();
 
     let clienteActual = '';
+    let audioCtx = null;
+    let alarmInterval = null;
+    let alarmaSilenciada = false;
+    let fallaAgua = false;
+
+    function sonarAlarma() {
+      if (alarmaSilenciada) return;
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.3);
+    }
+
+    function evaluarAlertas() {
+      const banner = document.getElementById('bannerAlerta');
+      if (fallaAgua) {
+        banner.style.display = 'flex';
+        if (!alarmInterval && !alarmaSilenciada) alarmInterval = setInterval(sonarAlarma, 800);
+      } else {
+        banner.style.display = 'none';
+        if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
+      }
+    }
+
+    function silenciarAlarma() {
+      alarmaSilenciada = true;
+      if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
+    }
 
     db.ref('/clientes').on('value', (snapshot) => {
       const picker = document.getElementById('selectCliente');
@@ -139,7 +364,8 @@
 
       Object.keys(clientes).forEach(id => {
         const option = document.createElement('option');
-        option.value = id; option.innerText = clientes[id].nombre || id;
+        option.value = id;
+        option.innerText = clientes[id].nombre || id;
         picker.appendChild(option);
       });
 
@@ -149,140 +375,138 @@
     });
 
     function cargarCliente(clienteId) {
+      if(!clienteId) return;
       clienteActual = clienteId;
+      alarmaSilenciada = false;
 
-      // Escuchar Telemetría de Agua (Multi-Tanque y Multi-Bomba)
-      db.ref(`/clientes/${clienteActual}/telemetria/agua`).on('value', (snap) => {
-        const aguaData = snap.val() || {};
-        
-        // 1. Renderizar Tanques
-        const contenedorTanques = document.getElementById('listaTanques');
-        contenedorTanques.innerHTML = '';
-        const tanques = aguaData.tanques || {};
-        
-        if (Object.keys(tanques).length === 0) {
-          contenedorTanques.innerHTML = '<small style="color: var(--subtext);">Sin tanques configurados.</small>';
+      // 1. Escuchar Boya NO/NC (Falta de agua)
+      db.ref(`/clientes/${clienteActual}/telemetria/agua/boya_falta_agua`).on('value', (snap) => {
+        fallaAgua = snap.val() || false;
+        const tarjeta = document.getElementById('tarjetaBoya');
+        if (fallaAgua) {
+          tarjeta.className = "card card-alarm";
+          document.getElementById('iconoBoya').innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:var(--red);"></i>';
+          document.getElementById('textoBoya').innerText = "¡ALERTA: FALTA DE AGUA!";
+          document.getElementById('badgeBoya').innerText = "CRÍTICO";
+          document.getElementById('badgeBoya').style.color = "var(--red)";
         } else {
-          Object.keys(tanques).forEach(tId => {
-            const t = tanques[tId];
-            const estaCritico = t.boya_bajo_50;
-            contenedorTanques.innerHTML += `
-              <div class="pump-item" style="border-left: 4px solid ${estaCritico ? 'var(--red)' : 'var(--green)'};">
-                <div>
-                  <strong>${t.nombre || tId}</strong><br>
-                  <small style="color: ${estaCritico ? 'var(--red)' : 'var(--green)'}; font-weight:700;">
-                    ${estaCritico ? '¡ALERTA: NIVEL BAJO (< 50%)!' : 'Suministro Conforme'}
-                  </small>
-                </div>
-                <i class="${estaCritico ? 'fa-solid fa-triangle-exclamation' : 'fa-solid fa-circle-check'}" style="font-size:1.5rem; color:${estaCritico ? 'var(--red)' : 'var(--green)'};"></i>
-              </div>
-            `;
-          });
+          tarjeta.className = "card";
+          document.getElementById('iconoBoya').innerHTML = '<i class="fa-solid fa-circle-check" style="color:var(--green);"></i>';
+          document.getElementById('textoBoya').innerText = "Nivel de Agua Conforme";
+          document.getElementById('badgeBoya').innerText = "NORMAL";
+          document.getElementById('badgeBoya').style.color = "var(--green)";
         }
-
-        // 2. Renderizar Bombas con Consumo de Amperaje
-        const contenedorBombas = document.getElementById('listaBombas');
-        contenedorBombas.innerHTML = '';
-        const bombas = aguaData.bombas || {};
-        let activasCount = 0;
-        let totalBombas = Object.keys(bombas).length;
-        let amperajeSuma = 0.0;
-
-        if (totalBombas === 0) {
-          contenedorBombas.innerHTML = '<small style="color: var(--subtext);">Sin bombas configuradas.</small>';
-        } else {
-          Object.keys(bombas).forEach(bId => {
-            const b = bombas[bId];
-            const corriente = parseFloat(b.corriente_amperios || 0.0);
-            const encendida = b.estado || false;
-
-            if (encendida) activasCount++;
-            amperajeSuma += corriente;
-
-            contenedorBombas.innerHTML += `
-              <div class="pump-item">
-                <div class="pump-info">
-                  <h4>${b.nombre || bId}</h4>
-                  <p>Consumo individual: <strong style="color:white;">${corriente.toFixed(1)} A</strong></p>
-                </div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <span class="amp-badge">${corriente.toFixed(1)} A</span>
-                  <button class="btn ${encendida ? 'btn-on' : 'btn-off'}" style="width:auto; padding:8px 12px;" onclick="toggleBombaId('${bId}', ${!encendida})">
-                    ${encendida ? 'ON' : 'OFF'}
-                  </button>
-                </div>
-              </div>
-            `;
-          });
-        }
-
-        document.getElementById('totalBombasActivas').innerText = `${activasCount} / ${totalBombas}`;
-        document.getElementById('totalAmperaje').innerText = `${amperajeSuma.toFixed(1)} A`;
+        evaluarAlertas();
       });
 
-      // Escuchar Telemetría Multi-Ascensor
-      db.ref(`/clientes/${clienteActual}/telemetria/ascensores`).on('value', (snap) => {
-        const contenedor = document.getElementById('listaAscensores');
+      // 2. Escuchar Amperímetros de Pozos (3 Pozos)
+      db.ref(`/clientes/${clienteActual}/telemetria/agua/pozos`).on('value', (snap) => {
+        const contenedor = document.getElementById('contenedorPozos');
         contenedor.innerHTML = '';
-        const ascensores = snap.val() || {};
+        const pozos = snap.val() || {};
 
-        if (Object.keys(ascensores).length === 0) {
-          contenedor.innerHTML = '<small style="color: var(--subtext);">Sin ascensores configurados.</small>';
+        if (Object.keys(pozos).length === 0) {
+          contenedor.innerHTML = '<p style="color: var(--subtext); text-align: center;">Sin pozos registrados.</p>';
           return;
         }
 
-        Object.keys(ascensores).forEach(aId => {
-          const a = ascensores[aId];
+        Object.keys(pozos).forEach(pId => {
+          const p = pozos[pId];
+          const corriente = parseFloat(p.corriente_a || 0.0);
+          const enMarcha = corriente > 1.0; // Si consume más de 1 Amperio está operando
+
           contenedor.innerHTML += `
-            <div class="elevator-item" style="border-left: 4px solid ${a.falla ? 'var(--red)' : 'var(--accent)'};">
+            <div class="pozo-card">
               <div>
-                <strong>${a.nombre || aId}</strong><br>
-                <small style="color:var(--subtext);">Estado Puerta: ${a.puertas || 'CERRADA'}</small>
+                <strong>${p.nombre || pId}</strong><br>
+                <small style="color: ${enMarcha ? 'var(--green)' : 'var(--subtext)'}; font-weight: 700;">
+                  <i class="fa-solid fa-bolt"></i> ${enMarcha ? 'EN MARCHA' : 'DETENIDO'}
+                </small>
               </div>
-              <div style="text-align:right;">
-                <div style="font-size:1.5rem; font-weight:900; color:var(--accent);">${a.piso || 'PB'}</div>
-                <small style="color:${a.falla ? 'var(--red)' : 'var(--green)'}; font-weight:700;">${a.falla ? 'FALLA' : 'OK'}</small>
-              </div>
+              <div class="amp-display">${corriente.toFixed(1)} A</div>
+            </div>
+          `;
+        });
+      });
+
+      // 3. Escuchar Cámaras Frigoríficas Dinámicas (Pollos Don Juan)
+      db.ref(`/clientes/${clienteActual}/telemetria/frio`).on('value', (snap) => {
+        const contenedor = document.getElementById('contenedorCamaras');
+        contenedor.innerHTML = '';
+        const camaras = snap.val() || {};
+
+        if (Object.keys(camaras).length === 0) {
+          contenedor.innerHTML = '<p style="color: var(--subtext); text-align: center; grid-column: span 2;">Sin cámaras registradas.</p>';
+          return;
+        }
+
+        Object.keys(camaras).forEach(cId => {
+          const c = camaras[cId];
+          contenedor.innerHTML += `
+            <div class="stat-card">
+              <small style="color: var(--subtext);">${c.nombre || cId}</small>
+              <div style="font-size: 2.2rem; font-weight: 800; color: #38bdf8; margin: 6px 0;">${c.temp || '--'}°C</div>
+              <small style="color: var(--green);">Set: ${c.setpoint || '0.0'}°C</small>
             </div>
           `;
         });
       });
     }
 
-    function toggleBombaId(bombaId, nuevoEstado) {
-      db.ref(`/clientes/${clienteActual}/telemetria/agua/bombas/${bombaId}/estado`).set(nuevoEstado);
-    }
-
     function verModulo(mod, e) {
       document.getElementById('mod-agua').style.display = mod === 'agua' ? 'block' : 'none';
       document.getElementById('mod-ascensor').style.display = mod === 'ascensor' ? 'block' : 'none';
+      document.getElementById('mod-frio').style.display = mod === 'frio' ? 'block' : 'none';
+      document.getElementById('mod-hardware').style.display = mod === 'hardware' ? 'block' : 'none';
+
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       if(e) e.currentTarget.classList.add('active');
     }
 
+    function agregarPozo() {
+      const nombre = prompt("Nombre del Pozo/Bomba (ej: Pozo 3):");
+      if (nombre) {
+        const id = nombre.toLowerCase().replace(/ /g, '_');
+        db.ref(`/clientes/${clienteActual}/telemetria/agua/pozos/${id}`).set({
+          nombre: nombre,
+          corriente_a: 0.0
+        });
+      }
+    }
+
+    function agregarCamara() {
+      const nombre = prompt("Nombre de la Cámara (ej: Cámara Pre-frío):");
+      if (nombre) {
+        const id = nombre.toLowerCase().replace(/ /g, '_');
+        db.ref(`/clientes/${clienteActual}/telemetria/frio/${id}`).set({
+          nombre: nombre,
+          temp: 2.5,
+          setpoint: 3.0
+        });
+      }
+    }
+
     function nuevoCliente() {
-      const nombre = prompt("Nombre del edificio (ej: Don Félix):");
+      const nombre = prompt("Nombre del edificio/empresa:");
       if (nombre) {
         const id = nombre.toLowerCase().replace(/ /g, '_');
         db.ref(`/clientes/${id}`).set({
           nombre: nombre,
           telemetria: {
             agua: {
-              tanques: {
-                tanque_superior: { nombre: "Tanque Superior", boya_bajo_50: false },
-                tanque_inferior: { nombre: "Cisterna Inferior", boya_bajo_50: false }
-              },
-              bombas: {
-                bomba_1: { nombre: "Bomba Principal #1", estado: true, corriente_amperios: 8.4 },
-                bomba_2: { nombre: "Bomba Auxiliar #2", estado: false, corriente_amperios: 0.0 }
+              boya_falta_agua: false,
+              pozos: {
+                pozo_1: { nombre: "Pozo 1", corriente_a: 7.2 },
+                pozo_2: { nombre: "Pozo 2", corriente_a: 0.0 }
               }
-            },
-            ascensores: {
-              ascensor_1: { nombre: "Ascensor Principal", piso: "Piso 2", falla: false, puertas: "CERRADAS" }
             }
           }
         });
       }
+    }
+
+    function eliminarClienteActual() {
+      if (confirm(`¿Borrar "${clienteActual}"?`)) db.ref(`/clientes/${clienteActual}`).remove();
     }
   </script>
 </body>
