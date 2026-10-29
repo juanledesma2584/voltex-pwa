@@ -85,7 +85,6 @@
 
     .container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
 
-    /* BANNER ALERTA GLOBAL */
     .global-alert-banner {
       display: none;
       background: var(--red);
@@ -162,7 +161,6 @@
       padding: 20px; border-radius: 12px; background: #0f172a; border: 1px solid var(--border); text-align: center; gap: 10px;
     }
 
-    /* FILA DE POZOS / MEDIDORES DE AMPERAJE */
     .pozo-card {
       background: #0f172a;
       border: 1px solid var(--border);
@@ -184,7 +182,7 @@
       border: 1px solid rgba(245, 158, 11, 0.3);
     }
 
-    .elevator-grid, .temp-grid {
+    .temp-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
@@ -204,7 +202,6 @@
       display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn-on { background: var(--green); color: white; }
-    .btn-off { background: var(--red); color: white; }
     .btn-secondary { background: #334155; color: white; }
     .btn-danger { background: var(--red); color: white; }
 
@@ -212,6 +209,20 @@
       margin-top: 20px; padding: 16px; background: rgba(255,255,255,0.02);
       border: 1px dashed var(--border); border-radius: 12px; text-align: center;
     }
+
+    /* MODAL NUEVO CLIENTE */
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-content {
+      background: var(--card-bg); border: 1px solid var(--border); padding: 24px;
+      border-radius: 16px; width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px;
+    }
+    .checkbox-item {
+      display: flex; align-items: center; gap: 10px; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid var(--border);
+    }
+    .checkbox-item input { width: 18px; height: 18px; accent-color: var(--accent); }
   </style>
 </head>
 <body>
@@ -229,40 +240,38 @@
   <div class="container">
     <!-- BANNER DE ALERTA GLOBAL -->
     <div class="global-alert-banner" id="bannerAlerta">
-      <span><i class="fa-solid fa-triangle-exclamation"></i> <span id="textoAlertaGlobal">¡ALERTA TÉCNICA DETECTADA!</span></span>
+      <span><i class="fa-solid fa-triangle-exclamation"></i> <span id="textoAlertaGlobal">¡ALERTA EN SISTEMA!</span></span>
       <button onclick="silenciarAlarma()" style="background: rgba(0,0,0,0.3); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight:700; cursor:pointer;">Silenciar</button>
     </div>
 
-    <!-- PESTAÑAS -->
+    <!-- PESTAÑAS (SE MOSTRARÁN/OCULTARÁN AUTOMÁTICAMENTE SEGÚN CADA CLIENTE) -->
     <div class="module-nav" id="navegacionModulos">
-      <button class="tab-btn active" id="tab-agua" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Control de Agua y Pozos</button>
+      <button class="tab-btn" id="tab-agua" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Tanque y Pozos</button>
       <button class="tab-btn" id="tab-ascensor" onclick="verModulo('ascensor', event)"><i class="fa-solid fa-elevator"></i> Ascensores</button>
-      <button class="tab-btn" id="tab-frio" onclick="verModulo('frio', event)"><i class="fa-solid fa-snowflake"></i> Frío Industrial</button>
-      <button class="tab-btn" onclick="verModulo('hardware', event)"><i class="fa-solid fa-microchip"></i> Hardware ESP32</button>
+      <button class="tab-btn" id="tab-frio" onclick="verModulo('frio', event)"><i class="fa-solid fa-snowflake"></i> Cámaras Frigoríficas</button>
+      <button class="tab-btn" id="tab-hardware" onclick="verModulo('hardware', event)"><i class="fa-solid fa-microchip"></i> Hardware ESP32</button>
     </div>
 
-    <!-- 1. MÓDULO AGUA Y POZOS CON MEDIDORES DE AMPERAJE -->
-    <div id="mod-agua">
-      <!-- Estado de la Boya NO/NC -->
+    <!-- 1. MÓDULO AGUA (TANQUE BOYA + POZOS/BOMBAS) -->
+    <div id="mod-agua" style="display: none;">
       <div class="card" id="tarjetaBoya">
         <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-water"></i> Estado de Reservorio (Boya NO/NC)</div>
+          <div class="card-title"><i class="fa-solid fa-water"></i> Tanque de Agua (Boya NO/NC)</div>
           <small id="badgeBoya" style="color: var(--green); font-weight:700;">NORMAL</small>
         </div>
         <div class="status-box">
           <div style="font-size:3rem;" id="iconoBoya"><i class="fa-solid fa-circle-check" style="color: var(--green);"></i></div>
-          <h2 id="textoBoya">Nivel de Agua Conforme</h2>
-          <p id="subtextoBoya" style="color: var(--subtext); font-size: 0.9rem;">Contacto Boya Estado Normal</p>
+          <h2 id="textoBoya">Suministro Conforme</h2>
+          <p id="subtextoBoya" style="color: var(--subtext); font-size: 0.9rem;">Boya en Estado Normal</p>
         </div>
       </div>
 
-      <!-- Medidores de Amperaje de Pozos / Bombas -->
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-bolt"></i> Telemetría de Pozos (3 Amperímetros)</div>
+          <div class="card-title"><i class="fa-solid fa-bolt"></i> Pozos / Medidores de Amperaje</div>
           <button class="btn-secondary" style="width:auto; padding: 4px 10px; font-size: 0.8rem;" onclick="agregarPozo()">+ Pozo</button>
         </div>
-        <div id="contenedorPozos"><p style="color: var(--subtext); text-align: center;">Cargando medidores de amperaje...</p></div>
+        <div id="contenedorPozos"><p style="color: var(--subtext); text-align: center;">Sin pozos registrados.</p></div>
       </div>
     </div>
 
@@ -270,10 +279,10 @@
     <div id="mod-ascensor" style="display: none;">
       <div class="card" id="tarjetaAscensor">
         <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-elevator"></i> Ascensor Principal</div>
+          <div class="card-title"><i class="fa-solid fa-elevator"></i> Red de Ascensores</div>
           <small id="badgeAscensor" style="color: var(--green); font-weight:700;">OPERATIVO</small>
         </div>
-        <div class="elevator-grid">
+        <div class="temp-grid">
           <div class="stat-card">
             <small style="color: var(--subtext);">PISO ACTUAL</small>
             <div style="font-size: 2.8rem; font-weight: 900; color: var(--accent);" id="pisoActual">PB</div>
@@ -286,21 +295,21 @@
       </div>
     </div>
 
-    <!-- 3. MÓDULO CÁMARAS FRIGORÍFICAS (DINÁMICO PARA POLLO DON JUAN) -->
+    <!-- 3. MÓDULO FRÍO INDUSTRIAL (ILIMITADO) -->
     <div id="mod-frio" style="display: none;">
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-temperature-arrow-down"></i> Monitoreo de Cámaras Frigoríficas</div>
-          <button class="btn-secondary" style="width:auto; padding: 4px 10px; font-size: 0.8rem;" onclick="agregarCamara()">+ Cámara</button>
+          <div class="card-title"><i class="fa-solid fa-temperature-arrow-down"></i> Cámaras Frigoríficas</div>
+          <button class="btn-secondary" style="width:auto; padding: 4px 10px; font-size: 0.8rem;" onclick="agregarCamara()">+ Agregar Cámara</button>
         </div>
-        <div class="temp-grid" id="contenedorCamaras"><p style="color: var(--subtext); text-align: center;">Cargando sensores DS18B20...</p></div>
+        <div class="temp-grid" id="contenedorCamaras"><p style="color: var(--subtext); text-align: center; grid-column: span 2;">Sin cámaras registradas.</p></div>
       </div>
     </div>
 
     <!-- 4. HARDWARE -->
     <div id="mod-hardware" style="display: none;">
       <div class="card">
-        <div class="card-header"><div class="card-title"><i class="fa-solid fa-microchip"></i> Hardware ESP32</div></div>
+        <div class="card-header"><div class="card-title"><i class="fa-solid fa-microchip"></i> Hardware ESP32 Asignado</div></div>
         <div id="listaDispositivos"><p style="color: var(--subtext); text-align: center;">Cargando...</p></div>
       </div>
     </div>
@@ -309,8 +318,29 @@
     <div class="admin-panel">
       <small style="color: var(--subtext);">Gestión de Infraestructura</small>
       <div style="display: flex; gap: 10px; margin-top: 10px;">
-        <button class="btn btn-secondary" style="margin:0;" onclick="nuevoCliente()"><i class="fa-solid fa-plus"></i> Nuevo Edificio / Cliente</button>
+        <button class="btn btn-secondary" style="margin:0;" onclick="abrirModal()"><i class="fa-solid fa-plus"></i> Registrar Nuevo Cliente</button>
         <button class="btn btn-danger" style="margin:0;" onclick="eliminarClienteActual()"><i class="fa-solid fa-trash"></i> Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE CONFIGURACIÓN POR CLIENTE -->
+  <div class="modal" id="modalCliente">
+    <div class="modal-content">
+      <h3>Alta de Nuevo Cliente</h3>
+      <input type="text" id="inputNombre" placeholder="Ej: Pollos Don Juan" style="background:#0f172a; border:1px solid var(--border); padding:12px; color:white; border-radius:8px; outline:none;">
+      
+      <p style="font-size:0.9rem; color:var(--subtext);">Seleccioná qué módulos posee este cliente:</p>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <label class="checkbox-item"><input type="checkbox" id="chkAgua" checked> <span>Suministro de Agua (Tanque/Pozos)</span></label>
+        <label class="checkbox-item"><input type="checkbox" id="chkAscensor"> <span>Ascensores</span></label>
+        <label class="checkbox-item"><input type="checkbox" id="chkFrio"> <span>Cámaras Frigoríficas</span></label>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <button class="btn btn-on" onclick="guardarCliente()">Guardar Cliente</button>
+        <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
       </div>
     </div>
   </div>
@@ -379,7 +409,21 @@
       clienteActual = clienteId;
       alarmaSilenciada = false;
 
-      // 1. Escuchar Boya NO/NC (Falta de agua)
+      // 1. Filtrar visibilidad de Pestañas según Módulos Habilitados
+      db.ref(`/clientes/${clienteActual}/modulos`).once('value', (snap) => {
+        const mods = snap.val() || { agua: true, ascensor: false, frio: false };
+
+        document.getElementById('tab-agua').style.display = mods.agua ? 'flex' : 'none';
+        document.getElementById('tab-ascensor').style.display = mods.ascensor ? 'flex' : 'none';
+        document.getElementById('tab-frio').style.display = mods.frio ? 'flex' : 'none';
+
+        if (mods.agua) verModulo('agua');
+        else if (mods.ascensor) verModulo('ascensor');
+        else if (mods.frio) verModulo('frio');
+        else verModulo('hardware');
+      });
+
+      // 2. Telemetría Tanque Agua (Boya)
       db.ref(`/clientes/${clienteActual}/telemetria/agua/boya_falta_agua`).on('value', (snap) => {
         fallaAgua = snap.val() || false;
         const tarjeta = document.getElementById('tarjetaBoya');
@@ -392,35 +436,35 @@
         } else {
           tarjeta.className = "card";
           document.getElementById('iconoBoya').innerHTML = '<i class="fa-solid fa-circle-check" style="color:var(--green);"></i>';
-          document.getElementById('textoBoya').innerText = "Nivel de Agua Conforme";
+          document.getElementById('textoBoya').innerText = "Suministro Conforme";
           document.getElementById('badgeBoya').innerText = "NORMAL";
           document.getElementById('badgeBoya').style.color = "var(--green)";
         }
         evaluarAlertas();
       });
 
-      // 2. Escuchar Amperímetros de Pozos (3 Pozos)
+      // 3. Telemetría Amperímetros Pozos
       db.ref(`/clientes/${clienteActual}/telemetria/agua/pozos`).on('value', (snap) => {
         const contenedor = document.getElementById('contenedorPozos');
         contenedor.innerHTML = '';
         const pozos = snap.val() || {};
 
         if (Object.keys(pozos).length === 0) {
-          contenedor.innerHTML = '<p style="color: var(--subtext); text-align: center;">Sin pozos registrados.</p>';
+          contenedor.innerHTML = '<p style="color: var(--subtext); text-align: center;">Sin pozos configurados.</p>';
           return;
         }
 
         Object.keys(pozos).forEach(pId => {
           const p = pozos[pId];
           const corriente = parseFloat(p.corriente_a || 0.0);
-          const enMarcha = corriente > 1.0; // Si consume más de 1 Amperio está operando
+          const enMarcha = corriente > 1.0;
 
           contenedor.innerHTML += `
             <div class="pozo-card">
               <div>
                 <strong>${p.nombre || pId}</strong><br>
                 <small style="color: ${enMarcha ? 'var(--green)' : 'var(--subtext)'}; font-weight: 700;">
-                  <i class="fa-solid fa-bolt"></i> ${enMarcha ? 'EN MARCHA' : 'DETENIDO'}
+                  <i class="fa-solid fa-bolt"></i> ${enMarcha ? 'OPERANDO' : 'DETENIDO'}
                 </small>
               </div>
               <div class="amp-display">${corriente.toFixed(1)} A</div>
@@ -429,7 +473,7 @@
         });
       });
 
-      // 3. Escuchar Cámaras Frigoríficas Dinámicas (Pollos Don Juan)
+      // 4. Telemetría Cámaras Frigoríficas (Dinámico)
       db.ref(`/clientes/${clienteActual}/telemetria/frio`).on('value', (snap) => {
         const contenedor = document.getElementById('contenedorCamaras');
         contenedor.innerHTML = '';
@@ -460,7 +504,8 @@
       document.getElementById('mod-hardware').style.display = mod === 'hardware' ? 'block' : 'none';
 
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      if(e) e.currentTarget.classList.add('active');
+      let targetTab = e ? e.currentTarget : document.getElementById(`tab-${mod}`);
+      if(targetTab) targetTab.classList.add('active');
     }
 
     function agregarPozo() {
@@ -475,38 +520,43 @@
     }
 
     function agregarCamara() {
-      const nombre = prompt("Nombre de la Cámara (ej: Cámara Pre-frío):");
+      const nombre = prompt("Nombre de la Cámara (ej: Cámara Lácteos #2):");
       if (nombre) {
         const id = nombre.toLowerCase().replace(/ /g, '_');
         db.ref(`/clientes/${clienteActual}/telemetria/frio/${id}`).set({
           nombre: nombre,
-          temp: 2.5,
-          setpoint: 3.0
+          temp: 3.5,
+          setpoint: 4.0
         });
       }
     }
 
-    function nuevoCliente() {
-      const nombre = prompt("Nombre del edificio/empresa:");
-      if (nombre) {
-        const id = nombre.toLowerCase().replace(/ /g, '_');
-        db.ref(`/clientes/${id}`).set({
-          nombre: nombre,
-          telemetria: {
-            agua: {
-              boya_falta_agua: false,
-              pozos: {
-                pozo_1: { nombre: "Pozo 1", corriente_a: 7.2 },
-                pozo_2: { nombre: "Pozo 2", corriente_a: 0.0 }
-              }
-            }
-          }
-        });
-      }
+    function abrirModal() { document.getElementById('modalCliente').style.display = 'flex'; }
+    function cerrarModal() { document.getElementById('modalCliente').style.display = 'none'; }
+
+    function guardarCliente() {
+      const nombre = document.getElementById('inputNombre').value.trim();
+      if (!nombre) return alert("Por favor ingresá un nombre.");
+
+      const id = nombre.toLowerCase().replace(/ /g, '_');
+      const mAgua = document.getElementById('chkAgua').checked;
+      const mAscensor = document.getElementById('chkAscensor').checked;
+      const mFrio = document.getElementById('chkFrio').checked;
+
+      db.ref(`/clientes/${id}`).set({
+        nombre: nombre,
+        modulos: { agua: mAgua, ascensor: mAscensor, frio: mFrio },
+        telemetria: {
+          agua: { boya_falta_agua: false }
+        }
+      }).then(() => {
+        cerrarModal();
+        document.getElementById('inputNombre').value = '';
+      });
     }
 
     function eliminarClienteActual() {
-      if (confirm(`¿Borrar "${clienteActual}"?`)) db.ref(`/clientes/${clienteActual}`).remove();
+      if (confirm(`¿Eliminar cliente "${clienteActual}"?`)) db.ref(`/clientes/${clienteActual}`).remove();
     }
   </script>
 </body>
