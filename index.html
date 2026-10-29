@@ -5,9 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VOLTEX Enterprise IoT</title>
   
+  <!-- Manifest & PWA settings -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+  <!-- FontAwesome & Firebase -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -44,15 +48,36 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
+      background: var(--card-bg);
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
     }
 
-    .brand { font-size: 1.5rem; font-weight: 900; color: var(--accent); letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+    .brand { 
+      font-size: 1.4rem; 
+      font-weight: 900; 
+      color: var(--accent); 
+      letter-spacing: 1px; 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+    }
+
+    .brand img {
+      height: 42px;
+      width: 42px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+      object-fit: cover;
+    }
 
     .client-picker {
-      background: var(--card-bg);
+      background: var(--bg);
       color: var(--text);
       border: 1px solid var(--border);
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 10px;
       font-weight: 700;
       outline: none;
@@ -150,8 +175,12 @@
 </head>
 <body>
 
+  <!-- Encabezado con Logo Oficial de VOLTEX -->
   <div class="top-bar">
-    <div class="brand"><i class="fa-solid fa-bolt"></i> VOLTEX</div>
+    <div class="brand">
+      <img src="https://lh3.googleusercontent.com/d/1Cj75t_iXjB0_S4kC8f15_gqZpQ9s7M8A" alt="VOLTEX Logo">
+      <span>VOLTEX</span>
+    </div>
     <select class="client-picker" id="selectCliente" onchange="cargarCliente(this.value)">
       <option value="don_felix">Don Félix</option>
       <option value="frigorifico_centro">Frigorífico Centro</option>
@@ -161,9 +190,9 @@
   <div class="container">
     <!-- Navegación Módulos -->
     <div class="module-nav">
-      <button class="tab-btn active" onclick="verModulo('agua')"><i class="fa-solid fa-droplet"></i> Agua</button>
-      <button class="tab-btn" onclick="verModulo('frio')"><i class="fa-solid fa-snowflake"></i> Cámaras Frigoríficas</button>
-      <button class="tab-btn" onclick="verModulo('energia')"><i class="fa-solid fa-plug"></i> Energía / Red</button>
+      <button class="tab-btn active" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Agua</button>
+      <button class="tab-btn" onclick="verModulo('frio', event)"><i class="fa-solid fa-snowflake"></i> Cámaras Frigoríficas</button>
+      <button class="tab-btn" onclick="verModulo('energia', event)"><i class="fa-solid fa-plug"></i> Energía / Red</button>
     </div>
 
     <!-- VISTA AGUA -->
@@ -189,7 +218,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title"><i class="fa-solid fa-temperature-arrow-down"></i> Monitoreo Térmico</div>
-          <small style="color: var(--accent); font-weight:700;">4 SENSRORES</small>
+          <small style="color: var(--accent); font-weight:700;">4 SENSORES</small>
         </div>
         <div class="temp-grid">
           <div class="temp-card">
@@ -203,7 +232,7 @@
             <small style="color: var(--green);">Set: -20.0°C</small>
           </div>
         </div>
-        <button class="btn btn-secondary"><i class="fa-solid fa-sliders"></i> Ajustar Parametros Térmicos</button>
+        <button class="btn btn-secondary"><i class="fa-solid fa-sliders"></i> Ajustar Parámetros Térmicos</button>
       </div>
     </div>
 
@@ -217,7 +246,7 @@
       </div>
     </div>
 
-    <!-- Panel para agregar nuevos clientes -->
+    <!-- Panel de Gestión Administrador -->
     <div class="admin-panel">
       <small style="color: var(--subtext);">¿Querés dar de alta una nueva infraestructura?</small>
       <button class="btn btn-secondary" onclick="nuevoCliente()"><i class="fa-solid fa-plus"></i> Registrar Nuevo Edificio / Empresa</button>
@@ -233,18 +262,17 @@
     let clienteActual = 'don_felix';
     let estadoBomba = false;
 
-    // Conectar eventos dinámicos
     function cargarCliente(clienteId) {
       clienteActual = clienteId;
       
-      // Escuchar Telemetría de Agua
+      // Escuchar Nivel de Agua
       db.ref(`/clientes/${clienteActual}/telemetria/agua/tanque_superior_pct`).on('value', (snap) => {
         const val = snap.val() || 0;
         document.getElementById('nivelAgua').innerText = val;
         document.getElementById('waterFill').style.height = val + '%';
       });
 
-      // Escuchar Bomba
+      // Escuchar Estado Bomba
       db.ref(`/clientes/${clienteActual}/telemetria/agua/bomba_1_estado`).on('value', (snap) => {
         estadoBomba = snap.val();
         const btn = document.getElementById('btnBomba');
@@ -262,13 +290,13 @@
       db.ref(`/clientes/${clienteActual}/telemetria/agua/bomba_1_estado`).set(!estadoBomba);
     }
 
-    function verModulo(mod) {
+    function verModulo(mod, e) {
       document.getElementById('mod-agua').style.display = mod === 'agua' ? 'block' : 'none';
       document.getElementById('mod-frio').style.display = mod === 'frio' ? 'block' : 'none';
       document.getElementById('mod-energia').style.display = mod === 'energia' ? 'block' : 'none';
 
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      event.currentTarget.classList.add('active');
+      if(e) e.currentTarget.classList.add('active');
     }
 
     function nuevoCliente() {
@@ -284,7 +312,12 @@
       }
     }
 
-    // Inicializar
+    // Registrar Service Worker para PWA instalable
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Error:', err));
+    }
+
+    // Carga Inicial
     cargarCliente('don_felix');
   </script>
 </body>
