@@ -85,6 +85,26 @@
 
     .container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
 
+    /* BANDEROLA GLOBAL DE CRÍTICO */
+    .global-alert-banner {
+      display: none;
+      background: var(--red);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 800;
+      text-align: center;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+      animation: pulse-red 1s infinite alternate;
+    }
+
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+      100% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.9); }
+    }
+
     .module-nav {
       display: flex;
       gap: 10px;
@@ -104,12 +124,25 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      position: relative;
     }
 
     .tab-btn.active {
       border-color: var(--accent);
       color: var(--accent);
       background: rgba(56, 189, 248, 0.1);
+    }
+
+    .tab-btn.has-alarm::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background: var(--red);
+      border-radius: 50%;
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      box-shadow: 0 0 6px var(--red);
     }
 
     .card {
@@ -124,12 +157,6 @@
     .card-alarm {
       background-color: #3b0707 !important;
       border: 2px solid var(--red) !important;
-      animation: pulse-red 1s infinite alternate;
-    }
-
-    @keyframes pulse-red {
-      0% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
-      100% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.9); }
     }
 
     .card-header {
@@ -143,8 +170,7 @@
 
     .card-title { font-weight: 700; font-size: 1.1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
 
-    /* Estilos Módulo Ascensor */
-    .elevator-grid {
+    .elevator-grid, .temp-grid, .energy-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
@@ -157,10 +183,6 @@
       border-radius: 12px;
       padding: 15px;
       text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
     }
 
     .floor-number {
@@ -179,6 +201,19 @@
       text-align: center;
     }
 
+    .stat-val { font-size: 2.2rem; font-weight: 800; }
+    .temp-cold { color: #38bdf8; }
+    .temp-freeze { color: #818cf8; }
+    .energy-val { color: #f59e0b; }
+
+    .status-box {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 20px; border-radius: 12px; background: #0f172a; border: 1px solid var(--border); text-align: center; gap: 10px;
+    }
+    .status-icon { font-size: 3.5rem; }
+    .status-ok { color: var(--green); }
+    .status-critico { color: var(--red); }
+
     .btn {
       width: 100%; padding: 14px; border: none; border-radius: 10px;
       font-weight: 700; cursor: pointer; margin-top: 15px;
@@ -188,14 +223,6 @@
     .btn-off { background: var(--red); color: white; }
     .btn-secondary { background: #334155; color: white; margin-top: 10px; }
     .btn-danger { background: var(--red); color: white; margin-top: 10px; }
-
-    .status-box {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 20px; border-radius: 12px; background: #0f172a; border: 1px solid var(--border); text-align: center; gap: 10px;
-    }
-    .status-icon { font-size: 3.5rem; }
-    .status-ok { color: var(--green); }
-    .status-critico { color: var(--red); }
 
     .admin-panel {
       margin-top: 20px; padding: 16px; background: rgba(255,255,255,0.02);
@@ -218,28 +245,50 @@
   </div>
 
   <div class="container">
-    <!-- NAVEGACIÓN MÓDULOS -->
+    <!-- BANNER DE ALERTA GLOBAL -->
+    <div class="global-alert-banner" id="bannerAlerta">
+      <span><i class="fa-solid fa-triangle-exclamation"></i> <span id="textoAlertaGlobal">¡FALLA DETECTADA EN EL SISTEMA!</span></span>
+      <button onclick="silenciarAlarma()" style="background: rgba(0,0,0,0.3); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight:700; cursor:pointer;">Silenciar</button>
+    </div>
+
+    <!-- BARRA NAVEGADORA DE MÓDULOS -->
     <div class="module-nav">
-      <button class="tab-btn active" onclick="verModulo('ascensor', event)"><i class="fa-solid fa-elevator"></i> Ascensores</button>
-      <button class="tab-btn" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Suministro Agua</button>
+      <button class="tab-btn active" id="tab-agua" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Agua</button>
+      <button class="tab-btn" id="tab-ascensor" onclick="verModulo('ascensor', event)"><i class="fa-solid fa-elevator"></i> Ascensores</button>
+      <button class="tab-btn" id="tab-frio" onclick="verModulo('frio', event)"><i class="fa-solid fa-snowflake"></i> Frío Industrial</button>
+      <button class="tab-btn" id="tab-energia" onclick="verModulo('energia', event)"><i class="fa-solid fa-plug"></i> Energía</button>
       <button class="tab-btn" onclick="verModulo('hardware', event)"><i class="fa-solid fa-microchip"></i> Hardware ESP32</button>
     </div>
 
-    <!-- MÓDULO ASCENSORES -->
-    <div id="mod-ascensor">
+    <!-- 1. MÓDULO AGUA -->
+    <div id="mod-agua">
+      <div class="card" id="tarjetaAgua">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-water"></i> Tanque de Agua (Boya)</div>
+          <small id="badgeAgua" style="color: var(--green); font-weight:700;">OK</small>
+        </div>
+        <div class="status-box">
+          <div class="status-icon" id="iconoBoya"><i class="fa-solid fa-circle-check status-ok"></i></div>
+          <h2 id="textoAgua">Suministro Normal</h2>
+          <p id="subtextoAgua" style="color: var(--subtext); font-size: 0.9rem;">Nivel de agua por encima del 50%</p>
+        </div>
+        <button id="btnBomba" class="btn btn-off" onclick="toggleBomba()">CARGANDO...</button>
+      </div>
+    </div>
+
+    <!-- 2. MÓDULO ASCENSORES -->
+    <div id="mod-ascensor" style="display: none;">
       <div class="card" id="tarjetaAscensor">
         <div class="card-header">
           <div class="card-title"><i class="fa-solid fa-elevator"></i> Ascensor Principal</div>
           <small id="badgeAscensor" style="color: var(--green); font-weight:700;">OPERATIVO</small>
         </div>
-
         <div class="elevator-grid">
           <div class="floor-display">
             <small style="color: var(--subtext);">PISO ACTUAL</small>
             <div class="floor-number" id="pisoActual">--</div>
-            <small style="color: var(--accent);" id="dirMovimiento"><i class="fa-solid fa-arrows-up-down"></i> Detenido</small>
+            <small style="color: var(--accent);" id="dirMovimiento">Detenido</small>
           </div>
-
           <div style="display: flex; flex-direction: column; gap: 10px;">
             <div class="stat-card">
               <small style="color: var(--subtext);">Serie Puertas</small>
@@ -251,43 +300,59 @@
             </div>
           </div>
         </div>
-
-        <button id="btnMuteAscensor" class="btn btn-secondary" style="display: none;" onclick="silenciarAlarma()">
-          <i class="fa-solid fa-volume-xmark"></i> Silenciar Alerta Sonora
-        </button>
-
-        <button id="btnMantenimiento" class="btn btn-secondary" onclick="toggleMantenimiento()">
-          <i class="fa-solid fa-wrench"></i> MODO MANTENIMIENTO
-        </button>
+        <button id="btnMantenimiento" class="btn btn-secondary" onclick="toggleMantenimiento()"><i class="fa-solid fa-wrench"></i> MODO MANTENIMIENTO</button>
       </div>
     </div>
 
-    <!-- MÓDULO AGUA -->
-    <div id="mod-agua" style="display: none;">
-      <div class="card" id="tarjetaAgua">
+    <!-- 3. MÓDULO FRÍO INDUSTRIAL -->
+    <div id="mod-frio" style="display: none;">
+      <div class="card">
         <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-water"></i> Nivel Tanque (Boya)</div>
-          <small id="badgeEstado" style="color: var(--green); font-weight:700;">SISTEMA OK</small>
+          <div class="card-title"><i class="fa-solid fa-temperature-arrow-down"></i> Cámaras Frigoríficas</div>
         </div>
-        <div class="status-box">
-          <div class="status-icon" id="iconoBoya"><i class="fa-solid fa-circle-check status-ok"></i></div>
-          <h2 id="textoEstado">Suministro Normal</h2>
-          <p id="subtextoEstado" style="color: var(--subtext); font-size: 0.9rem;">Nivel por encima del 50%</p>
+        <div class="temp-grid">
+          <div class="stat-card">
+            <small style="color: var(--subtext);">Cámara Lácteos</small>
+            <div class="stat-val temp-cold"><span id="tempCamara1">--</span>°C</div>
+          </div>
+          <div class="stat-card">
+            <small style="color: var(--subtext);">Congelados</small>
+            <div class="stat-val temp-freeze"><span id="tempCamara2">--</span>°C</div>
+          </div>
         </div>
-        <button id="btnBomba" class="btn btn-off" onclick="toggleBomba()">CARGANDO...</button>
       </div>
     </div>
 
-    <!-- HARDWARE -->
+    <!-- 4. MÓDULO ENERGÍA -->
+    <div id="mod-energia" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-bolt"></i> Telemetría Eléctrica</div>
+        </div>
+        <div class="energy-grid">
+          <div class="stat-card">
+            <small style="color: var(--subtext);">Tensión Red</small>
+            <div class="stat-val energy-val"><span id="voltaje">220</span>V</div>
+          </div>
+          <div class="stat-card">
+            <small style="color: var(--subtext);">Potencia Total</small>
+            <div class="stat-val energy-val"><span id="potencia">3.2</span>kW</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. HARDWARE -->
     <div id="mod-hardware" style="display: none;">
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-microchip"></i> Dispositivos Asignados</div>
+          <div class="card-title"><i class="fa-solid fa-microchip"></i> Dispositivos ESP32</div>
         </div>
         <div id="listaDispositivos"><p style="color: var(--subtext); text-align: center;">Cargando...</p></div>
       </div>
     </div>
 
+    <!-- ADMINISTRACIÓN -->
     <div class="admin-panel">
       <small style="color: var(--subtext);">Gestión de Infraestructura</small>
       <div style="display: flex; gap: 10px; margin-top: 10px;">
@@ -303,10 +368,15 @@
     const db = firebase.database();
 
     let clienteActual = '';
+    let estadoBomba = false;
     let modoMantenimiento = false;
     let audioCtx = null;
     let alarmInterval = null;
     let alarmaSilenciada = false;
+
+    // Estado global de fallas para la sirena en 2do plano
+    let fallaAgua = false;
+    let fallaAscensor = false;
 
     function sonarAlarma() {
       if (alarmaSilenciada) return;
@@ -322,9 +392,32 @@
       osc.stop(audioCtx.currentTime + 0.3);
     }
 
-    function iniciarSirena() { if (!alarmInterval) alarmInterval = setInterval(sonarAlarma, 800); }
-    function detenerSirena() { if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; } }
-    function silenciarAlarma() { alarmaSilenciada = true; detenerSirena(); document.getElementById('btnMuteAscensor').style.display = 'none'; }
+    function evaluarAlertasGlobales() {
+      const banner = document.getElementById('bannerAlerta');
+      const textoBanner = document.getElementById('textoAlertaGlobal');
+
+      if (fallaAgua || fallaAscensor) {
+        banner.style.display = 'flex';
+        if (fallaAgua && fallaAscensor) textoBanner.innerText = "¡CRÍTICO: FALLA EN AGUA Y ASCENSOR!";
+        else if (fallaAgua) textoBanner.innerText = "¡ALERTA CRÍTICA: NIVEL DE AGUA BAJO (BOYA)!";
+        else if (fallaAscensor) textoBanner.innerText = "¡ALERTA TÉCNICA: PARADA DE ASCENSOR!";
+
+        if (!alarmInterval && !alarmaSilenciada) {
+          alarmInterval = setInterval(sonarAlarma, 800);
+        }
+      } else {
+        banner.style.display = 'none';
+        if (alarmInterval) {
+          clearInterval(alarmInterval);
+          alarmInterval = null;
+        }
+      }
+    }
+
+    function silenciarAlarma() {
+      alarmaSilenciada = true;
+      if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
+    }
 
     db.ref('/clientes').on('value', (snapshot) => {
       const picker = document.getElementById('selectCliente');
@@ -339,9 +432,7 @@
         picker.appendChild(option);
       });
 
-      if (!clienteActual || !clientes[clienteActual]) {
-        clienteActual = Object.keys(clientes)[0];
-      }
+      if (!clienteActual || !clientes[clienteActual]) clienteActual = Object.keys(clientes)[0];
       picker.value = clienteActual;
       cargarCliente(clienteActual);
     });
@@ -349,59 +440,88 @@
     function cargarCliente(clienteId) {
       if(!clienteId) return;
       clienteActual = clienteId;
+      alarmaSilenciada = false;
 
-      // 1. Escuchar Telemetría del Ascensor
+      // 1. Telemetría de Agua (Boya)
+      db.ref(`/clientes/${clienteActual}/telemetria/agua/boya_bajo_50`).on('value', (snap) => {
+        fallaAgua = snap.val() || false;
+        const tarjeta = document.getElementById('tarjetaAgua');
+        const tab = document.getElementById('tab-agua');
+        
+        if (fallaAgua) {
+          tarjeta.className = "card card-alarm";
+          tab.classList.add('has-alarm');
+          document.getElementById('iconoBoya').innerHTML = '<i class="fa-solid fa-triangle-exclamation status-critico"></i>';
+          document.getElementById('textoAgua').innerText = "¡NIVEL CRÍTICO BAJO!";
+          document.getElementById('badgeAgua').innerText = "CRÍTICO";
+          document.getElementById('badgeAgua').style.color = "var(--red)";
+        } else {
+          tarjeta.className = "card";
+          tab.classList.remove('has-alarm');
+          document.getElementById('iconoBoya').innerHTML = '<i class="fa-solid fa-circle-check status-ok"></i>';
+          document.getElementById('textoAgua').innerText = "Suministro Normal";
+          document.getElementById('badgeAgua').innerText = "OK";
+          document.getElementById('badgeAgua').style.color = "var(--green)";
+        }
+        evaluarAlertasGlobales();
+      });
+
+      // 2. Telemetría de Ascensor
       db.ref(`/clientes/${clienteActual}/telemetria/ascensor`).on('value', (snap) => {
         const data = snap.val() || {};
+        fallaAscensor = data.falla || false;
+        
         document.getElementById('pisoActual').innerText = data.piso !== undefined ? data.piso : 'PB';
         document.getElementById('dirMovimiento').innerText = data.movimiento || 'Detenido';
         document.getElementById('estadoPuerta').innerText = data.puertas || 'CERRADAS';
-        
-        const tarjeta = document.getElementById('tarjetaAscensor');
-        const badge = document.getElementById('badgeAscensor');
-        const btnMute = document.getElementById('btnMuteAscensor');
 
-        if (data.falla) {
+        const tarjeta = document.getElementById('tarjetaAscensor');
+        const tab = document.getElementById('tab-ascensor');
+
+        if (fallaAscensor) {
           tarjeta.className = "card card-alarm";
-          badge.innerText = "¡FALLA TÉCNICA!";
-          badge.style.color = "var(--red)";
-          btnMute.style.display = 'flex';
-          iniciarSirena();
+          tab.classList.add('has-alarm');
+          document.getElementById('badgeAscensor').innerText = "¡FALLA TÉCNICA!";
+          document.getElementById('badgeAscensor').style.color = "var(--red)";
         } else {
           tarjeta.className = "card";
-          badge.innerText = "OPERATIVO";
-          badge.style.color = "var(--green)";
-          btnMute.style.display = 'none';
-          detenerSirena();
+          tab.classList.remove('has-alarm');
+          document.getElementById('badgeAscensor').innerText = "OPERATIVO";
+          document.getElementById('badgeAscensor').style.color = "var(--green)";
         }
+        evaluarAlertasGlobales();
       });
 
-      // 2. Escuchar Modo Mantenimiento
-      db.ref(`/clientes/${clienteActual}/telemetria/ascensor/mantenimiento`).on('value', (snap) => {
-        modoMantenimiento = snap.val() || false;
-        const btn = document.getElementById('btnMantenimiento');
-        const modoLabel = document.getElementById('modoTablero');
-        if (modoMantenimiento) {
-          btn.className = "btn btn-off";
-          btn.innerHTML = '<i class="fa-solid fa-wrench"></i> EN MANTENIMIENTO';
-          modoLabel.innerText = "MANTENIMIENTO";
-          modoLabel.style.color = "var(--warning)";
+      // 3. Bomba de Agua
+      db.ref(`/clientes/${clienteActual}/telemetria/agua/bomba_1_estado`).on('value', (snap) => {
+        estadoBomba = snap.val();
+        const btn = document.getElementById('btnBomba');
+        if(estadoBomba) {
+          btn.className = "btn btn-on";
+          btn.innerHTML = '<i class="fa-solid fa-power-off"></i> BOMBA ACTIVADA';
         } else {
-          btn.className = "btn btn-secondary";
-          btn.innerHTML = '<i class="fa-solid fa-wrench"></i> MODO MANTENIMIENTO';
-          modoLabel.innerText = "AUTOMÁTICO";
-          modoLabel.style.color = "var(--accent)";
+          btn.className = "btn btn-off";
+          btn.innerHTML = '<i class="fa-solid fa-power-off"></i> BOMBA APAGADA';
         }
+      });
+
+      // 4. Cámaras Frigoríficas
+      db.ref(`/clientes/${clienteActual}/telemetria/frio/camara_1_temp`).on('value', snap => {
+        document.getElementById('tempCamara1').innerText = snap.val() || '2.4';
+      });
+      db.ref(`/clientes/${clienteActual}/telemetria/frio/camara_2_temp`).on('value', snap => {
+        document.getElementById('tempCamara2').innerText = snap.val() || '-18.2';
       });
     }
 
-    function toggleMantenimiento() {
-      db.ref(`/clientes/${clienteActual}/telemetria/ascensor/mantenimiento`).set(!modoMantenimiento);
-    }
+    function toggleBomba() { db.ref(`/clientes/${clienteActual}/telemetria/agua/bomba_1_estado`).set(!estadoBomba); }
+    function toggleMantenimiento() { db.ref(`/clientes/${clienteActual}/telemetria/ascensor/mantenimiento`).set(!modoMantenimiento); }
 
     function verModulo(mod, e) {
-      document.getElementById('mod-ascensor').style.display = mod === 'ascensor' ? 'block' : 'none';
       document.getElementById('mod-agua').style.display = mod === 'agua' ? 'block' : 'none';
+      document.getElementById('mod-ascensor').style.display = mod === 'ascensor' ? 'block' : 'none';
+      document.getElementById('mod-frio').style.display = mod === 'frio' ? 'block' : 'none';
+      document.getElementById('mod-energia').style.display = mod === 'energia' ? 'block' : 'none';
       document.getElementById('mod-hardware').style.display = mod === 'hardware' ? 'block' : 'none';
 
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -415,17 +535,16 @@
         db.ref(`/clientes/${id}`).set({
           nombre: nombre,
           telemetria: {
-            ascensor: { piso: "PB", movimiento: "Detenido", puertas: "CERRADAS", falla: false, mantenimiento: false },
-            agua: { boya_bajo_50: false, bomba_1_estado: false }
+            agua: { boya_bajo_50: false, bomba_1_estado: false },
+            ascensor: { piso: "PB", movimiento: "Detenido", puertas: "CERRADAS", falla: false },
+            frio: { camara_1_temp: 3.0, camara_2_temp: -20.0 }
           }
         });
       }
     }
 
     function eliminarClienteActual() {
-      if (confirm(`¿Borrar "${clienteActual}"?`)) {
-        db.ref(`/clientes/${clienteActual}`).remove();
-      }
+      if (confirm(`¿Borrar "${clienteActual}"?`)) db.ref(`/clientes/${clienteActual}`).remove();
     }
   </script>
 </body>
