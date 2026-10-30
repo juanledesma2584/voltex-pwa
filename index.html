@@ -7,37 +7,24 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   
-  <!-- Tailwind CSS Framework -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Firebase JavaScript SDKs v8 -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
 
   <style>
-    body { 
-      background-color: #0f172a; 
-      color: #f8fafc; 
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
-    }
-    .card-glow-red { 
-      box-shadow: 0 0 20px rgba(239, 68, 68, 0.35); 
-      border-color: rgba(239, 68, 68, 0.6);
-    }
-    .card-glow-yellow { 
-      box-shadow: 0 0 20px rgba(234, 179, 8, 0.35); 
-      border-color: rgba(234, 179, 8, 0.6);
-    }
-    .card-glow-green { 
-      box-shadow: 0 0 15px rgba(34, 197, 94, 0.25); 
-      border-color: rgba(30, 41, 59, 1);
-    }
+    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    .card-glow-red { box-shadow: 0 0 20px rgba(239, 68, 68, 0.35); border-color: rgba(239, 68, 68, 0.6); }
+    .card-glow-yellow { box-shadow: 0 0 20px rgba(234, 179, 8, 0.35); border-color: rgba(234, 179, 8, 0.6); }
+    .card-glow-green { box-shadow: 0 0 15px rgba(34, 197, 94, 0.25); border-color: rgba(30, 41, 59, 1); }
   </style>
 </head>
 <body class="pb-24 min-h-screen">
 
-  <!-- ENCABEZADO PRINCIPAL DE LA PWA -->
+  <!-- ENCABEZADO -->
   <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 p-4 sticky top-0 z-50 flex justify-between items-center shadow-lg">
     <div class="flex items-center space-x-3">
       <div id="indicador-conexion" class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" title="Conectado a Firebase"></div>
@@ -46,30 +33,27 @@
         <p class="text-[10px] text-slate-400 font-medium tracking-wider uppercase mt-0.5">Telemetría Industrial IoT</p>
       </div>
     </div>
-    <div class="flex items-center space-x-2">
-      <span class="text-xs bg-slate-800 text-slate-300 font-semibold px-3 py-1 rounded-full border border-slate-700 shadow-inner">
-        Juan Ledesma
-      </span>
-    </div>
+    <span class="text-xs bg-slate-800 text-slate-300 font-semibold px-3 py-1 rounded-full border border-slate-700 shadow-inner">
+      Juan Ledesma
+    </span>
   </header>
 
   <!-- CONTENIDO PRINCIPAL -->
   <main class="p-4 max-w-md mx-auto space-y-5">
 
-    <!-- BARRA DE SELECCIÓN Y FILTROS POR RUBRO -->
+    <!-- FILTROS POR RUBRO -->
     <section>
       <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-2">Filtrar por Rubro</p>
       <div class="grid grid-cols-4 gap-2 text-xs font-bold text-center">
-        <button onclick="filtrarRubro('todos')" id="btn-todos" class="py-2.5 rounded-xl bg-amber-500 text-slate-950 shadow-md transition-all active:scale-95">Todos</button>
-        <button onclick="filtrarRubro('agua')" id="btn-agua" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all active:scale-95">Agua</button>
-        <button onclick="filtrarRubro('frio')" id="btn-frio" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all active:scale-95">Frío</button>
-        <button onclick="filtrarRubro('ascensores')" id="btn-ascensores" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all active:scale-95">Ascensores</button>
+        <button onclick="filtrarRubro('todos')" id="btn-todos" class="py-2.5 rounded-xl bg-amber-500 text-slate-950 shadow-md transition-all">Todos</button>
+        <button onclick="filtrarRubro('agua')" id="btn-agua" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all">Agua</button>
+        <button onclick="filtrarRubro('frio')" id="btn-frio" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all">Frío</button>
+        <button onclick="filtrarRubro('ascensores')" id="btn-ascensores" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all">Ascensores</button>
       </div>
     </section>
 
-    <!-- PANEL PRINCIPAL DE TELEMETRÍA EN VIVO (DON FÉLIX) -->
+    <!-- MONITOR DE AGUA EN VIVO (DON FÉLIX) -->
     <section id="panel-don-felix" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 transition-all duration-500 card-glow-green relative overflow-hidden">
-      
       <div class="flex justify-between items-start mb-4">
         <div>
           <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block mb-1">Módulo Nivel de Agua</span>
@@ -80,7 +64,6 @@
         </span>
       </div>
 
-      <!-- ESTADO VISUAL Y BARRAS DE PROGRESO DE TANQUE -->
       <div class="space-y-3 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80">
         <div class="flex justify-between items-center text-sm">
           <span class="text-slate-400 font-medium">Estado del Tanque:</span>
@@ -109,31 +92,18 @@
       </div>
     </section>
 
-    <!-- LISTADO SECUNDARIO DE CLIENTES DE LA BASE DE DATOS -->
+    <!-- LISTADO DINÁMICO DE TODOS LOS CLIENTES (DESDE FIREBASE) -->
     <section class="space-y-3">
       <h3 class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Instalaciones Monitoreadas</h3>
       <div id="lista-clientes" class="space-y-3">
-        <!-- Generado dinámicamente desde /clientes_lista/ -->
+        <!-- Se renderiza dinámicamente desde /clientes_lista/ -->
       </div>
     </section>
 
   </main>
 
-  <!-- NAVEGACIÓN INFERIOR (TAB BAR) -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 p-2 flex justify-around items-center text-xs text-slate-400 z-50">
-    <button class="flex flex-col items-center py-1 text-amber-500 font-bold">
-      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-      Telemetría
-    </button>
-    <button class="flex flex-col items-center py-1 hover:text-slate-200 transition">
-      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-      Alertas
-    </button>
-  </nav>
-
-  <!-- LÓGICA COMPLETA DE FIREBASE Y PWA -->
+  <!-- LÓGICA JAVASCRIPT PRINCIPAL -->
   <script>
-    // 1. Inicialización de Firebase RTDB
     const firebaseConfig = {
       databaseURL: "https://voltex-iot-default-rtdb.firebaseio.com"
     };
@@ -144,29 +114,20 @@
     let rubroActual = 'todos';
     let clientesData = {};
 
-    // 2. Registro de Service Worker para Notificaciones Push
+    // 1. Registro del Service Worker para Notificaciones Push Escandalosas
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then((reg) => {
-            console.log('Service Worker registrado correctamente:', reg.scope);
-          })
-          .catch((err) => {
-            console.error('Error al registrar Service Worker:', err);
-          });
+          .then((reg) => console.log('Service Worker activo:', reg.scope))
+          .catch((err) => console.error('Error Service Worker:', err));
       });
     }
 
-    // Solicitar permiso explícito para Notificaciones del Sistema
     if ('Notification' in window) {
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          console.log('Permiso de notificaciones push concedido.');
-        }
-      });
+      Notification.requestPermission();
     }
 
-    // 3. Telemetría en Tiempo Real para Don Félix
+    // 2. Escucha en Tiempo Real para la Telemetría de Don Félix (Agua)
     db.ref('/clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
       const data = snapshot.val() || {};
       const boyaMedio = data.boya_medio_tanque || false;
@@ -184,42 +145,36 @@
       textoHora.innerText = 'Act. ' + horaActual;
 
       if (boyaFalta) {
-        // Estado Crítico: Sin Agua (0%)
         panel.className = "bg-slate-900 border rounded-2xl p-5 transition-all duration-500 card-glow-red relative overflow-hidden";
         badge.className = "text-xs font-black px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/40 uppercase tracking-wider animate-pulse";
         badge.innerText = "¡CRÍTICO!";
         textoNivel.className = "font-bold text-red-400";
         textoNivel.innerText = "TANQUE VACÍO (0%)";
         barra.className = "bg-red-500 h-2 rounded-full w-1/12 transition-all duration-700 ease-out";
-        
         indMedio.className = "w-2.5 h-2.5 rounded-full bg-red-500";
         indVacio.className = "w-2.5 h-2.5 rounded-full bg-red-500 animate-ping";
       } else if (boyaMedio) {
-        // Estado Preventivo: Medio Tanque (< 50%)
         panel.className = "bg-slate-900 border rounded-2xl p-5 transition-all duration-500 card-glow-yellow relative overflow-hidden";
         badge.className = "text-xs font-black px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 uppercase tracking-wider";
         badge.innerText = "ALERTA";
         textoNivel.className = "font-bold text-amber-400";
         textoNivel.innerText = "MEDIO TANQUE (< 50%)";
         barra.className = "bg-amber-500 h-2 rounded-full w-1/2 transition-all duration-700 ease-out";
-
         indMedio.className = "w-2.5 h-2.5 rounded-full bg-amber-500";
         indVacio.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
       } else {
-        // Estado Normal: Tanque Lleno (> 50%)
         panel.className = "bg-slate-900 border rounded-2xl p-5 transition-all duration-500 card-glow-green relative overflow-hidden";
         badge.className = "text-xs font-black px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider";
         badge.innerText = "NORMAL";
         textoNivel.className = "font-bold text-emerald-400";
         textoNivel.innerText = "Correcto (> 50%)";
         barra.className = "bg-emerald-500 h-2 rounded-full w-full transition-all duration-700 ease-out";
-
         indMedio.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
         indVacio.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
       }
     });
 
-    // 4. Lectura y Renderizado de Lista de Clientes desde /clientes_lista/
+    // 3. Carga Automática e Inalterable de la Lista de Clientes desde /clientes_lista/
     db.ref('/clientes_lista').on('value', (snapshot) => {
       clientesData = snapshot.val() || {};
       renderizarClientes();
@@ -232,9 +187,9 @@
       botones.forEach(b => {
         const btn = document.getElementById(`btn-${b}`);
         if (b === rubro) {
-          btn.className = "py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold shadow-md transition-all active:scale-95";
+          btn.className = "py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold shadow-md transition-all";
         } else {
-          btn.className = "py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all active:scale-95";
+          btn.className = "py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all";
         }
       });
 
@@ -255,12 +210,12 @@
       Object.keys(clientesData).forEach(key => {
         const cliente = clientesData[key];
 
-        // Filtro por selección de rubro
+        // Filtrar por rubro activo
         if (rubroActual !== 'todos' && !cliente[rubroActual]) {
           return;
         }
 
-        // Excluir a Don Félix del listado secundario si estamos viendo Agua/Todos
+        // Si es Don Félix y estamos en Agua o Todos, omitir del listado secundario para no duplicar
         if (key === 'don_felix' && (rubroActual === 'todos' || rubroActual === 'agua')) return;
 
         const card = document.createElement('div');
