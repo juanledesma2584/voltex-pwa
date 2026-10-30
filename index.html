@@ -13,7 +13,6 @@
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
 
   <style>
     body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
@@ -43,9 +42,14 @@
 
     <!-- FILTROS POR RUBRO -->
     <section>
-      <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-2">Filtrar por Rubro</p>
+      <div class="flex justify-between items-center mb-2">
+        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Filtrar por Rubro</p>
+        <button onclick="abrirModal()" class="text-xs bg-amber-500 text-slate-950 font-bold px-2.5 py-1 rounded-lg hover:bg-amber-400 transition">
+          + Agregar Cliente
+        </button>
+      </div>
       <div class="grid grid-cols-4 gap-2 text-xs font-bold text-center">
-        <button onclick="filtrarRubro('todos')" id="btn-todos" class="py-2.5 rounded-xl bg-amber-500 text-slate-950 shadow-md transition-all">Todos</button>
+        <button onclick="filtrarRubro('todos')" id="btn-todos" class="py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold shadow-md transition-all">Todos</button>
         <button onclick="filtrarRubro('agua')" id="btn-agua" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all">Agua</button>
         <button onclick="filtrarRubro('frio')" id="btn-frio" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all">Frío</button>
         <button onclick="filtrarRubro('ascensores')" id="btn-ascensores" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all">Ascensores</button>
@@ -92,15 +96,50 @@
       </div>
     </section>
 
-    <!-- LISTADO DINÁMICO DE TODOS LOS CLIENTES (DESDE FIREBASE) -->
+    <!-- LISTADO DINÁMICO DE TODOS LOS CLIENTES -->
     <section class="space-y-3">
       <h3 class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Instalaciones Monitoreadas</h3>
       <div id="lista-clientes" class="space-y-3">
-        <!-- Se renderiza dinámicamente desde /clientes_lista/ -->
+        <!-- Renderizado dinámico -->
       </div>
     </section>
 
   </main>
+
+  <!-- MODAL PARA AGREGAR NUEVA EMPRESA -->
+  <div id="modal-cliente" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 w-full max-w-sm space-y-4">
+      <h3 class="text-lg font-bold text-slate-100">Agregar Nueva Empresa</h3>
+      
+      <div>
+        <label class="text-xs text-slate-400 block mb-1">Nombre de la Empresa / Cliente</label>
+        <input type="text" id="nuevo-nombre" placeholder="Ej. Vesna Ascensores" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+      </div>
+
+      <div>
+        <label class="text-xs text-slate-400 block mb-2">Rubros Monitoreados</label>
+        <div class="space-y-2 text-sm text-slate-300">
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" id="check-agua" class="rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-0">
+            <span>Tanques de Agua</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" id="check-frio" class="rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-0">
+            <span>Sistemas de Frío / Chillers</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" id="check-ascensores" class="rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-0">
+            <span>Ascensores</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex justify-end space-x-2 pt-2">
+        <button onclick="cerrarModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold hover:bg-slate-700">Cancelar</button>
+        <button onclick="guardarCliente()" class="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold hover:bg-amber-400">Guardar</button>
+      </div>
+    </div>
+  </div>
 
   <!-- LÓGICA JAVASCRIPT PRINCIPAL -->
   <script>
@@ -114,20 +153,7 @@
     let rubroActual = 'todos';
     let clientesData = {};
 
-    // 1. Registro del Service Worker para Notificaciones Push Escandalosas
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then((reg) => console.log('Service Worker activo:', reg.scope))
-          .catch((err) => console.error('Error Service Worker:', err));
-      });
-    }
-
-    if ('Notification' in window) {
-      Notification.requestPermission();
-    }
-
-    // 2. Escucha en Tiempo Real para la Telemetría de Don Félix (Agua)
+    // Escucha de Telemetría para Don Félix
     db.ref('/clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
       const data = snapshot.val() || {};
       const boyaMedio = data.boya_medio_tanque || false;
@@ -174,7 +200,7 @@
       }
     });
 
-    // 3. Carga Automática e Inalterable de la Lista de Clientes desde /clientes_lista/
+    // Carga de la Lista de Clientes
     db.ref('/clientes_lista').on('value', (snapshot) => {
       clientesData = snapshot.val() || {};
       renderizarClientes();
@@ -210,12 +236,7 @@
       Object.keys(clientesData).forEach(key => {
         const cliente = clientesData[key];
 
-        // Filtrar por rubro activo
-        if (rubroActual !== 'todos' && !cliente[rubroActual]) {
-          return;
-        }
-
-        // Si es Don Félix y estamos en Agua o Todos, omitir del listado secundario para no duplicar
+        if (rubroActual !== 'todos' && !cliente[rubroActual]) return;
         if (key === 'don_felix' && (rubroActual === 'todos' || rubroActual === 'agua')) return;
 
         const card = document.createElement('div');
@@ -227,16 +248,62 @@
         if (cliente.ascensores) rubroTexto.push('Ascensores');
 
         card.innerHTML = `
-          <div>
+          <div onclick="verDetalleCliente('${key}')" class="cursor-pointer flex-1">
             <h4 class="font-bold text-slate-200 text-base">${cliente.nombre || key}</h4>
             <p class="text-xs text-slate-400 mt-0.5">${rubroTexto.join(' • ')}</p>
           </div>
-          <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-lg border border-slate-700/80 font-medium">
-            Monitoreado
-          </span>
+          <button onclick="eliminarCliente('${key}')" class="text-xs bg-red-500/10 text-red-400 border border-red-500/20 px-2.5 py-1 rounded-lg hover:bg-red-500/20 transition ml-2">
+            Eliminar
+          </button>
         `;
         contenedor.appendChild(card);
       });
+    }
+
+    // Funciones del Modal y Gestión de Clientes
+    function abrirModal() {
+      document.getElementById('modal-cliente').classList.remove('hidden');
+    }
+
+    function cerrarModal() {
+      document.getElementById('modal-cliente').classList.add('hidden');
+      document.getElementById('nuevo-nombre').value = '';
+      document.getElementById('check-agua').checked = false;
+      document.getElementById('check-frio').checked = false;
+      document.getElementById('check-ascensores').checked = false;
+    }
+
+    function guardarCliente() {
+      const nombre = document.getElementById('nuevo-nombre').value.trim();
+      const agua = document.getElementById('check-agua').checked;
+      const frio = document.getElementById('check-frio').checked;
+      const ascensores = document.getElementById('check-ascensores').checked;
+
+      if (!nombre) {
+        alert("Por favor ingrese el nombre del cliente o empresa.");
+        return;
+      }
+
+      const key = nombre.toLowerCase().replace(/[^a-z0-0]/g, '_');
+
+      db.ref('/clientes_lista/' + key).set({
+        nombre: nombre,
+        agua: agua,
+        frio: frio,
+        ascensores: ascensores
+      }).then(() => {
+        cerrarModal();
+      });
+    }
+
+    function eliminarCliente(key) {
+      if (confirm(`¿Desea eliminar la empresa de la lista?`)) {
+        db.ref('/clientes_lista/' + key).remove();
+      }
+    }
+
+    function verDetalleCliente(key) {
+      alert(`Detalle de ${clientesData[key]?.nombre || key}:\nEsperando conexión del hardware de telemetría para este módulo.`);
     }
   </script>
 </body>
