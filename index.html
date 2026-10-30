@@ -3,501 +3,286 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VOLTEX IoT</title>
-  
+  <title>VOLTEX - Monitoreo IoT Industrial</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#090d16">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="theme-color" content="#0f172a">
+  
+  <!-- Tailwind CSS Framework -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Firebase JavaScript SDKs v8 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
 
   <style>
-    :root {
-      --bg: #090d16;
-      --card-bg: #151c2e;
-      --border: #232d42;
-      --accent: #38bdf8;
-      --green: #10b981;
-      --red: #ef4444;
-      --warning: #f59e0b;
-      --text: #f8fafc;
-      --subtext: #64748b;
+    body { 
+      background-color: #0f172a; 
+      color: #f8fafc; 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 16px;
+    .card-glow-red { 
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.35); 
+      border-color: rgba(239, 68, 68, 0.6);
     }
-
-    .top-bar {
-      width: 100%;
-      max-width: 500px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      background: var(--card-bg);
-      padding: 12px 16px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
+    .card-glow-yellow { 
+      box-shadow: 0 0 20px rgba(234, 179, 8, 0.35); 
+      border-color: rgba(234, 179, 8, 0.6);
     }
-
-    .brand {
-      font-size: 1.3rem;
-      font-weight: 900;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .card-glow-green { 
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.25); 
+      border-color: rgba(30, 41, 59, 1);
     }
-
-    .btn-back {
-      background: rgba(56, 189, 248, 0.1);
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; }
-
-    .menu-grid { display: flex; flex-direction: column; gap: 12px; }
-
-    .header-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-    .menu-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px;
-      color: var(--text);
-      font-size: 1.1rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    .btn-admin {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px dashed var(--green);
-      color: var(--green);
-      padding: 12px;
-      border-radius: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .client-item-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 16px;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .tags-container { display: flex; gap: 6px; }
-
-    .tag-rubro {
-      font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-weight: 800;
-    }
-
-    .tag-agua { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
-    .tag-frio { background: rgba(56, 189, 248, 0.2); color: var(--accent); }
-    .tag-ascensor { background: rgba(167, 243, 208, 0.2); color: #a7f3d0; }
-
-    /* ESTILOS DEL FORMULARIO Y ABM DE CLIENTES */
-    .modal-form {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 16px;
-      border-radius: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .input-text {
-      width: 100%;
-      padding: 12px;
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 1rem;
-    }
-
-    .checkbox-group {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      font-size: 0.95rem;
-      font-weight: 700;
-    }
-
-    .btn-save {
-      background: var(--accent);
-      color: #000;
-      border: none;
-      padding: 12px;
-      border-radius: 8px;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .btn-delete {
-      background: rgba(239, 68, 68, 0.2);
-      color: var(--red);
-      border: 1px solid var(--red);
-      padding: 6px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    /* PANTALLA DETALLE CLIENTE */
-    .metrics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .phases-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-
-    .stat-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100px;
-    }
-
-    .phase-card {
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 6px;
-      text-align: center;
-    }
-
-    .bomba-list {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .bomba-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      background: #0f172a;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-    }
-
-    .status-pill { font-weight: 900; padding: 4px 12px; border-radius: 6px; font-size: 0.9rem; }
-    .status-on { background: rgba(16, 185, 129, 0.2); color: var(--green); border: 1px solid var(--green); }
-    .status-off { background: rgba(100, 116, 139, 0.2); color: var(--subtext); border: 1px solid var(--border); }
   </style>
 </head>
-<body>
+<body class="pb-24 min-h-screen">
 
-  <div class="top-bar">
-    <div class="brand">
-      <i class="fa-solid fa-bolt" style="color:var(--accent);"></i>
-      <span id="tituloBarra">Voltex IoT</span>
-    </div>
-    <button class="btn-back" id="btnVolver" onclick="mostrarMenuPrincipal()" style="display:none;"><i class="fa-solid fa-arrow-left"></i> Volver</button>
-  </div>
-
-  <div class="container">
-
-    <!-- 1. PANTALLA PRINCIPAL -->
-    <div id="vistaPrincipal" class="menu-grid">
-      <div class="header-row">
-        <button class="menu-btn" onclick="verClientes()"><i class="fa-solid fa-users"></i> Clientes</button>
-        <button class="menu-btn" onclick="verAlertas()"><i class="fa-solid fa-bell" style="color:var(--warning);"></i> Alertas</button>
+  <!-- ENCABEZADO PRINCIPAL DE LA PWA -->
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 p-4 sticky top-0 z-50 flex justify-between items-center shadow-lg">
+    <div class="flex items-center space-x-3">
+      <div id="indicador-conexion" class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" title="Conectado a Firebase"></div>
+      <div>
+        <h1 class="text-xl font-black tracking-wider text-amber-500 leading-none">VOLTEX</h1>
+        <p class="text-[10px] text-slate-400 font-medium tracking-wider uppercase mt-0.5">Telemetría Industrial IoT</p>
       </div>
+    </div>
+    <div class="flex items-center space-x-2">
+      <span class="text-xs bg-slate-800 text-slate-300 font-semibold px-3 py-1 rounded-full border border-slate-700 shadow-inner">
+        Juan Ledesma
+      </span>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="p-4 max-w-md mx-auto space-y-5">
+
+    <!-- BARRA DE SELECCIÓN Y FILTROS POR RUBRO -->
+    <section>
+      <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-2">Filtrar por Rubro</p>
+      <div class="grid grid-cols-4 gap-2 text-xs font-bold text-center">
+        <button onclick="filtrarRubro('todos')" id="btn-todos" class="py-2.5 rounded-xl bg-amber-500 text-slate-950 shadow-md transition-all active:scale-95">Todos</button>
+        <button onclick="filtrarRubro('agua')" id="btn-agua" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all active:scale-95">Agua</button>
+        <button onclick="filtrarRubro('frio')" id="btn-frio" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all active:scale-95">Frío</button>
+        <button onclick="filtrarRubro('ascensores')" id="btn-ascensores" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all active:scale-95">Ascensores</button>
+      </div>
+    </section>
+
+    <!-- PANEL PRINCIPAL DE TELEMETRÍA EN VIVO (DON FÉLIX) -->
+    <section id="panel-don-felix" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 transition-all duration-500 card-glow-green relative overflow-hidden">
       
-      <!-- BOTONES DE FILTRADO POR RUBRO -->
-      <button class="menu-btn" onclick="filtrarModulo('frio')"><i class="fa-solid fa-snowflake" style="color:var(--accent);"></i> Frío</button>
-      <button class="menu-btn" onclick="filtrarModulo('agua')"><i class="fa-solid fa-droplet" style="color:#60a5fa;"></i> Agua</button>
-      <button class="menu-btn" onclick="filtrarModulo('ascensores')"><i class="fa-solid fa-elevator" style="color:#a7f3d0;"></i> Ascensores</button>
-    </div>
-
-    <!-- 2. PANTALLA LISTA DE CLIENTES FILTRADA / ADMINISTRABLE -->
-    <div id="vistaClientes" style="display:none;" class="menu-grid">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="color:var(--subtext);" id="subtituloClientes">Clientes:</h3>
-        <button class="btn-admin" onclick="toggleFormNuevoCliente()"><i class="fa-solid fa-plus"></i> Nuevo Cliente</button>
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block mb-1">Módulo Nivel de Agua</span>
+          <h2 class="font-extrabold text-xl text-slate-100">Don Félix</h2>
+        </div>
+        <span id="badge-estado" class="text-xs font-black px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider">
+          NORMAL
+        </span>
       </div>
 
-      <!-- FORMULARIO DE ALTA / EDICION DE CLIENTE -->
-      <div id="formCliente" class="modal-form" style="display:none;">
-        <h4 style="color:var(--accent);">Agregar / Editar Cliente</h4>
-        <input type="text" id="nuevoNombre" class="input-text" placeholder="Nombre de la empresa (Ej: Don Felix)">
-        <input type="text" id="nuevaKey" class="input-text" placeholder="Identificador único sin espacios (Ej: don_felix)">
-        
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <small style="color:var(--subtext); font-weight:700;">Rubros Contratados:</small>
-          <div class="checkbox-group">
-            <label><input type="checkbox" id="chkAgua"> Agua</label>
-            <label><input type="checkbox" id="chkFrio"> Frío</label>
-            <label><input type="checkbox" id="chkAscensores"> Ascensores</label>
+      <!-- ESTADO VISUAL Y BARRAS DE PROGRESO DE TANQUE -->
+      <div class="space-y-3 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80">
+        <div class="flex justify-between items-center text-sm">
+          <span class="text-slate-400 font-medium">Estado del Tanque:</span>
+          <span id="texto-nivel-agua" class="font-bold text-emerald-400">Correcto (> 50%)</span>
+        </div>
+
+        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden p-0.5 border border-slate-700/50">
+          <div id="barra-progreso" class="bg-emerald-500 h-2 rounded-full w-full transition-all duration-700 ease-out"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80 text-xs">
+          <div class="flex items-center space-x-2">
+            <div id="indicador-boya-50" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+            <span class="text-slate-300">Boya 50% (Medio)</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div id="indicador-boya-vacio" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+            <span class="text-slate-300">Boya Vacío (Crítico)</span>
           </div>
         </div>
-
-        <button class="btn-save" onclick="guardarCliente()">Guardar Cliente</button>
       </div>
 
-      <!-- CONTENEDOR DINAMICO DE CLIENTES -->
-      <div id="listaClientesDinamica" class="menu-grid">
-        <!-- Se llena automáticamente con Firebase -->
+      <div class="mt-3 flex justify-between items-center text-[11px] text-slate-500">
+        <span>Hardware: ESP32 NodeMCU</span>
+        <span id="ultima-actualizacion">Actualizado en vivo</span>
       </div>
-    </div>
+    </section>
 
-    <!-- 3. PANTALLA DETALLE DEL CLIENTE: DON FELIX (AGUA) -->
-    <div id="vistaDetalleCliente" style="display:none;" class="menu-grid">
-      <div class="metrics-row">
-        <div class="stat-card" id="cardNivelAgua">
-          <small style="color:var(--subtext); font-weight:700;">NIVEL AGUA</small>
-          <div style="font-size: 1.1rem; font-weight: 900; margin-top: 6px;" id="txtNivelAgua">Cargando...</div>
-        </div>
-        <div class="stat-card" id="cardSaludRed">
-          <small style="color:var(--subtext); font-weight:700;">SALUD TRIFÁSICA</small>
-          <div style="font-size: 1.2rem; font-weight: 900; margin-top: 4px;" id="txtDesbalance">0.0%</div>
-          <span style="font-size: 0.8rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; margin-top: 6px; background:rgba(16,185,129,0.2); color:var(--green);" id="badgeSaludRed">BALANCED</span>
-        </div>
+    <!-- LISTADO SECUNDARIO DE CLIENTES DE LA BASE DE DATOS -->
+    <section class="space-y-3">
+      <h3 class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Instalaciones Monitoreadas</h3>
+      <div id="lista-clientes" class="space-y-3">
+        <!-- Generado dinámicamente desde /clientes_lista/ -->
       </div>
+    </section>
 
-      <div class="bomba-list" style="gap:8px;">
-        <h4 style="color:var(--subtext); font-size:0.9rem;">Consumo por Fase (380V):</h4>
-        <div class="phases-row">
-          <div class="phase-card"><small style="color:var(--accent); font-weight:800;">FASE R</small><div style="font-size: 1.2rem; font-weight: 900; margin-top:4px;" id="txtAmpR">0.0 A</div></div>
-          <div class="phase-card"><small style="color:var(--accent); font-weight:800;">FASE S</small><div style="font-size: 1.2rem; font-weight: 900; margin-top:4px;" id="txtAmpS">0.0 A</div></div>
-          <div class="phase-card"><small style="color:var(--accent); font-weight:800;">FASE T</small><div style="font-size: 1.2rem; font-weight: 900; margin-top:4px;" id="txtAmpT">0.0 A</div></div>
-        </div>
-      </div>
+  </main>
 
-      <div class="bomba-list">
-        <h4 style="color:var(--subtext);">Estado de Bombas:</h4>
-        <div class="bomba-item"><span><i class="fa-solid fa-circle" id="dotBomba1" style="color:var(--subtext); margin-right:8px;"></i> <strong>Bomba 1 (2 HP)</strong></span><span class="status-pill status-off" id="badgeBomba1">OFF</span></div>
-        <div class="bomba-item"><span><i class="fa-solid fa-circle" id="dotBomba2" style="color:var(--subtext); margin-right:8px;"></i> <strong>Bomba 2 (1 HP)</strong></span><span class="status-pill status-off" id="badgeBomba2">OFF</span></div>
-        <div class="bomba-item"><span><i class="fa-solid fa-circle" id="dotBomba3" style="color:var(--subtext); margin-right:8px;"></i> <strong>Bomba 3 (1 HP)</strong></span><span class="status-pill status-off" id="badgeBomba3">OFF</span></div>
-      </div>
-    </div>
+  <!-- NAVEGACIÓN INFERIOR (TAB BAR) -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 p-2 flex justify-around items-center text-xs text-slate-400 z-50">
+    <button class="flex flex-col items-center py-1 text-amber-500 font-bold">
+      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Telemetría
+    </button>
+    <button class="flex flex-col items-center py-1 hover:text-slate-200 transition">
+      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+      Alertas
+    </button>
+  </nav>
 
-  </div>
-
+  <!-- LÓGICA COMPLETA DE FIREBASE Y PWA -->
   <script>
-    const firebaseConfig = { databaseURL: "https://voltex-iot-default-rtdb.firebaseio.com/" };
+    // 1. Inicialización de Firebase RTDB
+    const firebaseConfig = {
+      databaseURL: "https://voltex-iot-default-rtdb.firebaseio.com"
+    };
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let clientesGlobal = {};
-    let filtroActual = 'todos';
+    let rubroActual = 'todos';
+    let clientesData = {};
 
-    // Inicializar lectura en vivo de clientes
-    db.ref('/clientes_lista').on('value', (snap) => {
-      clientesGlobal = snap.val() || {};
+    // 2. Registro de Service Worker para Notificaciones Push
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => {
+            console.log('Service Worker registrado correctamente:', reg.scope);
+          })
+          .catch((err) => {
+            console.error('Error al registrar Service Worker:', err);
+          });
+      });
+    }
+
+    // Solicitar permiso explícito para Notificaciones del Sistema
+    if ('Notification' in window) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          console.log('Permiso de notificaciones push concedido.');
+        }
+      });
+    }
+
+    // 3. Telemetría en Tiempo Real para Don Félix
+    db.ref('/clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
+      const data = snapshot.val() || {};
+      const boyaMedio = data.boya_medio_tanque || false;
+      const boyaFalta = data.boya_falta_agua || false;
+
+      const panel = document.getElementById('panel-don-felix');
+      const badge = document.getElementById('badge-estado');
+      const textoNivel = document.getElementById('texto-nivel-agua');
+      const barra = document.getElementById('barra-progreso');
+      const indMedio = document.getElementById('indicador-boya-50');
+      const indVacio = document.getElementById('indicador-boya-vacio');
+      const textoHora = document.getElementById('ultima-actualizacion');
+
+      const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      textoHora.innerText = 'Act. ' + horaActual;
+
+      if (boyaFalta) {
+        // Estado Crítico: Sin Agua (0%)
+        panel.className = "bg-slate-900 border rounded-2xl p-5 transition-all duration-500 card-glow-red relative overflow-hidden";
+        badge.className = "text-xs font-black px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/40 uppercase tracking-wider animate-pulse";
+        badge.innerText = "¡CRÍTICO!";
+        textoNivel.className = "font-bold text-red-400";
+        textoNivel.innerText = "TANQUE VACÍO (0%)";
+        barra.className = "bg-red-500 h-2 rounded-full w-1/12 transition-all duration-700 ease-out";
+        
+        indMedio.className = "w-2.5 h-2.5 rounded-full bg-red-500";
+        indVacio.className = "w-2.5 h-2.5 rounded-full bg-red-500 animate-ping";
+      } else if (boyaMedio) {
+        // Estado Preventivo: Medio Tanque (< 50%)
+        panel.className = "bg-slate-900 border rounded-2xl p-5 transition-all duration-500 card-glow-yellow relative overflow-hidden";
+        badge.className = "text-xs font-black px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 uppercase tracking-wider";
+        badge.innerText = "ALERTA";
+        textoNivel.className = "font-bold text-amber-400";
+        textoNivel.innerText = "MEDIO TANQUE (< 50%)";
+        barra.className = "bg-amber-500 h-2 rounded-full w-1/2 transition-all duration-700 ease-out";
+
+        indMedio.className = "w-2.5 h-2.5 rounded-full bg-amber-500";
+        indVacio.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
+      } else {
+        // Estado Normal: Tanque Lleno (> 50%)
+        panel.className = "bg-slate-900 border rounded-2xl p-5 transition-all duration-500 card-glow-green relative overflow-hidden";
+        badge.className = "text-xs font-black px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider";
+        badge.innerText = "NORMAL";
+        textoNivel.className = "font-bold text-emerald-400";
+        textoNivel.innerText = "Correcto (> 50%)";
+        barra.className = "bg-emerald-500 h-2 rounded-full w-full transition-all duration-700 ease-out";
+
+        indMedio.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
+        indVacio.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
+      }
+    });
+
+    // 4. Lectura y Renderizado de Lista de Clientes desde /clientes_lista/
+    db.ref('/clientes_lista').on('value', (snapshot) => {
+      clientesData = snapshot.val() || {};
       renderizarClientes();
     });
 
-    function mostrarMenuPrincipal() {
-      document.getElementById('vistaPrincipal').style.display = 'flex';
-      document.getElementById('vistaClientes').style.display = 'none';
-      document.getElementById('vistaDetalleCliente').style.display = 'none';
-      document.getElementById('btnVolver').style.display = 'none';
-      document.getElementById('tituloBarra').innerText = 'Voltex IoT';
-    }
+    function filtrarRubro(rubro) {
+      rubroActual = rubro;
+      const botones = ['todos', 'agua', 'frio', 'ascensores'];
+      
+      botones.forEach(b => {
+        const btn = document.getElementById(`btn-${b}`);
+        if (b === rubro) {
+          btn.className = "py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold shadow-md transition-all active:scale-95";
+        } else {
+          btn.className = "py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all active:scale-95";
+        }
+      });
 
-    function verClientes() {
-      filtroActual = 'todos';
-      document.getElementById('subtituloClientes').innerText = "Todos los Clientes:";
-      mostrarVistaClientes();
-    }
-
-    function filtrarModulo(rubro) {
-      filtroActual = rubro;
-      document.getElementById('subtituloClientes').innerText = `Clientes de ${rubro.toUpperCase()}:`;
-      mostrarVistaClientes();
-    }
-
-    function mostrarVistaClientes() {
-      document.getElementById('vistaPrincipal').style.display = 'none';
-      document.getElementById('vistaClientes').style.display = 'flex';
-      document.getElementById('vistaDetalleCliente').style.display = 'none';
-      document.getElementById('btnVolver').style.display = 'block';
-      document.getElementById('tituloBarra').innerText = 'Clientes';
       renderizarClientes();
     }
 
     function renderizarClientes() {
-      const contenedor = document.getElementById('listaClientesDinamica');
+      const contenedor = document.getElementById('lista-clientes');
       contenedor.innerHTML = '';
 
-      Object.keys(clientesGlobal).forEach(key => {
-        const c = clientesGlobal[key];
-
-        // Verificar filtro
-        if (filtroActual !== 'todos' && !c[filtroActual]) return;
-
-        let tagsHTML = '';
-        if (c.agua) tagsHTML += '<span class="tag-rubro tag-agua">Agua</span>';
-        if (c.frio) tagsHTML += '<span class="tag-rubro tag-frio">Frío</span>';
-        if (c.ascensores) tagsHTML += '<span class="tag-rubro tag-ascensor">Ascensor</span>';
-
-        const item = document.createElement('div');
-        item.className = 'client-item-btn';
-        item.innerHTML = `
-          <div onclick="abrirCliente('${key}')" style="flex:1;">
-            <div>${c.nombre}</div>
-            <div class="tags-container" style="margin-top:6px;">${tagsHTML}</div>
-          </div>
-          <button class="btn-delete" onclick="eliminarCliente('${key}')"><i class="fa-solid fa-trash"></i></button>
-        `;
-        contenedor.appendChild(item);
-      });
-    }
-
-    function toggleFormNuevoCliente() {
-      const f = document.getElementById('formCliente');
-      f.style.display = f.style.display === 'none' ? 'flex' : 'none';
-    }
-
-    function guardarCliente() {
-      const nombre = document.getElementById('nuevoNombre').value.trim();
-      const key = document.getElementById('nuevaKey').value.trim().toLowerCase().replace(/\s+/g, '_');
-      const agua = document.getElementById('chkAgua').checked;
-      const frio = document.getElementById('chkFrio').checked;
-      const ascensores = document.getElementById('chkAscensores').checked;
-
-      if (!nombre || !key) {
-        alert("Completá el nombre y la clave del cliente.");
-        return;
-      }
-
-      db.ref(`/clientes_lista/${key}`).set({
-        nombre: nombre,
-        agua: agua,
-        frio: frio,
-        ascensores: ascensores
-      }).then(() => {
-        document.getElementById('nuevoNombre').value = '';
-        document.getElementById('nuevaKey').value = '';
-        toggleFormNuevoCliente();
-      });
-    }
-
-    function eliminarCliente(key) {
-      if (confirm(`¿Dar de baja a este cliente?`)) {
-        db.ref(`/clientes_lista/${key}`).remove();
-      }
-    }
-
-    function abrirCliente(clienteKey) {
-      document.getElementById('vistaClientes').style.display = 'none';
-      document.getElementById('vistaDetalleCliente').style.display = 'flex';
-      document.getElementById('btnVolver').style.display = 'block';
-      document.getElementById('tituloBarra').innerText = clientesGlobal[clienteKey]?.nombre || 'Cliente';
-
-      if (clienteKey === 'don_felix') escucharDonFelix();
-    }
-
-    function escucharDonFelix() {
-      db.ref('/clientes/don_felix/telemetria/agua').on('value', (snap) => {
-        const data = snap.val() || {};
-        
-        const boyaMedioTanque = data.boya_medio_tanque || false;
-        const boyaFaltaAgua = data.boya_falta_agua || false;
-
-        const cardAgua = document.getElementById('cardNivelAgua');
-        const txtAgua = document.getElementById('txtNivelAgua');
-
-        if (boyaFaltaAgua) {
-          cardAgua.className = "stat-card card-alarm";
-          txtAgua.innerText = "¡SIN AGUA!";
-          txtAgua.style.color = "var(--red)";
-        } else if (boyaMedioTanque) {
-          cardAgua.className = "stat-card card-warning";
-          txtAgua.innerText = "MEDIO TANQUE";
-          txtAgua.style.color = "var(--warning)";
-        } else {
-          cardAgua.className = "stat-card";
-          txtAgua.innerText = "Nivel Agua OK";
-          txtAgua.style.color = "var(--green)";
-        }
-
-        const ampR = parseFloat(data.amp_fase_r || 0.0);
-        const ampS = parseFloat(data.amp_fase_s || 0.0);
-        const ampT = parseFloat(data.amp_fase_t || 0.0);
-
-        document.getElementById('txtAmpR').innerText = ampR.toFixed(1) + " A";
-        document.getElementById('txtAmpS').innerText = ampS.toFixed(1) + " A";
-        document.getElementById('txtAmpT').innerText = ampT.toFixed(1) + " A";
-
-        const promedio = (ampR + ampS + ampT) / 3.0;
-        let desbalancePct = 0.0;
-
-        if (promedio > 0.3) {
-          const maxDev = Math.max(Math.abs(ampR - promedio), Math.abs(ampS - promedio), Math.abs(ampT - promedio));
-          desbalancePct = (maxDev / promedio) * 100.0;
-        }
-
-        document.getElementById('txtDesbalance').innerText = desbalancePct.toFixed(1) + "%";
-
-        actualizarBomba(1, promedio >= 3.0);
-        actualizarBomba(2, promedio >= 4.5);
-        actualizarBomba(3, promedio >= 6.0);
-      });
-    }
-
-    function actualizarBomba(num, encendido) {
-      const dot = document.getElementById(`dotBomba${num}`);
-      const badge = document.getElementById(`badgeBomba${num}`);
-      if (encendido) {
-        dot.style.color = "var(--green)";
-        badge.className = "status-pill status-on";
-        badge.innerText = "ON";
+      const panelDonFelix = document.getElementById('panel-don-felix');
+      if (rubroActual === 'todos' || rubroActual === 'agua') {
+        panelDonFelix.style.display = 'block';
       } else {
-        dot.style.color = "var(--subtext)";
-        badge.className = "status-pill status-off";
-        badge.innerText = "OFF";
+        panelDonFelix.style.display = 'none';
       }
-    }
 
-    function verAlertas() { alert("Vista de Alertas Globales de Voltex IoT"); }
+      Object.keys(clientesData).forEach(key => {
+        const cliente = clientesData[key];
+
+        // Filtro por selección de rubro
+        if (rubroActual !== 'todos' && !cliente[rubroActual]) {
+          return;
+        }
+
+        // Excluir a Don Félix del listado secundario si estamos viendo Agua/Todos
+        if (key === 'don_felix' && (rubroActual === 'todos' || rubroActual === 'agua')) return;
+
+        const card = document.createElement('div');
+        card.className = 'bg-slate-900/90 border border-slate-800/80 rounded-xl p-4 flex justify-between items-center shadow-md';
+        
+        let rubroTexto = [];
+        if (cliente.agua) rubroTexto.push('Agua');
+        if (cliente.frio) rubroTexto.push('Frío');
+        if (cliente.ascensores) rubroTexto.push('Ascensores');
+
+        card.innerHTML = `
+          <div>
+            <h4 class="font-bold text-slate-200 text-base">${cliente.nombre || key}</h4>
+            <p class="text-xs text-slate-400 mt-0.5">${rubroTexto.join(' • ')}</p>
+          </div>
+          <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-lg border border-slate-700/80 font-medium">
+            Monitoreado
+          </span>
+        `;
+        contenedor.appendChild(card);
+      });
+    }
   </script>
 </body>
 </html>
