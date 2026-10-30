@@ -72,17 +72,9 @@
 
     .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; }
 
-    .menu-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .menu-grid { display: flex; flex-direction: column; gap: 12px; }
 
-    .header-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+    .header-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
     .menu-btn {
       background: var(--card-bg);
@@ -100,18 +92,98 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
-    /* FILA SUPERIOR MÉRITAS DUALES Y MONITOREO DE FASES */
-    .metrics-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .btn-admin {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px dashed var(--green);
+      color: var(--green);
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .client-item-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .tags-container { display: flex; gap: 6px; }
+
+    .tag-rubro {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 800;
+    }
+
+    .tag-agua { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+    .tag-frio { background: rgba(56, 189, 248, 0.2); color: var(--accent); }
+    .tag-ascensor { background: rgba(167, 243, 208, 0.2); color: #a7f3d0; }
+
+    /* ESTILOS DEL FORMULARIO Y ABM DE CLIENTES */
+    .modal-form {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
       gap: 12px;
     }
 
-    .phases-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
+    .input-text {
+      width: 100%;
+      padding: 12px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
     }
+
+    .checkbox-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .btn-save {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--red);
+      border: 1px solid var(--red);
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* PANTALLA DETALLE CLIENTE */
+    .metrics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .phases-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 
     .stat-card {
       background: var(--card-bg);
@@ -134,16 +206,6 @@
       text-align: center;
     }
 
-    .stat-card.card-warning, .phase-card.card-warning {
-      border-color: var(--warning) !important;
-      background: rgba(245, 158, 11, 0.1) !important;
-    }
-
-    .stat-card.card-alarm, .phase-card.card-alarm {
-      border-color: var(--red) !important;
-      background: rgba(239, 68, 68, 0.15) !important;
-    }
-
     .bomba-list {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -164,39 +226,9 @@
       border: 1px solid var(--border);
     }
 
-    .status-pill {
-      font-weight: 900;
-      padding: 4px 12px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-
+    .status-pill { font-weight: 900; padding: 4px 12px; border-radius: 6px; font-size: 0.9rem; }
     .status-on { background: rgba(16, 185, 129, 0.2); color: var(--green); border: 1px solid var(--green); }
     .status-off { background: rgba(100, 116, 139, 0.2); color: var(--subtext); border: 1px solid var(--border); }
-
-    .client-item-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 16px;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text);
-      text-align: left;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .health-badge {
-      font-size: 0.8rem;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 6px;
-      margin-top: 6px;
-      display: inline-block;
-    }
   </style>
 </head>
 <body>
@@ -217,90 +249,73 @@
         <button class="menu-btn" onclick="verClientes()"><i class="fa-solid fa-users"></i> Clientes</button>
         <button class="menu-btn" onclick="verAlertas()"><i class="fa-solid fa-bell" style="color:var(--warning);"></i> Alertas</button>
       </div>
+      
+      <!-- BOTONES DE FILTRADO POR RUBRO -->
       <button class="menu-btn" onclick="filtrarModulo('frio')"><i class="fa-solid fa-snowflake" style="color:var(--accent);"></i> Frío</button>
       <button class="menu-btn" onclick="filtrarModulo('agua')"><i class="fa-solid fa-droplet" style="color:#60a5fa;"></i> Agua</button>
       <button class="menu-btn" onclick="filtrarModulo('ascensores')"><i class="fa-solid fa-elevator" style="color:#a7f3d0;"></i> Ascensores</button>
     </div>
 
-    <!-- 2. PANTALLA LISTA DE CLIENTES -->
+    <!-- 2. PANTALLA LISTA DE CLIENTES FILTRADA / ADMINISTRABLE -->
     <div id="vistaClientes" style="display:none;" class="menu-grid">
-      <h3 style="color:var(--subtext); margin-bottom:8px;">Seleccionar Cliente:</h3>
-      <div class="client-item-btn" onclick="abrirCliente('don_felix')">
-        <span>Don Felix (Pozos)</span> <i class="fa-solid fa-chevron-right"></i>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="color:var(--subtext);" id="subtituloClientes">Clientes:</h3>
+        <button class="btn-admin" onclick="toggleFormNuevoCliente()"><i class="fa-solid fa-plus"></i> Nuevo Cliente</button>
       </div>
-      <div class="client-item-btn" onclick="abrirCliente('vesna')">
-        <span>Vesna (Ascensor Monarch)</span> <i class="fa-solid fa-chevron-right"></i>
+
+      <!-- FORMULARIO DE ALTA / EDICION DE CLIENTE -->
+      <div id="formCliente" class="modal-form" style="display:none;">
+        <h4 style="color:var(--accent);">Agregar / Editar Cliente</h4>
+        <input type="text" id="nuevoNombre" class="input-text" placeholder="Nombre de la empresa (Ej: Don Felix)">
+        <input type="text" id="nuevaKey" class="input-text" placeholder="Identificador único sin espacios (Ej: don_felix)">
+        
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <small style="color:var(--subtext); font-weight:700;">Rubros Contratados:</small>
+          <div class="checkbox-group">
+            <label><input type="checkbox" id="chkAgua"> Agua</label>
+            <label><input type="checkbox" id="chkFrio"> Frío</label>
+            <label><input type="checkbox" id="chkAscensores"> Ascensores</label>
+          </div>
+        </div>
+
+        <button class="btn-save" onclick="guardarCliente()">Guardar Cliente</button>
       </div>
-      <div class="client-item-btn" onclick="abrirCliente('pollos')">
-        <span>Pollos (Frío Industrial)</span> <i class="fa-solid fa-chevron-right"></i>
+
+      <!-- CONTENEDOR DINAMICO DE CLIENTES -->
+      <div id="listaClientesDinamica" class="menu-grid">
+        <!-- Se llena automáticamente con Firebase -->
       </div>
     </div>
 
-    <!-- 3. PANTALLA DETALLE DEL CLIENTE: DON FELIX -->
+    <!-- 3. PANTALLA DETALLE DEL CLIENTE: DON FELIX (AGUA) -->
     <div id="vistaDetalleCliente" style="display:none;" class="menu-grid">
-      
-      <!-- ESTADO DE AGUA Y SALUD DE RED TRIFÁSICA -->
       <div class="metrics-row">
-        <!-- NIVEL AGUA -->
         <div class="stat-card" id="cardNivelAgua">
           <small style="color:var(--subtext); font-weight:700;">NIVEL AGUA</small>
           <div style="font-size: 1.1rem; font-weight: 900; margin-top: 6px;" id="txtNivelAgua">Cargando...</div>
         </div>
-
-        <!-- INDICADOR DE DESBALANCE TRIFÁSICO -->
         <div class="stat-card" id="cardSaludRed">
           <small style="color:var(--subtext); font-weight:700;">SALUD TRIFÁSICA</small>
           <div style="font-size: 1.2rem; font-weight: 900; margin-top: 4px;" id="txtDesbalance">0.0%</div>
-          <span class="health-badge" id="badgeSaludRed" style="background:rgba(16,185,129,0.2); color:var(--green);">BALANCED</span>
+          <span style="font-size: 0.8rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; margin-top: 6px; background:rgba(16,185,129,0.2); color:var(--green);" id="badgeSaludRed">BALANCED</span>
         </div>
       </div>
 
-      <!-- MONITOREO DE LAS 3 FASES INDIVIDUALES (R - S - T) -->
       <div class="bomba-list" style="gap:8px;">
         <h4 style="color:var(--subtext); font-size:0.9rem;">Consumo por Fase (380V):</h4>
         <div class="phases-row">
-          
-          <!-- FASE R -->
-          <div class="phase-card" id="cardFaseR">
-            <small style="color:var(--accent); font-weight:800;">FASE R</small>
-            <div style="font-size: 1.2rem; font-weight: 900; margin-top:4px;" id="txtAmpR">0.0 A</div>
-          </div>
-
-          <!-- FASE S -->
-          <div class="phase-card" id="cardFaseS">
-            <small style="color:var(--accent); font-weight:800;">FASE S</small>
-            <div style="font-size: 1.2rem; font-weight: 900; margin-top:4px;" id="txtAmpS">0.0 A</div>
-          </div>
-
-          <!-- FASE T -->
-          <div class="phase-card" id="cardFaseT">
-            <small style="color:var(--accent); font-weight:800;">FASE T</small>
-            <div style="font-size: 1.2rem; font-weight: 900; margin-top:4px;" id="txtAmpT">0.0 A</div>
-          </div>
-
+          <div class="phase-card"><small style="color:var(--accent); font-weight:800;">FASE R</small><div style="font-size: 1.2rem; font-weight: 900; margin-top:4px;" id="txtAmpR">0.0 A</div></div>
+          <div class="phase-card"><small style="color:var(--accent); font-weight:800;">FASE S</small><div style="font-size: 1.2rem; font-weight: 900; margin-top:4px;" id="txtAmpS">0.0 A</div></div>
+          <div class="phase-card"><small style="color:var(--accent); font-weight:800;">FASE T</small><div style="font-size: 1.2rem; font-weight: 900; margin-top:4px;" id="txtAmpT">0.0 A</div></div>
         </div>
       </div>
 
-      <!-- ESTADO DE BOMBAS -->
       <div class="bomba-list">
         <h4 style="color:var(--subtext);">Estado de Bombas:</h4>
-        
-        <div class="bomba-item">
-          <span><i class="fa-solid fa-circle" id="dotBomba1" style="color:var(--subtext); margin-right:8px;"></i> <strong>Bomba 1 (2 HP)</strong></span>
-          <span class="status-pill status-off" id="badgeBomba1">OFF</span>
-        </div>
-
-        <div class="bomba-item">
-          <span><i class="fa-solid fa-circle" id="dotBomba2" style="color:var(--subtext); margin-right:8px;"></i> <strong>Bomba 2 (1 HP)</strong></span>
-          <span class="status-pill status-off" id="badgeBomba2">OFF</span>
-        </div>
-
-        <div class="bomba-item">
-          <span><i class="fa-solid fa-circle" id="dotBomba3" style="color:var(--subtext); margin-right:8px;"></i> <strong>Bomba 3 (1 HP)</strong></span>
-          <span class="status-pill status-off" id="badgeBomba3">OFF</span>
-        </div>
+        <div class="bomba-item"><span><i class="fa-solid fa-circle" id="dotBomba1" style="color:var(--subtext); margin-right:8px;"></i> <strong>Bomba 1 (2 HP)</strong></span><span class="status-pill status-off" id="badgeBomba1">OFF</span></div>
+        <div class="bomba-item"><span><i class="fa-solid fa-circle" id="dotBomba2" style="color:var(--subtext); margin-right:8px;"></i> <strong>Bomba 2 (1 HP)</strong></span><span class="status-pill status-off" id="badgeBomba2">OFF</span></div>
+        <div class="bomba-item"><span><i class="fa-solid fa-circle" id="dotBomba3" style="color:var(--subtext); margin-right:8px;"></i> <strong>Bomba 3 (1 HP)</strong></span><span class="status-pill status-off" id="badgeBomba3">OFF</span></div>
       </div>
-
     </div>
 
   </div>
@@ -309,6 +324,15 @@
     const firebaseConfig = { databaseURL: "https://voltex-iot-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+
+    let clientesGlobal = {};
+    let filtroActual = 'todos';
+
+    // Inicializar lectura en vivo de clientes
+    db.ref('/clientes_lista').on('value', (snap) => {
+      clientesGlobal = snap.val() || {};
+      renderizarClientes();
+    });
 
     function mostrarMenuPrincipal() {
       document.getElementById('vistaPrincipal').style.display = 'flex';
@@ -319,33 +343,102 @@
     }
 
     function verClientes() {
+      filtroActual = 'todos';
+      document.getElementById('subtituloClientes').innerText = "Todos los Clientes:";
+      mostrarVistaClientes();
+    }
+
+    function filtrarModulo(rubro) {
+      filtroActual = rubro;
+      document.getElementById('subtituloClientes').innerText = `Clientes de ${rubro.toUpperCase()}:`;
+      mostrarVistaClientes();
+    }
+
+    function mostrarVistaClientes() {
       document.getElementById('vistaPrincipal').style.display = 'none';
       document.getElementById('vistaClientes').style.display = 'flex';
       document.getElementById('vistaDetalleCliente').style.display = 'none';
       document.getElementById('btnVolver').style.display = 'block';
       document.getElementById('tituloBarra').innerText = 'Clientes';
+      renderizarClientes();
+    }
+
+    function renderizarClientes() {
+      const contenedor = document.getElementById('listaClientesDinamica');
+      contenedor.innerHTML = '';
+
+      Object.keys(clientesGlobal).forEach(key => {
+        const c = clientesGlobal[key];
+
+        // Verificar filtro
+        if (filtroActual !== 'todos' && !c[filtroActual]) return;
+
+        let tagsHTML = '';
+        if (c.agua) tagsHTML += '<span class="tag-rubro tag-agua">Agua</span>';
+        if (c.frio) tagsHTML += '<span class="tag-rubro tag-frio">Frío</span>';
+        if (c.ascensores) tagsHTML += '<span class="tag-rubro tag-ascensor">Ascensor</span>';
+
+        const item = document.createElement('div');
+        item.className = 'client-item-btn';
+        item.innerHTML = `
+          <div onclick="abrirCliente('${key}')" style="flex:1;">
+            <div>${c.nombre}</div>
+            <div class="tags-container" style="margin-top:6px;">${tagsHTML}</div>
+          </div>
+          <button class="btn-delete" onclick="eliminarCliente('${key}')"><i class="fa-solid fa-trash"></i></button>
+        `;
+        contenedor.appendChild(item);
+      });
+    }
+
+    function toggleFormNuevoCliente() {
+      const f = document.getElementById('formCliente');
+      f.style.display = f.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    function guardarCliente() {
+      const nombre = document.getElementById('nuevoNombre').value.trim();
+      const key = document.getElementById('nuevaKey').value.trim().toLowerCase().replace(/\s+/g, '_');
+      const agua = document.getElementById('chkAgua').checked;
+      const frio = document.getElementById('chkFrio').checked;
+      const ascensores = document.getElementById('chkAscensores').checked;
+
+      if (!nombre || !key) {
+        alert("Completá el nombre y la clave del cliente.");
+        return;
+      }
+
+      db.ref(`/clientes_lista/${key}`).set({
+        nombre: nombre,
+        agua: agua,
+        frio: frio,
+        ascensores: ascensores
+      }).then(() => {
+        document.getElementById('nuevoNombre').value = '';
+        document.getElementById('nuevaKey').value = '';
+        toggleFormNuevoCliente();
+      });
+    }
+
+    function eliminarCliente(key) {
+      if (confirm(`¿Dar de baja a este cliente?`)) {
+        db.ref(`/clientes_lista/${key}`).remove();
+      }
     }
 
     function abrirCliente(clienteKey) {
       document.getElementById('vistaClientes').style.display = 'none';
       document.getElementById('vistaDetalleCliente').style.display = 'flex';
       document.getElementById('btnVolver').style.display = 'block';
+      document.getElementById('tituloBarra').innerText = clientesGlobal[clienteKey]?.nombre || 'Cliente';
 
-      if (clienteKey === 'don_felix') {
-        document.getElementById('tituloBarra').innerText = 'Don Felix';
-        escucharDonFelix();
-      } else if (clienteKey === 'vesna') {
-        document.getElementById('tituloBarra').innerText = 'Vesna';
-      } else {
-        document.getElementById('tituloBarra').innerText = 'Pollos';
-      }
+      if (clienteKey === 'don_felix') escucharDonFelix();
     }
 
     function escucharDonFelix() {
       db.ref('/clientes/don_felix/telemetria/agua').on('value', (snap) => {
         const data = snap.val() || {};
         
-        // 1. Boyas de Agua
         const boyaMedioTanque = data.boya_medio_tanque || false;
         const boyaFaltaAgua = data.boya_falta_agua || false;
 
@@ -366,7 +459,6 @@
           txtAgua.style.color = "var(--green)";
         }
 
-        // 2. Corrientes por Fase (R, S, T)
         const ampR = parseFloat(data.amp_fase_r || 0.0);
         const ampS = parseFloat(data.amp_fase_s || 0.0);
         const ampT = parseFloat(data.amp_fase_t || 0.0);
@@ -375,7 +467,6 @@
         document.getElementById('txtAmpS').innerText = ampS.toFixed(1) + " A";
         document.getElementById('txtAmpT').innerText = ampT.toFixed(1) + " A";
 
-        // 3. Cálculo del Desbalance Trifásico
         const promedio = (ampR + ampS + ampT) / 3.0;
         let desbalancePct = 0.0;
 
@@ -386,37 +477,15 @@
 
         document.getElementById('txtDesbalance').innerText = desbalancePct.toFixed(1) + "%";
 
-        const cardSalud = document.getElementById('cardSaludRed');
-        const badgeSalud = document.getElementById('badgeSaludRed');
-
-        if (desbalancePct > 15.0) {
-          cardSalud.className = "stat-card card-alarm";
-          badgeSalud.innerText = "DESBALANCE CRÍTICO";
-          badgeSalud.style.background = "rgba(239, 68, 68, 0.2)";
-          badgeSalud.style.color = "var(--red)";
-        } else if (desbalancePct > 7.0) {
-          cardSalud.className = "stat-card card-warning";
-          badgeSalud.innerText = "DESBALANCE MODERADO";
-          badgeSalud.style.background = "rgba(245, 158, 11, 0.2)";
-          badgeSalud.style.color = "var(--warning)";
-        } else {
-          cardSalud.className = "stat-card";
-          badgeSalud.innerText = "BALANCED";
-          badgeSalud.style.background = "rgba(16, 185, 129, 0.2)";
-          badgeSalud.style.color = "var(--green)";
-        }
-
-        // 4. Estado de Bombas (Determinado por la corriente)
-        actualizarBomba(1, promedio >= 3.0); // Bomba de 2 HP (~3.25A)
-        actualizarBomba(2, promedio >= 4.5); // + Bomba 1 HP (~1.63A)
-        actualizarBomba(3, promedio >= 6.0); // + Bomba 1 HP (~1.63A)
+        actualizarBomba(1, promedio >= 3.0);
+        actualizarBomba(2, promedio >= 4.5);
+        actualizarBomba(3, promedio >= 6.0);
       });
     }
 
     function actualizarBomba(num, encendido) {
       const dot = document.getElementById(`dotBomba${num}`);
       const badge = document.getElementById(`badgeBomba${num}`);
-
       if (encendido) {
         dot.style.color = "var(--green)";
         badge.className = "status-pill status-on";
@@ -428,7 +497,6 @@
       }
     }
 
-    function filtrarModulo(mod) { alert("Filtrando módulo: " + mod.toUpperCase()); }
     function verAlertas() { alert("Vista de Alertas Globales de Voltex IoT"); }
   </script>
 </body>
