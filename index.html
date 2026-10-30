@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VOLTEX Enterprise IoT</title>
+  <title>VOLTEX IoT</title>
   
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#090d16">
@@ -40,309 +40,269 @@
 
     .top-bar {
       width: 100%;
-      max-width: 600px;
+      max-width: 500px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       background: var(--card-bg);
       padding: 12px 16px;
       border-radius: 14px;
       border: 1px solid var(--border);
     }
 
-    .brand { 
-      font-size: 1.4rem; 
-      font-weight: 900; 
-      color: var(--accent); 
-      letter-spacing: 1.5px; 
-      display: flex; 
-      align-items: center; 
-      gap: 10px; 
-    }
-
-    .brand-logo-svg {
-      width: 38px;
-      height: 38px;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid var(--accent);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
-    }
-
-    .client-picker {
-      background: var(--bg);
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-weight: 700;
-      outline: none;
-    }
-
-    .container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
-
-    .global-alert-banner {
-      display: none;
-      background: var(--red);
-      color: white;
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-weight: 800;
-      text-align: center;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
-      animation: pulse-red 1s infinite alternate;
-    }
-
-    @keyframes pulse-red {
-      0% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
-      100% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.9); }
-    }
-
-    .module-nav {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 5px;
-    }
-
-    .tab-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      color: var(--subtext);
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .tab-btn.active {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(56, 189, 248, 0.1);
-    }
-
-    .card {
-      background-color: var(--card-bg);
-      border-radius: 16px;
-      padding: 20px;
-      border: 1px solid var(--border);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-      margin-bottom: 15px;
-    }
-
-    .card-alarm {
-      background-color: #3b0707 !important;
-      border: 2px solid var(--red) !important;
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
-    }
-
-    .card-title { font-weight: 700; font-size: 1.1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
-
-    .status-box {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 20px; border-radius: 12px; background: #0f172a; border: 1px solid var(--border); text-align: center; gap: 10px;
-    }
-
-    .pozo-card {
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .amp-display {
-      font-size: 1.4rem;
+    .brand {
+      font-size: 1.3rem;
       font-weight: 900;
-      color: var(--warning);
-      background: rgba(245, 158, 11, 0.1);
-      padding: 6px 14px;
-      border-radius: 8px;
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .temp-grid {
+    .btn-back {
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; }
+
+    .menu-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .header-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
 
-    .stat-card {
-      background: #0f172a;
-      padding: 14px;
-      border-radius: 12px;
+    .menu-btn {
+      background: var(--card-bg);
       border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      color: var(--text);
+      font-size: 1.1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* FILA SUPERIOR MÉRITAS DUALES Y MONITOREO DE FASES */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .phases-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100px;
+    }
+
+    .phase-card {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 6px;
       text-align: center;
     }
 
-    .btn {
-      width: 100%; padding: 14px; border: none; border-radius: 10px;
-      font-weight: 700; cursor: pointer; margin-top: 15px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .btn-on { background: var(--green); color: white; }
-    .btn-secondary { background: #334155; color: white; }
-    .btn-danger { background: var(--red); color: white; }
-
-    .admin-panel {
-      margin-top: 20px; padding: 16px; background: rgba(255,255,255,0.02);
-      border: 1px dashed var(--border); border-radius: 12px; text-align: center;
+    .stat-card.card-warning, .phase-card.card-warning {
+      border-color: var(--warning) !important;
+      background: rgba(245, 158, 11, 0.1) !important;
     }
 
-    /* MODAL NUEVO CLIENTE */
-    .modal {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; padding: 20px;
+    .stat-card.card-alarm, .phase-card.card-alarm {
+      border-color: var(--red) !important;
+      background: rgba(239, 68, 68, 0.15) !important;
     }
-    .modal-content {
-      background: var(--card-bg); border: 1px solid var(--border); padding: 24px;
-      border-radius: 16px; width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px;
+
+    .bomba-list {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
-    .checkbox-item {
-      display: flex; align-items: center; gap: 10px; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid var(--border);
+
+    .bomba-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #0f172a;
+      border-radius: 10px;
+      border: 1px solid var(--border);
     }
-    .checkbox-item input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+    .status-pill {
+      font-weight: 900;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .status-on { background: rgba(16, 185, 129, 0.2); color: var(--green); border: 1px solid var(--green); }
+    .status-off { background: rgba(100, 116, 139, 0.2); color: var(--subtext); border: 1px solid var(--border); }
+
+    .client-item-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .health-badge {
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-top: 6px;
+      display: inline-block;
+    }
   </style>
 </head>
 <body>
 
   <div class="top-bar">
     <div class="brand">
-      <div class="brand-logo-svg">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
-      </div>
-      <span>VOLTEX</span>
+      <i class="fa-solid fa-bolt" style="color:var(--accent);"></i>
+      <span id="tituloBarra">Voltex IoT</span>
     </div>
-    <select class="client-picker" id="selectCliente" onchange="cargarCliente(this.value)"></select>
+    <button class="btn-back" id="btnVolver" onclick="mostrarMenuPrincipal()" style="display:none;"><i class="fa-solid fa-arrow-left"></i> Volver</button>
   </div>
 
   <div class="container">
-    <!-- BANNER DE ALERTA GLOBAL -->
-    <div class="global-alert-banner" id="bannerAlerta">
-      <span><i class="fa-solid fa-triangle-exclamation"></i> <span id="textoAlertaGlobal">¡ALERTA EN SISTEMA!</span></span>
-      <button onclick="silenciarAlarma()" style="background: rgba(0,0,0,0.3); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight:700; cursor:pointer;">Silenciar</button>
-    </div>
 
-    <!-- PESTAÑAS (SE MOSTRARÁN/OCULTARÁN AUTOMÁTICAMENTE SEGÚN CADA CLIENTE) -->
-    <div class="module-nav" id="navegacionModulos">
-      <button class="tab-btn" id="tab-agua" onclick="verModulo('agua', event)"><i class="fa-solid fa-droplet"></i> Tanque y Pozos</button>
-      <button class="tab-btn" id="tab-ascensor" onclick="verModulo('ascensor', event)"><i class="fa-solid fa-elevator"></i> Ascensores</button>
-      <button class="tab-btn" id="tab-frio" onclick="verModulo('frio', event)"><i class="fa-solid fa-snowflake"></i> Cámaras Frigoríficas</button>
-      <button class="tab-btn" id="tab-hardware" onclick="verModulo('hardware', event)"><i class="fa-solid fa-microchip"></i> Hardware ESP32</button>
-    </div>
-
-    <!-- 1. MÓDULO AGUA (TANQUE BOYA + POZOS/BOMBAS) -->
-    <div id="mod-agua" style="display: none;">
-      <div class="card" id="tarjetaBoya">
-        <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-water"></i> Tanque de Agua (Boya NO/NC)</div>
-          <small id="badgeBoya" style="color: var(--green); font-weight:700;">NORMAL</small>
-        </div>
-        <div class="status-box">
-          <div style="font-size:3rem;" id="iconoBoya"><i class="fa-solid fa-circle-check" style="color: var(--green);"></i></div>
-          <h2 id="textoBoya">Suministro Conforme</h2>
-          <p id="subtextoBoya" style="color: var(--subtext); font-size: 0.9rem;">Boya en Estado Normal</p>
-        </div>
+    <!-- 1. PANTALLA PRINCIPAL -->
+    <div id="vistaPrincipal" class="menu-grid">
+      <div class="header-row">
+        <button class="menu-btn" onclick="verClientes()"><i class="fa-solid fa-users"></i> Clientes</button>
+        <button class="menu-btn" onclick="verAlertas()"><i class="fa-solid fa-bell" style="color:var(--warning);"></i> Alertas</button>
       </div>
+      <button class="menu-btn" onclick="filtrarModulo('frio')"><i class="fa-solid fa-snowflake" style="color:var(--accent);"></i> Frío</button>
+      <button class="menu-btn" onclick="filtrarModulo('agua')"><i class="fa-solid fa-droplet" style="color:#60a5fa;"></i> Agua</button>
+      <button class="menu-btn" onclick="filtrarModulo('ascensores')"><i class="fa-solid fa-elevator" style="color:#a7f3d0;"></i> Ascensores</button>
+    </div>
 
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-bolt"></i> Pozos / Medidores de Amperaje</div>
-          <button class="btn-secondary" style="width:auto; padding: 4px 10px; font-size: 0.8rem;" onclick="agregarPozo()">+ Pozo</button>
-        </div>
-        <div id="contenedorPozos"><p style="color: var(--subtext); text-align: center;">Sin pozos registrados.</p></div>
+    <!-- 2. PANTALLA LISTA DE CLIENTES -->
+    <div id="vistaClientes" style="display:none;" class="menu-grid">
+      <h3 style="color:var(--subtext); margin-bottom:8px;">Seleccionar Cliente:</h3>
+      <div class="client-item-btn" onclick="abrirCliente('don_felix')">
+        <span>Don Felix (Pozos)</span> <i class="fa-solid fa-chevron-right"></i>
+      </div>
+      <div class="client-item-btn" onclick="abrirCliente('vesna')">
+        <span>Vesna (Ascensor Monarch)</span> <i class="fa-solid fa-chevron-right"></i>
+      </div>
+      <div class="client-item-btn" onclick="abrirCliente('pollos')">
+        <span>Pollos (Frío Industrial)</span> <i class="fa-solid fa-chevron-right"></i>
       </div>
     </div>
 
-    <!-- 2. MÓDULO ASCENSORES -->
-    <div id="mod-ascensor" style="display: none;">
-      <div class="card" id="tarjetaAscensor">
-        <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-elevator"></i> Red de Ascensores</div>
-          <small id="badgeAscensor" style="color: var(--green); font-weight:700;">OPERATIVO</small>
-        </div>
-        <div class="temp-grid">
-          <div class="stat-card">
-            <small style="color: var(--subtext);">PISO ACTUAL</small>
-            <div style="font-size: 2.8rem; font-weight: 900; color: var(--accent);" id="pisoActual">PB</div>
-          </div>
-          <div class="stat-card">
-            <small style="color: var(--subtext);">Serie Puertas</small>
-            <div style="font-weight: 800; margin-top: 10px; color: var(--green);" id="estadoPuerta">CERRADAS</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. MÓDULO FRÍO INDUSTRIAL (ILIMITADO) -->
-    <div id="mod-frio" style="display: none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><i class="fa-solid fa-temperature-arrow-down"></i> Cámaras Frigoríficas</div>
-          <button class="btn-secondary" style="width:auto; padding: 4px 10px; font-size: 0.8rem;" onclick="agregarCamara()">+ Agregar Cámara</button>
-        </div>
-        <div class="temp-grid" id="contenedorCamaras"><p style="color: var(--subtext); text-align: center; grid-column: span 2;">Sin cámaras registradas.</p></div>
-      </div>
-    </div>
-
-    <!-- 4. HARDWARE -->
-    <div id="mod-hardware" style="display: none;">
-      <div class="card">
-        <div class="card-header"><div class="card-title"><i class="fa-solid fa-microchip"></i> Hardware ESP32 Asignado</div></div>
-        <div id="listaDispositivos"><p style="color: var(--subtext); text-align: center;">Cargando...</p></div>
-      </div>
-    </div>
-
-    <!-- PANEL ADMINISTRATIVO -->
-    <div class="admin-panel">
-      <small style="color: var(--subtext);">Gestión de Infraestructura</small>
-      <div style="display: flex; gap: 10px; margin-top: 10px;">
-        <button class="btn btn-secondary" style="margin:0;" onclick="abrirModal()"><i class="fa-solid fa-plus"></i> Registrar Nuevo Cliente</button>
-        <button class="btn btn-danger" style="margin:0;" onclick="eliminarClienteActual()"><i class="fa-solid fa-trash"></i> Eliminar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DE CONFIGURACIÓN POR CLIENTE -->
-  <div class="modal" id="modalCliente">
-    <div class="modal-content">
-      <h3>Alta de Nuevo Cliente</h3>
-      <input type="text" id="inputNombre" placeholder="Ej: Pollos Don Juan" style="background:#0f172a; border:1px solid var(--border); padding:12px; color:white; border-radius:8px; outline:none;">
+    <!-- 3. PANTALLA DETALLE DEL CLIENTE: DON FELIX -->
+    <div id="vistaDetalleCliente" style="display:none;" class="menu-grid">
       
-      <p style="font-size:0.9rem; color:var(--subtext);">Seleccioná qué módulos posee este cliente:</p>
+      <!-- ESTADO DE AGUA Y SALUD DE RED TRIFÁSICA -->
+      <div class="metrics-row">
+        <!-- NIVEL AGUA -->
+        <div class="stat-card" id="cardNivelAgua">
+          <small style="color:var(--subtext); font-weight:700;">NIVEL AGUA</small>
+          <div style="font-size: 1.1rem; font-weight: 900; margin-top: 6px;" id="txtNivelAgua">Cargando...</div>
+        </div>
 
-      <div style="display:flex; flex-direction:column; gap:8px;">
-        <label class="checkbox-item"><input type="checkbox" id="chkAgua" checked> <span>Suministro de Agua (Tanque/Pozos)</span></label>
-        <label class="checkbox-item"><input type="checkbox" id="chkAscensor"> <span>Ascensores</span></label>
-        <label class="checkbox-item"><input type="checkbox" id="chkFrio"> <span>Cámaras Frigoríficas</span></label>
+        <!-- INDICADOR DE DESBALANCE TRIFÁSICO -->
+        <div class="stat-card" id="cardSaludRed">
+          <small style="color:var(--subtext); font-weight:700;">SALUD TRIFÁSICA</small>
+          <div style="font-size: 1.2rem; font-weight: 900; margin-top: 4px;" id="txtDesbalance">0.0%</div>
+          <span class="health-badge" id="badgeSaludRed" style="background:rgba(16,185,129,0.2); color:var(--green);">BALANCED</span>
+        </div>
       </div>
 
-      <div style="display:flex; gap:10px; margin-top:10px;">
-        <button class="btn btn-on" onclick="guardarCliente()">Guardar Cliente</button>
-        <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+      <!-- MONITOREO DE LAS 3 FASES INDIVIDUALES (R - S - T) -->
+      <div class="bomba-list" style="gap:8px;">
+        <h4 style="color:var(--subtext); font-size:0.9rem;">Consumo por Fase (380V):</h4>
+        <div class="phases-row">
+          
+          <!-- FASE R -->
+          <div class="phase-card" id="cardFaseR">
+            <small style="color:var(--accent); font-weight:800;">FASE R</small>
+            <div style="font-size: 1.2rem; font-weight: 900; margin-top:4px;" id="txtAmpR">0.0 A</div>
+          </div>
+
+          <!-- FASE S -->
+          <div class="phase-card" id="cardFaseS">
+            <small style="color:var(--accent); font-weight:800;">FASE S</small>
+            <div style="font-size: 1.2rem; font-weight: 900; margin-top:4px;" id="txtAmpS">0.0 A</div>
+          </div>
+
+          <!-- FASE T -->
+          <div class="phase-card" id="cardFaseT">
+            <small style="color:var(--accent); font-weight:800;">FASE T</small>
+            <div style="font-size: 1.2rem; font-weight: 900; margin-top:4px;" id="txtAmpT">0.0 A</div>
+          </div>
+
+        </div>
       </div>
+
+      <!-- ESTADO DE BOMBAS -->
+      <div class="bomba-list">
+        <h4 style="color:var(--subtext);">Estado de Bombas:</h4>
+        
+        <div class="bomba-item">
+          <span><i class="fa-solid fa-circle" id="dotBomba1" style="color:var(--subtext); margin-right:8px;"></i> <strong>Bomba 1 (2 HP)</strong></span>
+          <span class="status-pill status-off" id="badgeBomba1">OFF</span>
+        </div>
+
+        <div class="bomba-item">
+          <span><i class="fa-solid fa-circle" id="dotBomba2" style="color:var(--subtext); margin-right:8px;"></i> <strong>Bomba 2 (1 HP)</strong></span>
+          <span class="status-pill status-off" id="badgeBomba2">OFF</span>
+        </div>
+
+        <div class="bomba-item">
+          <span><i class="fa-solid fa-circle" id="dotBomba3" style="color:var(--subtext); margin-right:8px;"></i> <strong>Bomba 3 (1 HP)</strong></span>
+          <span class="status-pill status-off" id="badgeBomba3">OFF</span>
+        </div>
+      </div>
+
     </div>
+
   </div>
 
   <script>
@@ -350,214 +310,126 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let clienteActual = '';
-    let audioCtx = null;
-    let alarmInterval = null;
-    let alarmaSilenciada = false;
-    let fallaAgua = false;
-
-    function sonarAlarma() {
-      if (alarmaSilenciada) return;
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.3);
+    function mostrarMenuPrincipal() {
+      document.getElementById('vistaPrincipal').style.display = 'flex';
+      document.getElementById('vistaClientes').style.display = 'none';
+      document.getElementById('vistaDetalleCliente').style.display = 'none';
+      document.getElementById('btnVolver').style.display = 'none';
+      document.getElementById('tituloBarra').innerText = 'Voltex IoT';
     }
 
-    function evaluarAlertas() {
-      const banner = document.getElementById('bannerAlerta');
-      if (fallaAgua) {
-        banner.style.display = 'flex';
-        if (!alarmInterval && !alarmaSilenciada) alarmInterval = setInterval(sonarAlarma, 800);
+    function verClientes() {
+      document.getElementById('vistaPrincipal').style.display = 'none';
+      document.getElementById('vistaClientes').style.display = 'flex';
+      document.getElementById('vistaDetalleCliente').style.display = 'none';
+      document.getElementById('btnVolver').style.display = 'block';
+      document.getElementById('tituloBarra').innerText = 'Clientes';
+    }
+
+    function abrirCliente(clienteKey) {
+      document.getElementById('vistaClientes').style.display = 'none';
+      document.getElementById('vistaDetalleCliente').style.display = 'flex';
+      document.getElementById('btnVolver').style.display = 'block';
+
+      if (clienteKey === 'don_felix') {
+        document.getElementById('tituloBarra').innerText = 'Don Felix';
+        escucharDonFelix();
+      } else if (clienteKey === 'vesna') {
+        document.getElementById('tituloBarra').innerText = 'Vesna';
       } else {
-        banner.style.display = 'none';
-        if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
+        document.getElementById('tituloBarra').innerText = 'Pollos';
       }
     }
 
-    function silenciarAlarma() {
-      alarmaSilenciada = true;
-      if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
-    }
+    function escucharDonFelix() {
+      db.ref('/clientes/don_felix/telemetria/agua').on('value', (snap) => {
+        const data = snap.val() || {};
+        
+        // 1. Boyas de Agua
+        const boyaMedioTanque = data.boya_medio_tanque || false;
+        const boyaFaltaAgua = data.boya_falta_agua || false;
 
-    db.ref('/clientes').on('value', (snapshot) => {
-      const picker = document.getElementById('selectCliente');
-      picker.innerHTML = '';
-      const clientes = snapshot.val();
-      if (!clientes) return;
+        const cardAgua = document.getElementById('cardNivelAgua');
+        const txtAgua = document.getElementById('txtNivelAgua');
 
-      Object.keys(clientes).forEach(id => {
-        const option = document.createElement('option');
-        option.value = id;
-        option.innerText = clientes[id].nombre || id;
-        picker.appendChild(option);
-      });
-
-      if (!clienteActual || !clientes[clienteActual]) clienteActual = Object.keys(clientes)[0];
-      picker.value = clienteActual;
-      cargarCliente(clienteActual);
-    });
-
-    function cargarCliente(clienteId) {
-      if(!clienteId) return;
-      clienteActual = clienteId;
-      alarmaSilenciada = false;
-
-      // 1. Filtrar visibilidad de Pestañas según Módulos Habilitados
-      db.ref(`/clientes/${clienteActual}/modulos`).once('value', (snap) => {
-        const mods = snap.val() || { agua: true, ascensor: false, frio: false };
-
-        document.getElementById('tab-agua').style.display = mods.agua ? 'flex' : 'none';
-        document.getElementById('tab-ascensor').style.display = mods.ascensor ? 'flex' : 'none';
-        document.getElementById('tab-frio').style.display = mods.frio ? 'flex' : 'none';
-
-        if (mods.agua) verModulo('agua');
-        else if (mods.ascensor) verModulo('ascensor');
-        else if (mods.frio) verModulo('frio');
-        else verModulo('hardware');
-      });
-
-      // 2. Telemetría Tanque Agua (Boya)
-      db.ref(`/clientes/${clienteActual}/telemetria/agua/boya_falta_agua`).on('value', (snap) => {
-        fallaAgua = snap.val() || false;
-        const tarjeta = document.getElementById('tarjetaBoya');
-        if (fallaAgua) {
-          tarjeta.className = "card card-alarm";
-          document.getElementById('iconoBoya').innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:var(--red);"></i>';
-          document.getElementById('textoBoya').innerText = "¡ALERTA: FALTA DE AGUA!";
-          document.getElementById('badgeBoya').innerText = "CRÍTICO";
-          document.getElementById('badgeBoya').style.color = "var(--red)";
+        if (boyaFaltaAgua) {
+          cardAgua.className = "stat-card card-alarm";
+          txtAgua.innerText = "¡SIN AGUA!";
+          txtAgua.style.color = "var(--red)";
+        } else if (boyaMedioTanque) {
+          cardAgua.className = "stat-card card-warning";
+          txtAgua.innerText = "MEDIO TANQUE";
+          txtAgua.style.color = "var(--warning)";
         } else {
-          tarjeta.className = "card";
-          document.getElementById('iconoBoya').innerHTML = '<i class="fa-solid fa-circle-check" style="color:var(--green);"></i>';
-          document.getElementById('textoBoya').innerText = "Suministro Conforme";
-          document.getElementById('badgeBoya').innerText = "NORMAL";
-          document.getElementById('badgeBoya').style.color = "var(--green)";
-        }
-        evaluarAlertas();
-      });
-
-      // 3. Telemetría Amperímetros Pozos
-      db.ref(`/clientes/${clienteActual}/telemetria/agua/pozos`).on('value', (snap) => {
-        const contenedor = document.getElementById('contenedorPozos');
-        contenedor.innerHTML = '';
-        const pozos = snap.val() || {};
-
-        if (Object.keys(pozos).length === 0) {
-          contenedor.innerHTML = '<p style="color: var(--subtext); text-align: center;">Sin pozos configurados.</p>';
-          return;
+          cardAgua.className = "stat-card";
+          txtAgua.innerText = "Nivel Agua OK";
+          txtAgua.style.color = "var(--green)";
         }
 
-        Object.keys(pozos).forEach(pId => {
-          const p = pozos[pId];
-          const corriente = parseFloat(p.corriente_a || 0.0);
-          const enMarcha = corriente > 1.0;
+        // 2. Corrientes por Fase (R, S, T)
+        const ampR = parseFloat(data.amp_fase_r || 0.0);
+        const ampS = parseFloat(data.amp_fase_s || 0.0);
+        const ampT = parseFloat(data.amp_fase_t || 0.0);
 
-          contenedor.innerHTML += `
-            <div class="pozo-card">
-              <div>
-                <strong>${p.nombre || pId}</strong><br>
-                <small style="color: ${enMarcha ? 'var(--green)' : 'var(--subtext)'}; font-weight: 700;">
-                  <i class="fa-solid fa-bolt"></i> ${enMarcha ? 'OPERANDO' : 'DETENIDO'}
-                </small>
-              </div>
-              <div class="amp-display">${corriente.toFixed(1)} A</div>
-            </div>
-          `;
-        });
-      });
+        document.getElementById('txtAmpR').innerText = ampR.toFixed(1) + " A";
+        document.getElementById('txtAmpS').innerText = ampS.toFixed(1) + " A";
+        document.getElementById('txtAmpT').innerText = ampT.toFixed(1) + " A";
 
-      // 4. Telemetría Cámaras Frigoríficas (Dinámico)
-      db.ref(`/clientes/${clienteActual}/telemetria/frio`).on('value', (snap) => {
-        const contenedor = document.getElementById('contenedorCamaras');
-        contenedor.innerHTML = '';
-        const camaras = snap.val() || {};
+        // 3. Cálculo del Desbalance Trifásico
+        const promedio = (ampR + ampS + ampT) / 3.0;
+        let desbalancePct = 0.0;
 
-        if (Object.keys(camaras).length === 0) {
-          contenedor.innerHTML = '<p style="color: var(--subtext); text-align: center; grid-column: span 2;">Sin cámaras registradas.</p>';
-          return;
+        if (promedio > 0.3) {
+          const maxDev = Math.max(Math.abs(ampR - promedio), Math.abs(ampS - promedio), Math.abs(ampT - promedio));
+          desbalancePct = (maxDev / promedio) * 100.0;
         }
 
-        Object.keys(camaras).forEach(cId => {
-          const c = camaras[cId];
-          contenedor.innerHTML += `
-            <div class="stat-card">
-              <small style="color: var(--subtext);">${c.nombre || cId}</small>
-              <div style="font-size: 2.2rem; font-weight: 800; color: #38bdf8; margin: 6px 0;">${c.temp || '--'}°C</div>
-              <small style="color: var(--green);">Set: ${c.setpoint || '0.0'}°C</small>
-            </div>
-          `;
-        });
+        document.getElementById('txtDesbalance').innerText = desbalancePct.toFixed(1) + "%";
+
+        const cardSalud = document.getElementById('cardSaludRed');
+        const badgeSalud = document.getElementById('badgeSaludRed');
+
+        if (desbalancePct > 15.0) {
+          cardSalud.className = "stat-card card-alarm";
+          badgeSalud.innerText = "DESBALANCE CRÍTICO";
+          badgeSalud.style.background = "rgba(239, 68, 68, 0.2)";
+          badgeSalud.style.color = "var(--red)";
+        } else if (desbalancePct > 7.0) {
+          cardSalud.className = "stat-card card-warning";
+          badgeSalud.innerText = "DESBALANCE MODERADO";
+          badgeSalud.style.background = "rgba(245, 158, 11, 0.2)";
+          badgeSalud.style.color = "var(--warning)";
+        } else {
+          cardSalud.className = "stat-card";
+          badgeSalud.innerText = "BALANCED";
+          badgeSalud.style.background = "rgba(16, 185, 129, 0.2)";
+          badgeSalud.style.color = "var(--green)";
+        }
+
+        // 4. Estado de Bombas (Determinado por la corriente)
+        actualizarBomba(1, promedio >= 3.0); // Bomba de 2 HP (~3.25A)
+        actualizarBomba(2, promedio >= 4.5); // + Bomba 1 HP (~1.63A)
+        actualizarBomba(3, promedio >= 6.0); // + Bomba 1 HP (~1.63A)
       });
     }
 
-    function verModulo(mod, e) {
-      document.getElementById('mod-agua').style.display = mod === 'agua' ? 'block' : 'none';
-      document.getElementById('mod-ascensor').style.display = mod === 'ascensor' ? 'block' : 'none';
-      document.getElementById('mod-frio').style.display = mod === 'frio' ? 'block' : 'none';
-      document.getElementById('mod-hardware').style.display = mod === 'hardware' ? 'block' : 'none';
+    function actualizarBomba(num, encendido) {
+      const dot = document.getElementById(`dotBomba${num}`);
+      const badge = document.getElementById(`badgeBomba${num}`);
 
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      let targetTab = e ? e.currentTarget : document.getElementById(`tab-${mod}`);
-      if(targetTab) targetTab.classList.add('active');
-    }
-
-    function agregarPozo() {
-      const nombre = prompt("Nombre del Pozo/Bomba (ej: Pozo 3):");
-      if (nombre) {
-        const id = nombre.toLowerCase().replace(/ /g, '_');
-        db.ref(`/clientes/${clienteActual}/telemetria/agua/pozos/${id}`).set({
-          nombre: nombre,
-          corriente_a: 0.0
-        });
+      if (encendido) {
+        dot.style.color = "var(--green)";
+        badge.className = "status-pill status-on";
+        badge.innerText = "ON";
+      } else {
+        dot.style.color = "var(--subtext)";
+        badge.className = "status-pill status-off";
+        badge.innerText = "OFF";
       }
     }
 
-    function agregarCamara() {
-      const nombre = prompt("Nombre de la Cámara (ej: Cámara Lácteos #2):");
-      if (nombre) {
-        const id = nombre.toLowerCase().replace(/ /g, '_');
-        db.ref(`/clientes/${clienteActual}/telemetria/frio/${id}`).set({
-          nombre: nombre,
-          temp: 3.5,
-          setpoint: 4.0
-        });
-      }
-    }
-
-    function abrirModal() { document.getElementById('modalCliente').style.display = 'flex'; }
-    function cerrarModal() { document.getElementById('modalCliente').style.display = 'none'; }
-
-    function guardarCliente() {
-      const nombre = document.getElementById('inputNombre').value.trim();
-      if (!nombre) return alert("Por favor ingresá un nombre.");
-
-      const id = nombre.toLowerCase().replace(/ /g, '_');
-      const mAgua = document.getElementById('chkAgua').checked;
-      const mAscensor = document.getElementById('chkAscensor').checked;
-      const mFrio = document.getElementById('chkFrio').checked;
-
-      db.ref(`/clientes/${id}`).set({
-        nombre: nombre,
-        modulos: { agua: mAgua, ascensor: mAscensor, frio: mFrio },
-        telemetria: {
-          agua: { boya_falta_agua: false }
-        }
-      }).then(() => {
-        cerrarModal();
-        document.getElementById('inputNombre').value = '';
-      });
-    }
-
-    function eliminarClienteActual() {
-      if (confirm(`¿Eliminar cliente "${clienteActual}"?`)) db.ref(`/clientes/${clienteActual}`).remove();
-    }
+    function filtrarModulo(mod) { alert("Filtrando módulo: " + mod.toUpperCase()); }
+    function verAlertas() { alert("Vista de Alertas Globales de Voltex IoT"); }
   </script>
 </body>
 </html>
