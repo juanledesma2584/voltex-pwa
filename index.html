@@ -48,7 +48,6 @@
       overflow-x: hidden;
     }
 
-    /* HEADER INDUSTRIAL CON LOGO SVG VECTORIAL DIRECTO */
     header {
       display: flex;
       justify-content: space-between;
@@ -126,7 +125,6 @@
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
     }
 
-    /* CONTROLES SUPERIORES */
     .controls-bar-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -180,7 +178,6 @@
       to { transform: scale(1.02); }
     }
 
-    /* SECCIÓN SEPARADORA DE CATEGORÍA */
     .section-header {
       max-width: 650px;
       margin: 0 auto 12px auto;
@@ -204,7 +201,6 @@
       background: rgba(255, 255, 255, 0.08);
     }
 
-    /* MAIN CONTAINER */
     .app-viewport {
       display: flex;
       flex-direction: column;
@@ -214,7 +210,6 @@
       width: 100%;
     }
 
-    /* TARJETAS GLASSMORPHISM INDUSTRIAL */
     .voltex-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -289,7 +284,6 @@
       border: 1px solid rgba(148, 163, 184, 0.4);
     }
 
-    /* PESTAÑAS SUB-SISTEMAS */
     .tab-bar {
       display: flex;
       gap: 6px;
@@ -320,7 +314,6 @@
       box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
     }
 
-    /* PANELES Y TELEMETRÍA */
     .panel-group {
       display: flex;
       flex-direction: column;
@@ -366,7 +359,6 @@
     .val-alert { color: var(--status-alert); }
     .val-warn { color: var(--status-warn); }
 
-    /* CONTROLES DE SETEO DE TEMPERATURA DINÁMICA */
     .threshold-control {
       display: flex;
       align-items: center;
@@ -387,7 +379,6 @@
       justify-content: center;
     }
 
-    /* MÓDULO CONTROL INDEPENDIENTE (PORTONES/CASA) */
     .control-card {
       background: linear-gradient(135deg, rgba(13, 21, 39, 0.85) 0%, rgba(20, 31, 55, 0.85) 100%);
       border: 1px solid rgba(139, 92, 246, 0.3);
@@ -458,7 +449,7 @@
 
   <div class="controls-bar-grid">
     <button class="btn-alert-setup" onclick="activarAlertasSegundoPlano()">
-      🔔 ACTIVAR TELEMETRÍA CRÍTICA Y PUSH 24/7
+      🔔 VINCULAR DISPOSITIVO A ALERTAS PUSH 24/7
     </button>
     <button id="btn-silenciar" class="btn-silence-alarm" onclick="silenciarAlarmaManualmente()">
       🔕 SILENCIAR SIRENA DE ALARMA (ACK)
@@ -550,7 +541,7 @@
       </div>
     </div>
 
-    <!-- CLIENTE 3: POLLO JUANES (CON SETEO DE UMBRAL DINÁMICO DE TEMPERATURA) -->
+    <!-- CLIENTE 3: POLLO JUANES -->
     <div id="card-pollo_juanes" class="voltex-card client-node">
       <div class="card-top">
         <div class="client-title">🍗 Pollo Juanes</div>
@@ -569,7 +560,6 @@
             <span id="temp-pollo_juanes" class="row-value val-ok">-18.5 °C</span>
           </div>
 
-          <!-- CONTROL DE SETEO DE UMBRAL DE ALERTA -->
           <div class="telemetry-row">
             <span class="row-label">⚙️ Umbral Máximo Alerta:</span>
             <div class="threshold-control">
@@ -636,11 +626,12 @@
   </div>
 
   <footer>
-    VOLTEX IoT Telemetry Platform &bull; Software Industrial v3.2 &bull; Asunción, PY
+    VOLTEX IoT Telemetry Platform &bull; Software Industrial v3.3 &bull; Asunción, PY
   </footer>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -707,13 +698,18 @@
       tabElement.classList.add('active');
     }
 
+    // REGISTRO DE TOKEN PUSH DE SEGUNDO PLANO EN FIREBASE
     function activarAlertasSegundoPlano() {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
 
       if ("Notification" in window) {
         Notification.requestPermission().then(permission => {
-          if (permission === "granted") alert("¡Sistema VOLTEX Push 24/7 Activado!");
+          if (permission === "granted") {
+            alert("¡Dispositivo vinculado con éxito! Recibirás alertas Push nativas incluso con la app cerrada o el celular bloqueado.");
+          } else {
+            alert("Permiso de notificaciones denegado en el navegador.");
+          }
         });
       }
     }
@@ -767,7 +763,6 @@
       apagarAlertasGlobales();
     }
 
-    // MODIFICAR Y GUARDAR UMBRAL EN FIREBASE EN TIEMPO REAL
     function modificarUmbralTemp(delta) {
       umbralTemperaturaActual += delta;
       document.getElementById('val-umbral-temp').innerText = `${umbralTemperaturaActual} °C`;
@@ -781,7 +776,7 @@
       alert(`⚡ Pulso enviado a Portón ${tipo.toUpperCase()}`);
     }
 
-    // SUSCRIPCIONES REALTIME CON AUTO-RESET E INSPECCIÓN DE CONEXIÓN (HEARTBEAT)
+    // REALTIME DATABASE LISTENERS
 
     // 1. Don Félix (Agua)
     db.ref('clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
@@ -824,7 +819,7 @@
       }
     });
 
-    // 2. Pollo Juanes (Frío con Umbral Dinámico)
+    // 2. Pollo Juanes
     db.ref('clientes/pollo_juanes/config/temp_maxima').on('value', (snap) => {
       if (snap.exists()) {
         umbralTemperaturaActual = snap.val();
