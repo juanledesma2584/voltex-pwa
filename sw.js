@@ -1,5 +1,5 @@
 // ============================================================================
-// VOLTEX IoT Platform - Service Worker de Alertas Push en Segundo Plano
+// VOLTEX IoT Platform - Service Worker de Alertas Push Nativas en Segundo Plano
 // ============================================================================
 
 self.addEventListener('install', (event) => {
@@ -10,10 +10,11 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim());
 });
 
+// Listener nativo del SO para recibir Push con la PWA cerrada o teléfono bloqueado
 self.addEventListener('push', (event) => {
   let payload = {
-    title: "⚡ VOLTEX SYSTEM ALERT",
-    body: "Se ha detectado una anomalía crítica en el sistema.",
+    title: "🚨 ¡ALERTA CRÍTICA VOLTEX!",
+    body: "Se ha detectado una anomalía en uno de los nodos de telemetría.",
     icon: "https://img.icons8.com/fluency/96/flash-on.png"
   };
 
@@ -32,7 +33,7 @@ self.addEventListener('push', (event) => {
     vibrate: [600, 200, 600, 200, 600, 200, 1000],
     tag: "voltex-critical-alert",
     renotify: true,
-    requireInteraction: true,
+    requireInteraction: true, // Mantiene la notificación fija en pantalla hasta que se atienda
     data: { url: "/" }
   };
 
@@ -41,6 +42,7 @@ self.addEventListener('push', (event) => {
   );
 });
 
+// Al hacer clic sobre la notificación Push con la app cerrada
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
