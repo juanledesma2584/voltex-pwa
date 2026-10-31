@@ -14,13 +14,11 @@
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #070a12 0%, #0d1527 50%, #050811 100%);
-      --card-bg: rgba(18, 26, 43, 0.75);
-      --card-border: rgba(56, 189, 248, 0.15);
-      --card-glow: rgba(56, 189, 248, 0.05);
+      --card-bg: rgba(18, 26, 43, 0.85);
+      --card-border: rgba(56, 189, 248, 0.18);
       
       --text-primary: #f1f5f9;
       --text-secondary: #94a3b8;
-      --text-dark: #090d16;
       
       --voltex-cyan: #38bdf8;
       --voltex-blue: #2563eb;
@@ -49,416 +47,116 @@
       overflow-x: hidden;
     }
 
-    /* HEADER INDUSTRIAL VOLTEX */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 18px;
-      background: rgba(15, 23, 42, 0.8);
+      padding: 12px 16px;
+      background: rgba(15, 23, 42, 0.85);
       border: 1px solid rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(12px);
       border-radius: 16px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
-    .brand-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .voltex-logo-svg {
-      width: 38px;
-      height: 38px;
-      filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
-    }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand-title {
-      font-size: 1.35rem;
-      font-weight: 900;
-      letter-spacing: 1.5px;
-      background: linear-gradient(90deg, #ffffff 0%, var(--voltex-cyan) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      line-height: 1.1;
-    }
-
-    .brand-subtitle {
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: var(--voltex-cyan);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
+    .brand-container { display: flex; align-items: center; gap: 10px; }
+    .voltex-logo-svg { width: 34px; height: 34px; filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6)); }
+    .brand-text { display: flex; flex-direction: column; }
+    .brand-title { font-size: 1.25rem; font-weight: 900; letter-spacing: 1.5px; background: linear-gradient(90deg, #ffffff 0%, var(--voltex-cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1; }
+    .brand-subtitle { font-size: 0.6rem; font-weight: 700; color: var(--voltex-cyan); letter-spacing: 1.5px; text-transform: uppercase; }
 
     .header-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(34, 197, 94, 0.1);
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: var(--status-ok);
-      letter-spacing: 0.5px;
+      display: flex; align-items: center; gap: 6px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 5px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; color: var(--status-ok);
     }
+    .status-pulse-dot { width: 7px; height: 7px; background-color: var(--status-ok); border-radius: 50%; box-shadow: 0 0 8px var(--status-ok); animation: pulse-green 1.5s infinite; }
+    @keyframes pulse-green { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
 
-    .status-pulse-dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--status-ok);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--status-ok);
-      animation: pulse-green 1.5s infinite;
-    }
+    /* NAVEGACIÓN */
+    .main-nav { display: flex; gap: 6px; margin-bottom: 16px; background: rgba(15, 23, 42, 0.7); padding: 5px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.05); }
+    .nav-btn { flex: 1; padding: 10px 4px; background: transparent; border: none; color: var(--text-secondary); font-weight: 800; font-size: 0.72rem; border-radius: 10px; cursor: pointer; text-align: center; transition: all 0.2s ease; }
+    .nav-btn.active { background: var(--voltex-cyan); color: #070a12; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3); }
 
-    @keyframes pulse-green {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-    }
+    .controls-bar-grid { display: grid; grid-template-columns: 1fr; gap: 10px; max-width: 650px; margin: 0 auto 20px auto; width: 100%; }
+    .btn-add-device { width: 100%; background: linear-gradient(135deg, rgba(34, 197, 94, 0.9) 0%, rgba(16, 185, 129, 0.9) 100%); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; padding: 14px; border-radius: 14px; font-size: 0.85rem; font-weight: 900; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3); }
+    .btn-silence-alarm { display: none; width: 100%; background: linear-gradient(135deg, rgba(239, 68, 68, 0.9) 0%, rgba(185, 28, 28, 0.9) 100%); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; padding: 14px; border-radius: 14px; font-size: 0.85rem; font-weight: 900; cursor: pointer; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5); }
 
-    /* NAV NAVEGACIÓN PRINCIPAL ENTRE MÓDULOS */
-    .main-nav {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-      background: rgba(15, 23, 42, 0.6);
-      padding: 6px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
+    .section-header { max-width: 650px; margin: 0 auto 10px auto; width: 100%; display: flex; align-items: center; gap: 10px; }
+    .section-header h2 { font-size: 0.8rem; font-weight: 800; color: var(--text-secondary); letter-spacing: 1.2px; text-transform: uppercase; }
+    .section-header .line { flex: 1; height: 1px; background: rgba(255, 255, 255, 0.08); }
 
-    .nav-btn {
-      flex: 1;
-      padding: 10px;
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      font-weight: 800;
-      font-size: 0.8rem;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-    }
+    .app-viewport { display: flex; flex-direction: column; gap: 16px; max-width: 650px; margin: 0 auto; width: 100%; }
 
-    .nav-btn.active {
-      background: var(--voltex-cyan);
-      color: #070a12;
-      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
-    }
+    /* TARJETAS */
+    .voltex-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px; padding: 18px; backdrop-filter: blur(16px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); position: relative; overflow: hidden; }
+    .voltex-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--voltex-cyan), transparent); opacity: 0.4; }
+    .voltex-card.critical-alarm { border-color: var(--status-alert) !important; animation: alert-flash 0.9s infinite alternate; }
+    @keyframes alert-flash { 0% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.2); } 100% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.7); } }
 
-    /* CONTROLES SUPERIORES */
-    .controls-bar-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      max-width: 650px;
-      margin: 0 auto 24px auto;
-      width: 100%;
-    }
-
-    .btn-add-device {
-      width: 100%;
-      background: linear-gradient(135deg, rgba(34, 197, 94, 0.9) 0%, rgba(16, 185, 129, 0.9) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #ffffff;
-      padding: 14px;
-      border-radius: 14px;
-      font-size: 0.9rem;
-      font-weight: 900;
-      letter-spacing: 1px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.35);
-    }
-
-    .btn-silence-alarm {
-      display: none;
-      width: 100%;
-      background: linear-gradient(135deg, rgba(239, 68, 68, 0.9) 0%, rgba(185, 28, 28, 0.9) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #ffffff;
-      padding: 14px;
-      border-radius: 14px;
-      font-size: 0.9rem;
-      font-weight: 900;
-      cursor: pointer;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
-    }
-
-    .section-header {
-      max-width: 650px;
-      margin: 0 auto 12px auto;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .section-header h2 {
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: var(--text-secondary);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-
-    .section-header .line {
-      flex: 1;
-      height: 1px;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .app-viewport {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      max-width: 650px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    /* TARJETAS GLASSMORPHISM INDUSTRIAL */
-    .voltex-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 22px;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .voltex-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--voltex-cyan), transparent);
-      opacity: 0.4;
-    }
-
-    .voltex-card.critical-alarm {
-      border-color: var(--status-alert) !important;
-      animation: alert-flash 0.9s infinite alternate;
-    }
-
-    @keyframes alert-flash {
-      0% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.2), inset 0 0 15px rgba(239, 68, 68, 0.1); }
-      100% { box-shadow: 0 0 35px rgba(239, 68, 68, 0.8), inset 0 0 25px rgba(239, 68, 68, 0.3); }
-    }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-    }
-
-    .client-title-area {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .client-title {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--text-primary);
-    }
-
-    .btn-edit-client {
-      background: rgba(56, 189, 248, 0.15);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      color: var(--voltex-cyan);
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .badge-status {
-      font-size: 0.7rem;
-      font-weight: 900;
-      padding: 5px 12px;
-      border-radius: 20px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
+    .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .client-title-area { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .client-title { font-size: 1.15rem; font-weight: 800; color: var(--text-primary); }
+    .btn-edit-client { background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: var(--voltex-cyan); padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+    .badge-status { font-size: 0.65rem; font-weight: 900; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase; }
     .badge-ok { background: rgba(34, 197, 94, 0.15); color: var(--status-ok); border: 1px solid rgba(34, 197, 94, 0.4); }
     .badge-alert { background: rgba(239, 68, 68, 0.2); color: var(--status-alert); border: 1px solid rgba(239, 68, 68, 0.6); }
     .badge-offline { background: rgba(100, 116, 139, 0.2); color: var(--status-offline); border: 1px solid rgba(100, 116, 139, 0.4); }
 
-    .tab-bar {
-      display: flex;
-      gap: 6px;
-      background: rgba(9, 13, 22, 0.7);
-      padding: 5px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      margin-bottom: 18px;
-    }
+    .tab-bar { display: flex; gap: 4px; background: rgba(9, 13, 22, 0.7); padding: 4px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05); margin-bottom: 14px; }
+    .tab-btn { flex: 1; padding: 8px 4px; color: var(--text-secondary); border-radius: 7px; font-size: 0.7rem; font-weight: 800; text-align: center; cursor: pointer; }
+    .tab-btn.active { background: linear-gradient(135deg, var(--voltex-cyan) 0%, var(--voltex-blue) 100%); color: #ffffff; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3); }
 
-    .tab-btn {
-      flex: 1;
-      padding: 10px 6px;
-      color: var(--text-secondary);
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      user-select: none;
-    }
-
-    .tab-btn.active {
-      background: linear-gradient(135deg, var(--voltex-cyan) 0%, var(--voltex-blue) 100%);
-      color: #ffffff;
-      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
-    }
-
-    .panel-group { display: flex; flex-direction: column; gap: 12px; }
-    .tab-panel { display: none; flex-direction: column; gap: 12px; }
+    .panel-group { display: flex; flex-direction: column; gap: 10px; }
+    .tab-panel { display: none; flex-direction: column; gap: 10px; }
     .tab-panel.active { display: flex; }
 
-    .telemetry-row {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      padding: 14px 18px;
-      border-radius: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .row-label { font-size: 0.9rem; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; font-weight: 600; }
-    .row-value { font-size: 1rem; font-weight: 800; letter-spacing: 0.5px; }
+    .telemetry-row { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.04); padding: 12px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .row-label { font-size: 0.82rem; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; font-weight: 600; }
+    .row-value { font-size: 0.9rem; font-weight: 800; text-align: right; }
 
     .val-ok { color: var(--status-ok); }
     .val-alert { color: var(--status-alert); }
     .val-warn { color: var(--status-warn); }
     .val-offline { color: var(--status-offline); }
 
-    /* MÓDULO CONTROL INDEPENDIENTE (PORTONES) */
-    .control-card {
-      background: linear-gradient(135deg, rgba(13, 21, 39, 0.85) 0%, rgba(20, 31, 55, 0.85) 100%);
-      border: 1px solid rgba(139, 92, 246, 0.3);
-    }
+    .control-card { background: linear-gradient(135deg, rgba(13, 21, 39, 0.85) 0%, rgba(20, 31, 55, 0.85) 100%); border: 1px solid rgba(139, 92, 246, 0.3); }
+    .control-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+    .btn-command { background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); border: 1px solid rgba(139, 92, 246, 0.4); color: var(--text-primary); padding: 12px; border-radius: 10px; font-weight: 800; font-size: 0.8rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
 
-    .control-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+    /* FINANZAS CORREGIDAS PARA IPHONE */
+    .finance-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .stat-card { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 4px; text-align: center; }
+    .stat-label { font-size: 0.6rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; }
+    .stat-val { font-size: 0.85rem; font-weight: 950; word-break: break-all; }
 
-    .btn-command {
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
-      border: 1px solid rgba(139, 92, 246, 0.4);
-      color: var(--text-primary);
-      padding: 14px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 0.85rem;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* MÓDULO FINANZAS & INVENTARIO */
-    .finance-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-
-    .stat-card {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .stat-label { font-size: 0.7rem; color: var(--text-secondary); font-weight: 700; }
-    .stat-val { font-size: 1.1rem; font-weight: 900; }
-
-    .table-custom {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 0.85rem;
-    }
-
-    .table-custom th, .table-custom td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
+    .table-custom { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 0.78rem; }
+    .table-custom th, .table-custom td { padding: 8px 6px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.08); word-break: break-word; }
     .table-custom th { color: var(--text-secondary); font-weight: 800; }
 
-    /* MODAL GENERAL */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(7, 10, 18, 0.85);
-      backdrop-filter: blur(12px);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
+    /* COMPARTIR ACCESO CLIENTE */
+    .share-box { background: rgba(56, 189, 248, 0.08); border: 1px dashed var(--voltex-cyan); padding: 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .share-link-text { font-size: 0.75rem; color: var(--voltex-cyan); word-break: break-all; font-family: monospace; }
+    .btn-whatsapp { background: #25d366; color: #fff; border: none; padding: 8px; border-radius: 8px; font-weight: 800; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(7, 10, 18, 0.85); backdrop-filter: blur(12px); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
     .modal-overlay.active { display: flex; }
+    .modal-body { background: #121a2b; border: 1px solid var(--voltex-cyan); border-radius: 18px; padding: 20px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); display: flex; flex-direction: column; gap: 14px; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px; }
+    .modal-title { font-size: 1rem; font-weight: 800; color: var(--voltex-cyan); }
+    .btn-close-modal { background: none; border: none; color: var(--text-secondary); font-size: 1.3rem; cursor: pointer; }
 
-    .modal-body {
-      background: #121a2b;
-      border: 1px solid var(--voltex-cyan);
-      border-radius: 20px;
-      padding: 24px;
-      width: 100%;
-      max-width: 500px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-label { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); }
+    .form-input, .form-select { background: #090d16; border: 1px solid var(--card-border); color: #fff; padding: 10px; border-radius: 8px; font-size: 0.85rem; outline: none; }
+    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+    .checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--text-primary); }
 
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 12px; }
-    .modal-title { font-size: 1.1rem; font-weight: 800; color: var(--voltex-cyan); }
-    .btn-close-modal { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; }
+    .btn-save-settings { background: linear-gradient(135deg, var(--voltex-cyan) 0%, var(--voltex-blue) 100%); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; margin-top: 6px; }
+    .btn-delete-client { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--status-alert); color: var(--status-alert); padding: 10px; border-radius: 10px; font-weight: 800; font-size: 0.8rem; cursor: pointer; }
 
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-label { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); }
-    .form-input, .form-select { background: #090d16; border: 1px solid var(--card-border); color: #fff; padding: 12px; border-radius: 10px; font-size: 0.9rem; outline: none; }
-
-    .btn-save-settings {
-      background: linear-gradient(135deg, var(--voltex-cyan) 0%, var(--voltex-blue) 100%);
-      color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 10px;
-    }
-
-    footer {
-      margin-top: auto; padding-top: 24px; text-align: center; font-size: 0.75rem; color: var(--text-secondary); border-top: 1px solid rgba(255, 255, 255, 0.05); letter-spacing: 0.5px;
-    }
+    footer { margin-top: auto; padding-top: 20px; text-align: center; font-size: 0.7rem; color: var(--text-secondary); border-top: 1px solid rgba(255, 255, 255, 0.05); }
   </style>
 </head>
 <body>
@@ -481,7 +179,7 @@
     </div>
   </header>
 
-  <!-- NAVEGACIÓN MÓDULOS -->
+  <!-- NAVEGACIÓN -->
   <nav class="main-nav">
     <button class="nav-btn active" onclick="switchViewSection('telemetria', this)">📡 TELEMETRÍA</button>
     <button class="nav-btn" onclick="switchViewSection('finanzas', this)">💼 COBROS & BALANCES</button>
@@ -500,7 +198,7 @@
 
   <div class="app-viewport">
     
-    <!-- SECCIÓN 1: TELEMETRÍA INDUSTRIAL Y CLIENTES -->
+    <!-- SECCIÓN 1: TELEMETRÍA -->
     <div id="section-view-telemetria">
       <div id="section-telemetria-header" class="section-header">
         <h2>Nodos de Telemetría Industrial</h2>
@@ -518,15 +216,15 @@
         </div>
 
         <div class="tab-bar">
-          <div class="tab-btn active" onclick="switchTab('don_felix', 'agua', this)">AGUA</div>
-          <div class="tab-btn" onclick="switchTab('don_felix', 'ascensores', this)">ASCENSORES</div>
-          <div class="tab-btn" onclick="switchTab('don_felix', 'frio', this)">CLIMATIZACIÓN</div>
+          <div id="tab-btn-don_felix-agua" class="tab-btn active" onclick="switchTab('don_felix', 'agua', this)">AGUA</div>
+          <div id="tab-btn-don_felix-ascensores" class="tab-btn" onclick="switchTab('don_felix', 'ascensores', this)">ASCENSORES</div>
+          <div id="tab-btn-don_felix-frio" class="tab-btn" onclick="switchTab('don_felix', 'frio', this)">CLIMATIZACIÓN</div>
         </div>
 
         <div class="panel-group">
           <div id="panel-don_felix-agua" class="tab-panel active">
             <div class="telemetry-row">
-              <span class="row-label">💧 Nivel Tanque Reservorio (Boya 50%):</span>
+              <span class="row-label">💧 Nivel Tanque Reservorio:</span>
               <span id="boya-don_felix" class="row-value val-ok">100% OK</span>
             </div>
           </div>
@@ -545,6 +243,13 @@
             </div>
           </div>
         </div>
+
+        <!-- ENLACE PARA COMPARTIR AL CLIENTE (iPhone / WhatsApp) -->
+        <div class="share-box">
+          <span style="font-size: 0.72rem; font-weight: 700; color: var(--text-primary);">📱 Enlace para ver en iPhone (Gerente Don Félix):</span>
+          <span class="share-link-text" id="link-don_felix">https://tudominio.github.io/voltex/?user=don_felix</span>
+          <button class="btn-whatsapp" onclick="enviarWhatsAppCliente('Don Félix', 'don_felix')">📤 Compartir por WhatsApp</button>
+        </div>
       </div>
 
       <!-- CLIENTE 2: VESNA -->
@@ -558,9 +263,9 @@
         </div>
 
         <div class="tab-bar">
-          <div class="tab-btn active" onclick="switchTab('vesna', 'ascensores', this)">ASCENSORES</div>
-          <div class="tab-btn" onclick="switchTab('vesna', 'agua', this)">AGUA</div>
-          <div class="tab-btn" onclick="switchTab('vesna', 'frio', this)">CLIMATIZACIÓN</div>
+          <div id="tab-btn-vesna-ascensores" class="tab-btn active" onclick="switchTab('vesna', 'ascensores', this)">ASCENSORES</div>
+          <div id="tab-btn-vesna-agua" class="tab-btn" onclick="switchTab('vesna', 'agua', this)">AGUA</div>
+          <div id="tab-btn-vesna-frio" class="tab-btn" onclick="switchTab('vesna', 'frio', this)">CLIMATIZACIÓN</div>
         </div>
 
         <div class="panel-group">
@@ -589,6 +294,12 @@
             </div>
           </div>
         </div>
+
+        <div class="share-box">
+          <span style="font-size: 0.72rem; font-weight: 700; color: var(--text-primary);">📱 Enlace para ver en iPhone (Edificio Vesna):</span>
+          <span class="share-link-text" id="link-vesna">https://tudominio.github.io/voltex/?user=vesna</span>
+          <button class="btn-whatsapp" onclick="enviarWhatsAppCliente('Edificio Vesna', 'vesna')">📤 Compartir por WhatsApp</button>
+        </div>
       </div>
 
       <!-- CLIENTE 3: POLLO JUANES -->
@@ -602,8 +313,8 @@
         </div>
 
         <div class="tab-bar">
-          <div class="tab-btn active" onclick="switchTab('pollo_juanes', 'frio', this)">CÁMARA FRIGORÍFICA</div>
-          <div class="tab-btn" onclick="switchTab('pollo_juanes', 'agua', this)">AGUA</div>
+          <div id="tab-btn-pollo_juanes-frio" class="tab-btn active" onclick="switchTab('pollo_juanes', 'frio', this)">CÁMARA FRÍO</div>
+          <div id="tab-btn-pollo_juanes-agua" class="tab-btn" onclick="switchTab('pollo_juanes', 'agua', this)">AGUA</div>
         </div>
 
         <div class="panel-group">
@@ -616,10 +327,6 @@
               <span class="row-label">⚙️ Umbral Configurado:</span>
               <span id="disp-umbral-pollo_juanes" class="row-value val-warn">-12 °C</span>
             </div>
-            <div class="telemetry-row">
-              <span class="row-label">🚪 Sensor Puerta Industrial:</span>
-              <span id="puerta-pollo_juanes" class="row-value val-ok">CERRADA</span>
-            </div>
           </div>
 
           <div id="panel-pollo_juanes-agua" class="tab-panel">
@@ -629,6 +336,12 @@
             </div>
           </div>
         </div>
+
+        <div class="share-box">
+          <span style="font-size: 0.72rem; font-weight: 700; color: var(--text-primary);">📱 Enlace para ver en iPhone (Pollo Juanes):</span>
+          <span class="share-link-text" id="link-pollo_juanes">https://tudominio.github.io/voltex/?user=pollo_juanes</span>
+          <button class="btn-whatsapp" onclick="enviarWhatsAppCliente('Pollo Juanes', 'pollo_juanes')">📤 Compartir por WhatsApp</button>
+        </div>
       </div>
 
       <div id="section-control-header" class="section-header">
@@ -636,7 +349,7 @@
         <div class="line"></div>
       </div>
 
-      <!-- CONTROL INDEPENDIENTE: PORTONES -->
+      <!-- PORTONES -->
       <div id="card-casa_portones" class="voltex-card control-card">
         <div class="card-top">
           <div class="client-title-area">
@@ -659,17 +372,17 @@
         <div class="control-actions-grid">
           <button class="btn-command" onclick="accionarPorton('vehicular')">
             <span>⚡ ACCIONAR PORTÓN</span>
-            <span style="font-size: 0.7rem; opacity: 0.7;">PULSO VEHICULAR</span>
+            <span style="font-size: 0.65rem; opacity: 0.7;">PULSO VEHICULAR</span>
           </button>
           <button class="btn-command" onclick="accionarPorton('peatonal')">
             <span>🔓 APERTURA PEATONAL</span>
-            <span style="font-size: 0.7rem; opacity: 0.7;">PULSO CERRADURA</span>
+            <span style="font-size: 0.65rem; opacity: 0.7;">PULSO CERRADURA</span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- SECCIÓN 2: FINANZAS & GESTIÓN DE COBROS B2B -->
+    <!-- SECCIÓN 2: FINANZAS & COBROS -->
     <div id="section-view-finanzas" style="display: none;">
       <div class="section-header">
         <h2>Balance Financiero & Cobranzas</h2>
@@ -679,25 +392,25 @@
       <div class="finance-grid">
         <div class="stat-card">
           <span class="stat-label">INGRESOS MES</span>
-          <span class="stat-val val-ok">₲ 8.500.000</span>
+          <span class="stat-val val-ok">₲ 8.5M</span>
         </div>
         <div class="stat-card">
-          <span class="stat-label">GASTOS OPERATIVOS</span>
-          <span class="stat-val val-alert">₲ 2.100.000</span>
+          <span class="stat-label">GASTOS OPER.</span>
+          <span class="stat-val val-alert">₲ 2.1M</span>
         </div>
         <div class="stat-card">
           <span class="stat-label">BALANCE NETO</span>
-          <span class="stat-val val-ok">₲ 6.400.000</span>
+          <span class="stat-val val-ok">₲ 6.4M</span>
         </div>
       </div>
 
       <div class="voltex-card">
-        <h3 style="font-size: 1rem; color: var(--voltex-cyan); margin-bottom: 12px;">📋 Estado de Cuentas por Cliente</h3>
+        <h3 style="font-size: 0.95rem; color: var(--voltex-cyan); margin-bottom: 10px;">📋 Estado de Cuentas por Cliente</h3>
         <table class="table-custom">
           <thead>
             <tr>
               <th>Cliente</th>
-              <th>Plan Telemetría</th>
+              <th>Plan</th>
               <th>Monto</th>
               <th>Estado</th>
             </tr>
@@ -705,70 +418,48 @@
           <tbody>
             <tr>
               <td>Don Félix</td>
-              <td>Agua + Ascensores</td>
-              <td>₲ 2.500.000</td>
+              <td>Ascensores</td>
+              <td>₲ 2.5M</td>
               <td><span class="badge-status badge-ok">AL DÍA</span></td>
             </tr>
             <tr>
               <td>Edificio Vesna</td>
               <td>Ascensores Monarch</td>
-              <td>₲ 3.000.000</td>
+              <td>₲ 3.0M</td>
               <td><span class="badge-status badge-ok">AL DÍA</span></td>
             </tr>
             <tr>
               <td>Pollo Juanes</td>
-              <td>Cámara Frigorífica</td>
-              <td>₲ 3.000.000</td>
-              <td><span class="badge-status badge-alert">EN MORA (5 DÍAS)</span></td>
+              <td>Cámara Fría</td>
+              <td>₲ 3.0M</td>
+              <td><span class="badge-status badge-alert">EN MORA</span></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- SECCIÓN 3: INVENTARIO DE HARDWARE & MATERIALES -->
+    <!-- SECCIÓN 3: STOCK Y MATERIALES EDITABLE CON VINCULACIÓN COMERCIAL -->
     <div id="section-view-inventario" style="display: none;">
       <div class="section-header">
-        <h2>Stock de Materiales & Nodos ESP32</h2>
+        <h2>Stock & Activación Comercial</h2>
         <div class="line"></div>
       </div>
 
       <div class="voltex-card">
-        <h3 style="font-size: 1rem; color: var(--voltex-purple); margin-bottom: 12px;">📦 Control de Hardware IoT</h3>
+        <h3 style="font-size: 0.95rem; color: var(--voltex-purple); margin-bottom: 8px;">📦 Inventario de Módulos ESP32</h3>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 12px;">Al activar el servicio comercial de un nodo, el sistema descuenta automáticamente 1 unidad del stock general.</p>
+        
         <table class="table-custom">
           <thead>
             <tr>
               <th>Componente</th>
               <th>Stock</th>
-              <th>Costo Unit.</th>
-              <th>Total Valorizado</th>
+              <th>Acción Stock</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Módulo ESP32 DevKit v1</td>
-              <td>12 Unid.</td>
-              <td>₲ 45.000</td>
-              <td>₲ 540.000</td>
-            </tr>
-            <tr>
-              <td>Fuente Switching 12V 5A</td>
-              <td>8 Unid.</td>
-              <td>₲ 65.000</td>
-              <td>₲ 520.000</td>
-            </tr>
-            <tr>
-              <td>Módulo Relé Industrial 4-Ch</td>
-              <td>5 Unid.</td>
-              <td>₲ 35.000</td>
-              <td>₲ 175.000</td>
-            </tr>
-            <tr>
-              <td>Sensor Temp. DS18B20 Inox</td>
-              <td>15 Unid.</td>
-              <td>₲ 25.000</td>
-              <td>₲ 375.000</td>
-            </tr>
+          <tbody id="inventory-table-body">
+            <!-- Dinámico con JS -->
           </tbody>
         </table>
       </div>
@@ -776,39 +467,45 @@
 
   </div>
 
-  <!-- MODAL EDITAR CONFIGURACIÓN DE CLIENTE -->
+  <!-- MODAL EDITAR / ELIMINAR CLIENTE -->
   <div id="modal-edit-client" class="modal-overlay">
     <div class="modal-body">
       <div class="modal-header">
-        <span id="modal-edit-title" class="modal-title">⚙️ Configurar Cliente</span>
+        <span id="modal-edit-title" class="modal-title">⚙️ Editar Cliente / Módulos</span>
         <button class="btn-close-modal" onclick="cerrarModalEditarCliente()">&times;</button>
       </div>
 
       <input type="hidden" id="edit-client-id">
 
       <div class="form-group">
-        <label class="form-label">Nombre Comercial de la Empresa:</label>
+        <label class="form-label">Nombre Comercial:</label>
         <input type="text" id="edit-client-name" class="form-input">
       </div>
 
       <div class="form-group">
-        <label class="form-label">Umbral Alerta Temperatura (°C):</label>
-        <input type="number" id="edit-client-temp" class="form-input" value="-12">
+        <label class="form-label">Subsistemas Habilitados (Qué tiene y qué no):</label>
+        <div class="checkbox-grid">
+          <label class="checkbox-item"><input type="checkbox" id="mod-agua" checked> Módulo Agua</label>
+          <label class="checkbox-item"><input type="checkbox" id="mod-ascensores" checked> Ascensores</label>
+          <label class="checkbox-item"><input type="checkbox" id="mod-frio" checked> Climatización / Frío</label>
+        </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label">Estado de Pago / Cobranza:</label>
+        <label class="form-label">Estado de Pago / Facturación:</label>
         <select id="edit-client-billing" class="form-select">
-          <option value="aldia">Al Día (Acceso Habilitado)</option>
-          <option value="mora">En Mora (Enviar Notificación de Pago)</option>
+          <option value="aldia">Al Día (Activo)</option>
+          <option value="mora">En Mora</option>
+          <option value="prueba">Fase de Prueba (Inactivo)</option>
         </select>
       </div>
 
-      <button class="btn-save-settings" onclick="guardarConfiguracionCliente()">GUARDAR Y APLICAR CAMBIOS</button>
+      <button class="btn-save-settings" onclick="guardarConfiguracionCliente()">GUARDAR CAMBIOS</button>
+      <button class="btn-delete-client" onclick="eliminarClienteActual()">🗑️ ELIMINAR CLIENTE / NODO DE PRUEBA</button>
     </div>
   </div>
 
-  <!-- MODAL SMART LIFE AGREGAR DISPOSITIVO -->
+  <!-- MODAL AGREGAR DISPOSITIVO -->
   <div id="modal-add-device" class="modal-overlay">
     <div class="modal-body">
       <div class="modal-header">
@@ -817,55 +514,83 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Empresa / Cliente Target:</label>
+        <label class="form-label">Cliente Destino:</label>
         <select id="new-dev-client" class="form-select">
           <option value="don_felix">Don Félix</option>
           <option value="vesna">Edificio Vesna</option>
           <option value="pollo_juanes">Pollo Juanes</option>
-          <option value="casa">Casa / Residencia</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label class="form-label">Identificador MAC del ESP32:</label>
-        <input type="text" id="new-dev-mac" class="form-input" placeholder="Ej: VOLTEX-NODE-01">
+        <label class="form-label">Identificador MAC o ID del ESP32:</label>
+        <input type="text" id="new-dev-mac" class="form-input" placeholder="Ej: ESP32-NODE-09">
       </div>
 
-      <button class="btn-save-settings" onclick="guardarNuevoDispositivo()">VINCULAR A VOLTEX</button>
+      <div class="form-group">
+        <label class="form-label">Estado Comercial Inicial:</label>
+        <select id="new-dev-status" class="form-select">
+          <option value="prueba">Fase de Prueba (No descuenta stock aún)</option>
+          <option value="activo">Activo Comercial (Descuenta 1 unidad de stock)</option>
+        </select>
+      </div>
+
+      <button class="btn-save-settings" onclick="guardarNuevoDispositivo()">VINCULAR Y REGISTRAR</button>
     </div>
   </div>
 
   <footer>
-    VOLTEX IoT Telemetry & Enterprise ERP Platform &bull; v5.0 &bull; Asunción, PY
+    VOLTEX IoT Telemetry & Enterprise ERP Platform &bull; v5.1 &bull; Asunción, PY
   </footer>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    const firebaseConfig = {
-      databaseURL: "https://voltex-iot-default-rtdb.firebaseio.com"
-    };
-
+    const firebaseConfig = { databaseURL: "https://voltex-iot-default-rtdb.firebaseio.com" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let audioCtx = null;
-    let alarmInterval = null;
-    let estadoAlertaActual = false;
-    let swRegistration = null;
+    // ESTADO DE STOCK LOCAL EN MEMORIA / FIREBASE
+    let stockHardware = [
+      { id: 1, nombre: "ESP32 DevKit v1", stock: 12 },
+      { id: 2, nombre: "Fuente Switching 12V 5A", stock: 8 },
+      { id: 3, nombre: "Sensor Temp. DS18B20", stock: 15 }
+    ];
 
-    // NAVEGACIÓN ENTRE MÓDULOS DE VISTA (TELEMETRÍA / FINANZAS / INVENTARIO)
+    function renderizarInventario() {
+      const tbody = document.getElementById('inventory-table-body');
+      tbody.innerHTML = '';
+      stockHardware.forEach((item, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${item.nombre}</td>
+            <td><strong>${item.stock} Unid.</strong></td>
+            <td>
+              <button onclick="modificarStock(${index}, 1)" style="background:var(--voltex-cyan); border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
+              <button onclick="modificarStock(${index}, -1)" style="background:rgba(239,68,68,0.3); color:#fff; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function modificarStock(index, delta) {
+      stockHardware[index].stock += delta;
+      if(stockHardware[index].stock < 0) stockHardware[index].stock = 0;
+      renderizarInventario();
+    }
+
     function switchViewSection(sectionId, btnElement) {
       document.querySelectorAll('.main-nav .nav-btn').forEach(b => b.classList.remove('active'));
       btnElement.classList.add('active');
-
       document.getElementById('section-view-telemetria').style.display = (sectionId === 'telemetria') ? 'block' : 'none';
       document.getElementById('section-view-finanzas').style.display = (sectionId === 'finanzas') ? 'block' : 'none';
       document.getElementById('section-view-inventario').style.display = (sectionId === 'inventario') ? 'block' : 'none';
+      if(sectionId === 'inventario') renderizarInventario();
     }
 
-    // MODAL DE EDICIÓN INDIVIDUAL DE CLIENTE
+    // GESTIÓN MODAL EDITAR CLIENTE
     function abrirModalEditarCliente(clientId, clientName) {
       document.getElementById('edit-client-id').value = clientId;
       document.getElementById('edit-client-name').value = clientName;
@@ -879,31 +604,57 @@
     function guardarConfiguracionCliente() {
       const clientId = document.getElementById('edit-client-id').value;
       const newName = document.getElementById('edit-client-name').value;
-      const newTemp = document.getElementById('edit-client-temp').value;
+      
+      // Leer subsistemas marcados
+      const usaAgua = document.getElementById('mod-agua').checked;
+      const usaAscensores = document.getElementById('mod-ascensores').checked;
+      const usaFrio = document.getElementById('mod-frio').checked;
 
-      // Actualizar interfaz en vivo
+      // Actualizar nombre visual
       const nameElem = document.getElementById(`name-${clientId}`);
       if (nameElem) nameElem.innerText = `🏢 ${newName}`;
 
-      // Actualizar Umbral en Firebase
-      if (clientId === 'pollo_juanes') {
-        db.ref('clientes/pollo_juanes/config/temp_maxima').set(parseFloat(newTemp));
-        document.getElementById('disp-umbral-pollo_juanes').innerText = `${newTemp} °C`;
-      }
+      // Mostrar/Ocultar pestañas según lo que tenga el cliente
+      const btnAgua = document.getElementById(`tab-btn-${clientId}-agua`);
+      const btnAsc = document.getElementById(`tab-btn-${clientId}-ascensores`);
+      const btnFrio = document.getElementById(`tab-btn-${clientId}-frio`);
 
-      alert(`✅ Configuración de ${newName} actualizada exitosamente.`);
+      if(btnAgua) btnAgua.style.display = usaAgua ? 'block' : 'none';
+      if(btnAsc) btnAsc.style.display = usaAscensores ? 'block' : 'none';
+      if(btnFrio) btnFrio.style.display = usaFrio ? 'block' : 'none';
+
+      alert(`✅ Configuración de ${newName} actualizada.`);
       cerrarModalEditarCliente();
     }
 
-    // AGREGAR DISPOSITIVO SMART LIFE
+    function eliminarClienteActual() {
+      const clientId = document.getElementById('edit-client-id').value;
+      if (confirm("¿Estás seguro de eliminar este nodo o cliente de prueba?")) {
+        const card = document.getElementById(`card-${clientId}`);
+        if(card) card.style.display = 'none';
+        alert("🗑️ Cliente/Nodo eliminado de la vista.");
+        cerrarModalEditarCliente();
+      }
+    }
+
+    // COMPARTIR WHATSAPP CLIENTE (IPHONE / ANDROID)
+    function enviarWhatsAppCliente(clientName, userParam) {
+      const url = `https://tudominio.github.io/voltex/?user=${userParam}`;
+      const mensaje = `Hola, estimado cliente de ${clientName}. Aquí tiene su enlace de acceso directo al sistema VOLTEX IoT para monitorear sus equipos en tiempo real: ${url}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(mensaje)}`, '_blank');
+    }
+
+    // MODAL AGREGAR DISPOSITIVO
     function abrirModalAgregarDispositivo() { document.getElementById('modal-add-device').classList.add('active'); }
     function cerrarModalAgregarDispositivo() { document.getElementById('modal-add-device').classList.remove('active'); }
 
     function guardarNuevoDispositivo() {
-      const client = document.getElementById('new-dev-client').value;
-      const mac = document.getElementById('new-dev-mac').value || "VOLTEX-ESP32-GEN";
-      db.ref(`clientes/${client}/dispositivos/${mac}`).set({ registrado: true, timestamp: new Date().toISOString() });
-      alert(`✅ Nodo ${mac} asignado a ${client.toUpperCase()}`);
+      const estadoComercial = document.getElementById('new-dev-status').value;
+      if(estadoComercial === 'activo') {
+        // Descuenta automáticamente del stock del ESP32 si pasa a activo comercial
+        if(stockHardware[0].stock > 0) stockHardware[0].stock -= 1;
+      }
+      alert(`✅ Dispositivo vinculado con éxito. Estado: ${estadoComercial.toUpperCase()}`);
       cerrarModalAgregarDispositivo();
     }
 
@@ -911,7 +662,6 @@
       const card = document.getElementById(`card-${clientId}`);
       card.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       card.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-
       const targetPanel = document.getElementById(`panel-${clientId}-${systemId}`);
       if (targetPanel) targetPanel.classList.add('active');
       tabElement.classList.add('active');
@@ -924,41 +674,33 @@
       alert(`⚡ Pulso enviado a Portón ${tipo.toUpperCase()}`);
     }
 
-    // TELEMETRÍA EN TIEMPO REAL CON DETECCIÓN DE CONEXIÓN
+    // TELEMETRÍA DON FÉLIX
     db.ref('clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
       const data = snapshot.val();
       const card = document.getElementById('card-don_felix');
       const badge = document.getElementById('badge-don_felix');
       const val = document.getElementById('boya-don_felix');
-
       const estaOnline = data && (data.online === true);
       const faltaAgua = data && (data.boya_medio_tanque === true);
 
       if (!estaOnline) {
         card.classList.remove('critical-alarm');
-        badge.className = 'badge-status badge-offline';
-        badge.innerText = 'OFFLINE';
-        val.className = 'row-value val-offline';
-        val.innerText = 'EQUIPO SIN INTERNET';
+        badge.className = 'badge-status badge-offline'; badge.innerText = 'OFFLINE';
+        val.className = 'row-value val-offline'; val.innerText = 'EQUIPO SIN INTERNET';
         return;
       }
-
       if (faltaAgua) {
         card.classList.add('critical-alarm');
-        badge.className = 'badge-status badge-alert';
-        badge.innerText = '🚨 ALERTA CRÍTICA';
-        val.className = 'row-value val-alert';
-        val.innerText = '⚠️ MENOS DEL 50%';
+        badge.className = 'badge-status badge-alert'; badge.innerText = '🚨 ALERTA CRÍTICA';
+        val.className = 'row-value val-alert'; val.innerText = '⚠️ MENOS DEL 50%';
       } else {
         card.classList.remove('critical-alarm');
-        badge.className = 'badge-status badge-ok';
-        badge.innerText = 'NORMAL';
-        val.className = 'row-value val-ok';
-        val.innerText = '100% OK';
+        badge.className = 'badge-status badge-ok'; badge.innerText = 'NORMAL';
+        val.className = 'row-value val-ok'; val.innerText = '100% OK';
       }
     });
 
-    // POSICIÓN DE ASCENSORES EN VIVO
+    // ASCENSOR VESNA
     db.ref('clientes/vesna/telemetria/ascensor').on('value', (snap) => {
       const data = snap.val();
       if (!data) return;
@@ -969,6 +711,15 @@
         ascVal.className = data.movimiento ? 'row-value val-warn' : 'row-value val-ok';
       }
     });
+
+    window.onload = () => {
+      // Actualizar URLs de ejemplo en los enlaces de compartir
+      const domainBase = window.location.origin + window.location.pathname;
+      ['don_felix', 'vesna', 'pollo_juanes'].forEach(user => {
+        const el = document.getElementById(`link-${user}`);
+        if(el) el.innerText = `${domainBase}?user=${user}`;
+      });
+    };
   </script>
 </body>
 </html>
