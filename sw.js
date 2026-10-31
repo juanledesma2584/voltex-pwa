@@ -10,11 +10,10 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim());
 });
 
-// Escuchar eventos Push desde Firebase / Servidor
 self.addEventListener('push', (event) => {
   let payload = {
     title: "⚡ VOLTEX SYSTEM ALERT",
-    body: "Se ha detectado una anomalía crítica en uno de los nodos de telemetría.",
+    body: "Se ha detectado una anomalía crítica en el sistema.",
     icon: "https://img.icons8.com/fluency/96/flash-on.png"
   };
 
@@ -42,7 +41,6 @@ self.addEventListener('push', (event) => {
   );
 });
 
-// Al hacer clic en la notificación Push
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
