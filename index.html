@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>VOLTEX - Industrial IoT & Telemetry Platform</title>
+  <title>VOLTEX - Industrial IoT Platform</title>
 
   <!-- PWA Metadata & Theme -->
   <link rel="manifest" href="manifest.json">
@@ -49,6 +49,7 @@
       overflow-x: hidden;
     }
 
+    /* HEADER INDUSTRIAL VOLTEX */
     header {
       display: flex;
       justify-content: space-between;
@@ -126,6 +127,7 @@
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
     }
 
+    /* CONTROLES PRINCIPALES & BOTÓN AGREGAR DISPOSITIVO */
     .controls-bar-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -135,14 +137,33 @@
       width: 100%;
     }
 
+    .btn-add-device {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.9) 0%, rgba(16, 185, 129, 0.9) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.35);
+      transition: transform 0.1s ease;
+    }
+
     .btn-alert-setup {
       width: 100%;
       background: linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #ffffff;
-      padding: 16px;
+      padding: 14px;
       border-radius: 14px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 800;
       letter-spacing: 0.5px;
       cursor: pointer;
@@ -152,7 +173,6 @@
       gap: 10px;
       box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
       backdrop-filter: blur(8px);
-      transition: all 0.2s ease;
     }
 
     .btn-silence-alarm {
@@ -174,11 +194,11 @@
       animation: pulse-silence-btn 1s infinite alternate;
     }
 
-    @keyframes pulse-silence-btn {
-      from { transform: scale(1); }
-      to { transform: scale(1.02); }
+    .btn-add-device:active, .btn-alert-setup:active, .btn-silence-alarm:active {
+      transform: scale(0.97);
     }
 
+    /* SECCIÓN SEPARADORA */
     .section-header {
       max-width: 650px;
       margin: 0 auto 12px auto;
@@ -211,6 +231,7 @@
       width: 100%;
     }
 
+    /* TARJETAS GLASSMORPHISM */
     .voltex-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -419,6 +440,119 @@
       background: var(--voltex-purple);
     }
 
+    /* MODAL SMART LIFE / AGREGAR DISPOSITIVO */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(7, 10, 18, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-body {
+      background: #121a2b;
+      border: 1px solid var(--voltex-cyan);
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--voltex-cyan);
+    }
+
+    .btn-close-modal {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+
+    .device-template-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .template-item {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .template-item:active, .template-item.selected {
+      border-color: var(--voltex-cyan);
+      background: rgba(56, 189, 248, 0.15);
+    }
+
+    .template-icon { font-size: 1.8rem; }
+    .template-name { font-size: 0.8rem; font-weight: 700; color: var(--text-primary); }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .form-input, .form-select {
+      background: #090d16;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .btn-submit-device {
+      background: linear-gradient(135deg, var(--voltex-cyan) 0%, var(--voltex-blue) 100%);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
     footer {
       margin-top: auto;
       padding-top: 24px;
@@ -432,6 +566,7 @@
 </head>
 <body>
 
+  <!-- HEADER OFICIAL VOLTEX -->
   <header>
     <div class="brand-container">
       <svg class="voltex-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -449,7 +584,11 @@
     </div>
   </header>
 
+  <!-- BARRA DE ACCIONES SUPERIORES -->
   <div class="controls-bar-grid">
+    <button class="btn-add-device" onclick="abrirModalAgregarDispositivo()">
+      ➕ AGREGAR NUEVO DISPOSITIVO ESP32
+    </button>
     <button class="btn-alert-setup" onclick="activarAlertasSegundoPlano()">
       🔔 VINCULAR DISPOSITIVO A ALERTAS PUSH 24/7
     </button>
@@ -627,8 +766,58 @@
 
   </div>
 
+  <!-- MODAL ESTILO SMART LIFE PARA APROVISIONAR ESP32 -->
+  <div id="modal-add-device" class="modal-overlay">
+    <div class="modal-body">
+      <div class="modal-header">
+        <span class="modal-title">➕ Catálogo VOLTEX - Aprovisionar Nodo</span>
+        <button class="btn-close-modal" onclick="cerrarModalAgregarDispositivo()">&times;</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">1. Seleccionar Empresa / Cliente Target:</label>
+        <select id="new-dev-client" class="form-select">
+          <option value="don_felix">Don Félix</option>
+          <option value="vesna">Edificio Vesna</option>
+          <option value="pollo_juanes">Pollo Juanes</option>
+          <option value="casa">Casa / Residencia</option>
+          <option value="nuevo">+ Crear Nueva Empresa...</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">2. Tipo de Plantilla de Dispositivo:</label>
+        <div class="device-template-grid">
+          <div class="template-item selected" onclick="seleccionarPlantilla(this, 'agua')">
+            <span class="template-icon">💧</span>
+            <span class="template-name">Nivel de Agua</span>
+          </div>
+          <div class="template-item" onclick="seleccionarPlantilla(this, 'ascensor')">
+            <span class="template-icon">🛗</span>
+            <span class="template-name">Ascensores</span>
+          </div>
+          <div class="template-item" onclick="seleccionarPlantilla(this, 'frio')">
+            <span class="template-icon">❄️</span>
+            <span class="template-name">Cámara Frío</span>
+          </div>
+          <div class="template-item" onclick="seleccionarPlantilla(this, 'acceso')">
+            <span class="template-icon">🚗</span>
+            <span class="template-name">Portón / Acceso</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">3. Identificador o MAC del ESP32:</label>
+        <input type="text" id="new-dev-mac" class="form-input" placeholder="Ej: ESP32-WATER-NODE-01">
+      </div>
+
+      <button class="btn-submit-device" onclick="guardarNuevoDispositivo()">VINCULAR DISPOSITIVO A VOLTEX</button>
+    </div>
+  </div>
+
   <footer>
-    VOLTEX IoT Telemetry Platform &bull; Software Industrial v3.4 &bull; Asunción, PY
+    VOLTEX IoT Telemetry Platform &bull; Software Industrial v4.0 &bull; Asunción, PY
   </footer>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -647,8 +836,8 @@
     let estadoAlertaActual = false;
     let swRegistration = null;
     let umbralTemperaturaActual = -12;
+    let plantillaSeleccionada = 'agua';
 
-    // Control de Tolerancia / Desconexión (1 Hora = 3600000 ms)
     const TIEMPO_GRACIA_DESCONEXION_MS = 60 * 60 * 1000; 
     let offlineTimerDonFelix = null;
 
@@ -691,6 +880,36 @@
           .then(reg => { swRegistration = reg; })
           .catch(err => console.error('Error Service Worker:', err));
       });
+    }
+
+    // GESTIÓN DEL MODAL AGREGAR DISPOSITIVO
+    function abrirModalAgregarDispositivo() {
+      document.getElementById('modal-add-device').classList.add('active');
+    }
+
+    function cerrarModalAgregarDispositivo() {
+      document.getElementById('modal-add-device').classList.remove('active');
+    }
+
+    function seleccionarPlantilla(element, tipo) {
+      document.querySelectorAll('.template-item').forEach(el => el.classList.remove('selected'));
+      element.classList.add('selected');
+      plantillaSeleccionada = tipo;
+    }
+
+    function guardarNuevoDispositivo() {
+      const cliente = document.getElementById('new-dev-client').value;
+      const macID = document.getElementById('new-dev-mac').value || "ESP32-GENERIC-ID";
+
+      // Registro en Firebase bajo el árbol del cliente
+      db.ref(`clientes/${cliente}/dispositivos/${macID}`).set({
+        tipo: plantillaSeleccionada,
+        registrado: true,
+        fecha_alta: new Date().toISOString()
+      });
+
+      alert(`✅ Dispositivo ${macID} (${plantillaSeleccionada.toUpperCase()}) vinculado exitosamente a ${cliente.toUpperCase()}`);
+      cerrarModalAgregarDispositivo();
     }
 
     function switchTab(clientId, systemId, tabElement) {
@@ -776,28 +995,26 @@
       alert(`⚡ Pulso enviado a Portón ${tipo.toUpperCase()}`);
     }
 
-    // REALTIME LISTENERS CON CONTROL DE DESCONEXIÓN Y LÓGICA DE SENSORES
-
-    // 1. Don Félix (Agua)
+    // TELEMETRÍA EN TIEMPO REAL REALTIME DATABASE
     db.ref('clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
       const data = snapshot.val();
       const card = document.getElementById('card-don_felix');
       const badge = document.getElementById('badge-don_felix');
       const val = document.getElementById('boya-don_felix');
 
-      // CASO A: Nodo Desconectado / Sin Internet (No activa la sirena)
-      if (!data || data.online === false) {
+      const estaOnline = data && (data.online === true);
+      const faltaAgua = data && (data.boya_medio_tanque === true);
+
+      if (!estaOnline) {
         card.classList.remove('critical-alarm');
         badge.className = 'badge-status badge-offline';
         badge.innerText = 'OFFLINE';
         val.className = 'row-value val-offline';
         val.innerText = 'EQUIPO SIN INTERNET';
         
-        // Apaga sirena si estaba sonando por desconexión previa
         estadoAlertaActual = false;
         apagarAlertasGlobales();
 
-        // Iniciar temporizador de 1 hora para aviso de mantenimiento al cliente
         if (!offlineTimerDonFelix) {
           offlineTimerDonFelix = setTimeout(() => {
             if (swRegistration && Notification.permission === "granted") {
@@ -811,16 +1028,12 @@
         return;
       }
 
-      // Si volvió la conexión, limpia el temporizador offline
       if (offlineTimerDonFelix) {
         clearTimeout(offlineTimerDonFelix);
         offlineTimerDonFelix = null;
       }
 
-      // CASO B: Nodo Conectado (Evalúa falla real del sensor G18)
-      const faltaAguaReal = (data.boya_medio_tanque === true);
-
-      if (faltaAguaReal) {
+      if (faltaAgua) {
         card.classList.add('critical-alarm');
         badge.className = 'badge-status badge-alert';
         badge.innerText = '🚨 ALERTA CRÍTICA';
@@ -832,7 +1045,6 @@
           dispararAlertasGlobales("🚨 VOLTEX: ALERTA CRÍTICA", "Don Félix: Tanque por debajo del 50%");
         }
       } else {
-        // Nivel normal (Boya 100% OK)
         card.classList.remove('critical-alarm');
         badge.className = 'badge-status badge-ok';
         badge.innerText = 'NORMAL';
@@ -843,7 +1055,6 @@
       }
     });
 
-    // 2. Pollo Juanes (Frío)
     db.ref('clientes/pollo_juanes/config/temp_maxima').on('value', (snap) => {
       if (snap.exists()) {
         umbralTemperaturaActual = snap.val();
@@ -881,7 +1092,6 @@
       }
     });
 
-    // 3. Portones Casa
     db.ref('casa/portones/estado').on('value', (snapshot) => {
       const data = snapshot.val();
       if (!data) return;
