@@ -68,7 +68,6 @@
       gap: 12px;
     }
 
-    /* LOGO VOLTEX INLINE SVG NO SE RUMPE NUNCA */
     .voltex-logo-svg {
       width: 38px;
       height: 38px;
@@ -396,7 +395,7 @@
       </svg>
       <div class="brand-text">
         <span class="brand-title">VOLTEX</span>
-        <span class="brand-subtitle">Industrial IoT</span>
+        <span id="user-view-label" class="brand-subtitle">Industrial IoT</span>
       </div>
     </div>
     <div class="header-status">
@@ -413,13 +412,13 @@
   <div class="app-viewport">
     
     <!-- SECCIÓN 1: CLIENTES & TELEMETRÍA -->
-    <div class="section-header">
+    <div id="section-telemetria-header" class="section-header">
       <h2>Nodos de Telemetría Industrial</h2>
       <div class="line"></div>
     </div>
 
     <!-- CLIENTE 1: DON FÉLIX -->
-    <div id="card-don_felix" class="voltex-card">
+    <div id="card-don_felix" class="voltex-card client-node">
       <div class="card-top">
         <div class="client-title">🏢 Don Félix</div>
         <div id="badge-don_felix" class="badge-status badge-ok">NORMAL</div>
@@ -456,7 +455,7 @@
     </div>
 
     <!-- CLIENTE 2: VESNA -->
-    <div id="card-vesna" class="voltex-card">
+    <div id="card-vesna" class="voltex-card client-node">
       <div class="card-top">
         <div class="client-title">🏢 Edificio Vesna</div>
         <div id="badge-vesna" class="badge-status badge-ok">NORMAL</div>
@@ -497,7 +496,7 @@
     </div>
 
     <!-- CLIENTE 3: POLLO JUANES -->
-    <div id="card-pollo_juanes" class="voltex-card">
+    <div id="card-pollo_juanes" class="voltex-card client-node">
       <div class="card-top">
         <div class="client-title">🍗 Pollo Juanes</div>
         <div id="badge-pollo_juanes" class="badge-status badge-ok">NORMAL</div>
@@ -534,7 +533,7 @@
     </div>
 
     <!-- SECCIÓN 2: MÓDULO INDEPENDIENTE DE CONTROL Y ACCESOS -->
-    <div class="section-header">
+    <div id="section-control-header" class="section-header">
       <h2>Automatización de Accesos & Control</h2>
       <div class="line"></div>
     </div>
@@ -592,6 +591,41 @@
     let alarmInterval = null;
     let estadoAlertaActual = false;
     let swRegistration = null;
+
+    // 0. ENRUTAMIENTO MULTI-USUARIO POR URL PARAMS (?user=don_felix | ?user=casa | ?user=vesna)
+    function aplicarFiltroUsuario() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const currentUser = urlParams.get('user');
+      const userLabel = document.getElementById('user-view-label');
+
+      if (!currentUser || currentUser === 'admin') {
+        userLabel.innerText = "ADMIN PANEL";
+        return; // Muestra todo
+      }
+
+      // Ocultar todas las tarjetas por defecto
+      document.querySelectorAll('.voltex-card').forEach(card => card.style.display = 'none');
+      document.getElementById('section-telemetria-header').style.display = 'none';
+      document.getElementById('section-control-header').style.display = 'none';
+
+      if (currentUser === 'casa') {
+        userLabel.innerText = "ACCESOS RESIDENCIA";
+        document.getElementById('card-casa_portones').style.display = 'block';
+        document.getElementById('section-control-header').style.display = 'flex';
+      } else if (currentUser === 'don_felix') {
+        userLabel.innerText = "DON FÉLIX - TELEMETRÍA";
+        document.getElementById('card-don_felix').style.display = 'block';
+        document.getElementById('section-telemetria-header').style.display = 'flex';
+      } else if (currentUser === 'vesna') {
+        userLabel.innerText = "EDIFICIO VESNA";
+        document.getElementById('card-vesna').style.display = 'block';
+        document.getElementById('section-telemetria-header').style.display = 'flex';
+      } else if (currentUser === 'pollo_juanes') {
+        userLabel.innerText = "POLLO JUANES - CÁMARAS";
+        document.getElementById('card-pollo_juanes').style.display = 'block';
+        document.getElementById('section-telemetria-header').style.display = 'flex';
+      }
+    }
 
     // 1. Registro de Service Worker para Notificaciones Push de Fondo
     if ('serviceWorker' in navigator) {
@@ -774,6 +808,9 @@
         veh.className = (data.vehicular === "ABIERTO") ? "row-value val-warn" : "row-value val-ok";
       }
     });
+
+    // Ejecutar filtro al cargar la página
+    window.onload = aplicarFiltroUsuario;
   </script>
 </body>
 </html>
