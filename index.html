@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>VOLTEX - Industrial IoT Platform</title>
+  <title>VOLTEX - Enterprise IoT & ERP Platform</title>
 
   <!-- PWA Metadata & Theme -->
   <link rel="manifest" href="manifest.json">
@@ -127,7 +127,38 @@
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
     }
 
-    /* CONTROLES PRINCIPALES & BOTÓN AGREGAR DISPOSITIVO */
+    /* NAV NAVEGACIÓN PRINCIPAL ENTRE MÓDULOS */
+    .main-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-weight: 800;
+      font-size: 0.8rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .nav-btn.active {
+      background: var(--voltex-cyan);
+      color: #070a12;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    }
+
+    /* CONTROLES SUPERIORES */
     .controls-bar-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -142,9 +173,9 @@
       background: linear-gradient(135deg, rgba(34, 197, 94, 0.9) 0%, rgba(16, 185, 129, 0.9) 100%);
       border: 1px solid rgba(255, 255, 255, 0.3);
       color: #ffffff;
-      padding: 16px;
+      padding: 14px;
       border-radius: 14px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 900;
       letter-spacing: 1px;
       cursor: pointer;
@@ -153,26 +184,6 @@
       justify-content: center;
       gap: 10px;
       box-shadow: 0 8px 24px rgba(34, 197, 94, 0.35);
-      transition: transform 0.1s ease;
-    }
-
-    .btn-alert-setup {
-      width: 100%;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #ffffff;
-      padding: 14px;
-      border-radius: 14px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
-      backdrop-filter: blur(8px);
     }
 
     .btn-silence-alarm {
@@ -181,24 +192,17 @@
       background: linear-gradient(135deg, rgba(239, 68, 68, 0.9) 0%, rgba(185, 28, 28, 0.9) 100%);
       border: 1px solid rgba(255, 255, 255, 0.3);
       color: #ffffff;
-      padding: 16px;
+      padding: 14px;
       border-radius: 14px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 900;
-      letter-spacing: 1px;
       cursor: pointer;
       align-items: center;
       justify-content: center;
       gap: 10px;
       box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
-      animation: pulse-silence-btn 1s infinite alternate;
     }
 
-    .btn-add-device:active, .btn-alert-setup:active, .btn-silence-alarm:active {
-      transform: scale(0.97);
-    }
-
-    /* SECCIÓN SEPARADORA */
     .section-header {
       max-width: 650px;
       margin: 0 auto 12px auto;
@@ -231,7 +235,7 @@
       width: 100%;
     }
 
-    /* TARJETAS GLASSMORPHISM */
+    /* TARJETAS GLASSMORPHISM INDUSTRIAL */
     .voltex-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -270,13 +274,27 @@
       margin-bottom: 18px;
     }
 
-    .client-title {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--text-primary);
+    .client-title-area {
       display: flex;
       align-items: center;
       gap: 10px;
+    }
+
+    .client-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .btn-edit-client {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: var(--voltex-cyan);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     .badge-status {
@@ -288,23 +306,9 @@
       text-transform: uppercase;
     }
 
-    .badge-ok {
-      background: rgba(34, 197, 94, 0.15);
-      color: var(--status-ok);
-      border: 1px solid rgba(34, 197, 94, 0.4);
-    }
-
-    .badge-alert {
-      background: rgba(239, 68, 68, 0.2);
-      color: var(--status-alert);
-      border: 1px solid rgba(239, 68, 68, 0.6);
-    }
-
-    .badge-offline {
-      background: rgba(100, 116, 139, 0.2);
-      color: var(--status-offline);
-      border: 1px solid rgba(100, 116, 139, 0.4);
-    }
+    .badge-ok { background: rgba(34, 197, 94, 0.15); color: var(--status-ok); border: 1px solid rgba(34, 197, 94, 0.4); }
+    .badge-alert { background: rgba(239, 68, 68, 0.2); color: var(--status-alert); border: 1px solid rgba(239, 68, 68, 0.6); }
+    .badge-offline { background: rgba(100, 116, 139, 0.2); color: var(--status-offline); border: 1px solid rgba(100, 116, 139, 0.4); }
 
     .tab-bar {
       display: flex;
@@ -327,7 +331,6 @@
       cursor: pointer;
       transition: all 0.25s ease;
       user-select: none;
-      letter-spacing: 0.5px;
     }
 
     .tab-btn.active {
@@ -336,21 +339,9 @@
       box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
     }
 
-    .panel-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .tab-panel {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .tab-panel.active {
-      display: flex;
-    }
+    .panel-group { display: flex; flex-direction: column; gap: 12px; }
+    .tab-panel { display: none; flex-direction: column; gap: 12px; }
+    .tab-panel.active { display: flex; }
 
     .telemetry-row {
       background: rgba(15, 23, 42, 0.6);
@@ -362,62 +353,21 @@
       align-items: center;
     }
 
-    .row-label {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 600;
-    }
-
-    .row-value {
-      font-size: 1rem;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-    }
+    .row-label { font-size: 0.9rem; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; font-weight: 600; }
+    .row-value { font-size: 1rem; font-weight: 800; letter-spacing: 0.5px; }
 
     .val-ok { color: var(--status-ok); }
     .val-alert { color: var(--status-alert); }
     .val-warn { color: var(--status-warn); }
     .val-offline { color: var(--status-offline); }
 
-    .threshold-control {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-step {
-      background: rgba(56, 189, 248, 0.2);
-      border: 1px solid var(--voltex-cyan);
-      color: #fff;
-      width: 30px;
-      height: 30px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
+    /* MÓDULO CONTROL INDEPENDIENTE (PORTONES) */
     .control-card {
       background: linear-gradient(135deg, rgba(13, 21, 39, 0.85) 0%, rgba(20, 31, 55, 0.85) 100%);
       border: 1px solid rgba(139, 92, 246, 0.3);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.1);
     }
 
-    .control-card::before {
-      background: linear-gradient(90deg, transparent, var(--voltex-purple), transparent);
-    }
-
-    .control-actions-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 10px;
-    }
+    .control-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
 
     .btn-command {
       background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
@@ -432,15 +382,40 @@
       flex-direction: column;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s ease;
     }
 
-    .btn-command:active {
-      transform: scale(0.95);
-      background: var(--voltex-purple);
+    /* MÓDULO FINANZAS & INVENTARIO */
+    .finance-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+
+    .stat-card {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    /* MODAL SMART LIFE / AGREGAR DISPOSITIVO */
+    .stat-label { font-size: 0.7rem; color: var(--text-secondary); font-weight: 700; }
+    .stat-val { font-size: 1.1rem; font-weight: 900; }
+
+    .table-custom {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.85rem;
+    }
+
+    .table-custom th, .table-custom td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .table-custom th { color: var(--text-secondary); font-weight: 800; }
+
+    /* MODAL GENERAL */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -453,9 +428,7 @@
       padding: 16px;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .modal-body {
       background: #121a2b;
@@ -470,103 +443,27 @@
       gap: 16px;
     }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 12px;
-    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 12px; }
+    .modal-title { font-size: 1.1rem; font-weight: 800; color: var(--voltex-cyan); }
+    .btn-close-modal { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; }
 
-    .modal-title {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--voltex-cyan);
-    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); }
+    .form-input, .form-select { background: #090d16; border: 1px solid var(--card-border); color: #fff; padding: 12px; border-radius: 10px; font-size: 0.9rem; outline: none; }
 
-    .btn-close-modal {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 1.4rem;
-      cursor: pointer;
-    }
-
-    .device-template-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .template-item {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 14px;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-    }
-
-    .template-item:active, .template-item.selected {
-      border-color: var(--voltex-cyan);
-      background: rgba(56, 189, 248, 0.15);
-    }
-
-    .template-icon { font-size: 1.8rem; }
-    .template-name { font-size: 0.8rem; font-weight: 700; color: var(--text-primary); }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .form-label {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-    }
-
-    .form-input, .form-select {
-      background: #090d16;
-      border: 1px solid var(--card-border);
-      color: #fff;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      outline: none;
-    }
-
-    .btn-submit-device {
+    .btn-save-settings {
       background: linear-gradient(135deg, var(--voltex-cyan) 0%, var(--voltex-blue) 100%);
-      color: #fff;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      margin-top: 10px;
+      color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 10px;
     }
 
     footer {
-      margin-top: auto;
-      padding-top: 24px;
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      letter-spacing: 0.5px;
+      margin-top: auto; padding-top: 24px; text-align: center; font-size: 0.75rem; color: var(--text-secondary); border-top: 1px solid rgba(255, 255, 255, 0.05); letter-spacing: 0.5px;
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER OFICIAL VOLTEX -->
+  <!-- HEADER VOLTEX -->
   <header>
     <div class="brand-container">
       <svg class="voltex-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -575,7 +472,7 @@
       </svg>
       <div class="brand-text">
         <span class="brand-title">VOLTEX</span>
-        <span id="user-view-label" class="brand-subtitle">Industrial IoT</span>
+        <span id="user-view-label" class="brand-subtitle">Enterprise IoT & ERP</span>
       </div>
     </div>
     <div class="header-status">
@@ -584,13 +481,17 @@
     </div>
   </header>
 
-  <!-- BARRA DE ACCIONES SUPERIORES -->
+  <!-- NAVEGACIÓN MÓDULOS -->
+  <nav class="main-nav">
+    <button class="nav-btn active" onclick="switchViewSection('telemetria', this)">📡 TELEMETRÍA</button>
+    <button class="nav-btn" onclick="switchViewSection('finanzas', this)">💼 COBROS & BALANCES</button>
+    <button class="nav-btn" onclick="switchViewSection('inventario', this)">📦 STOCK Y MATERIALES</button>
+  </nav>
+
+  <!-- ACCIONES RÁPIDAS -->
   <div class="controls-bar-grid">
     <button class="btn-add-device" onclick="abrirModalAgregarDispositivo()">
       ➕ AGREGAR NUEVO DISPOSITIVO ESP32
-    </button>
-    <button class="btn-alert-setup" onclick="activarAlertasSegundoPlano()">
-      🔔 VINCULAR DISPOSITIVO A ALERTAS PUSH 24/7
     </button>
     <button id="btn-silenciar" class="btn-silence-alarm" onclick="silenciarAlarmaManualmente()">
       🔕 SILENCIAR SIRENA DE ALARMA (ACK)
@@ -599,225 +500,343 @@
 
   <div class="app-viewport">
     
-    <div id="section-telemetria-header" class="section-header">
-      <h2>Nodos de Telemetría Industrial</h2>
-      <div class="line"></div>
-    </div>
-
-    <!-- CLIENTE 1: DON FÉLIX -->
-    <div id="card-don_felix" class="voltex-card client-node">
-      <div class="card-top">
-        <div class="client-title">🏢 Don Félix</div>
-        <div id="badge-don_felix" class="badge-status badge-ok">NORMAL</div>
+    <!-- SECCIÓN 1: TELEMETRÍA INDUSTRIAL Y CLIENTES -->
+    <div id="section-view-telemetria">
+      <div id="section-telemetria-header" class="section-header">
+        <h2>Nodos de Telemetría Industrial</h2>
+        <div class="line"></div>
       </div>
 
-      <div class="tab-bar">
-        <div class="tab-btn active" onclick="switchTab('don_felix', 'agua', this)">AGUA</div>
-        <div class="tab-btn" onclick="switchTab('don_felix', 'ascensores', this)">ASCENSORES</div>
-        <div class="tab-btn" onclick="switchTab('don_felix', 'frio', this)">CLIMATIZACIÓN</div>
-      </div>
-
-      <div class="panel-group">
-        <div id="panel-don_felix-agua" class="tab-panel active">
-          <div class="telemetry-row">
-            <span class="row-label">💧 Nivel Tanque Reservorio (Boya 50%):</span>
-            <span id="boya-don_felix" class="row-value val-ok">100% OK</span>
+      <!-- CLIENTE 1: DON FÉLIX -->
+      <div id="card-don_felix" class="voltex-card client-node">
+        <div class="card-top">
+          <div class="client-title-area">
+            <span id="name-don_felix" class="client-title">🏢 Don Félix</span>
+            <button class="btn-edit-client" onclick="abrirModalEditarCliente('don_felix', 'Don Félix')">⚙️ EDITAR</button>
           </div>
+          <div id="badge-don_felix" class="badge-status badge-ok">NORMAL</div>
         </div>
 
-        <div id="panel-don_felix-ascensores" class="tab-panel">
-          <div class="telemetry-row">
-            <span class="row-label">🛗 Cuadro Maniobra Ascensor:</span>
-            <span class="row-value val-ok">PISO 0 / OPERATIVO</span>
-          </div>
+        <div class="tab-bar">
+          <div class="tab-btn active" onclick="switchTab('don_felix', 'agua', this)">AGUA</div>
+          <div class="tab-btn" onclick="switchTab('don_felix', 'ascensores', this)">ASCENSORES</div>
+          <div class="tab-btn" onclick="switchTab('don_felix', 'frio', this)">CLIMATIZACIÓN</div>
         </div>
 
-        <div id="panel-don_felix-frio" class="tab-panel">
-          <div class="telemetry-row">
-            <span class="row-label">❄️ Chiller Central:</span>
-            <span class="row-value val-warn">EN ESPERA</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CLIENTE 2: VESNA -->
-    <div id="card-vesna" class="voltex-card client-node">
-      <div class="card-top">
-        <div class="client-title">🏢 Edificio Vesna</div>
-        <div id="badge-vesna" class="badge-status badge-ok">NORMAL</div>
-      </div>
-
-      <div class="tab-bar">
-        <div class="tab-btn active" onclick="switchTab('vesna', 'ascensores', this)">ASCENSORES</div>
-        <div class="tab-btn" onclick="switchTab('vesna', 'agua', this)">AGUA</div>
-        <div class="tab-btn" onclick="switchTab('vesna', 'frio', this)">CLIMATIZACIÓN</div>
-      </div>
-
-      <div class="panel-group">
-        <div id="panel-vesna-ascensores" class="tab-panel active">
-          <div class="telemetry-row">
-            <span class="row-label">🛗 Telemetría Monarch/Otis:</span>
-            <span id="ascensor-vesna" class="row-value val-ok">PISO 1 / NORMAL</span>
-          </div>
-          <div class="telemetry-row">
-            <span class="row-label">⚠️ Cadena de Seguridad:</span>
-            <span id="seguridad-vesna" class="row-value val-ok">CERRADA / OK</span>
-          </div>
-        </div>
-
-        <div id="panel-vesna-agua" class="tab-panel">
-          <div class="telemetry-row">
-            <span class="row-label">💧 Tanque Superior:</span>
-            <span class="row-value val-ok">NORMAL</span>
-          </div>
-        </div>
-
-        <div id="panel-vesna-frio" class="tab-panel">
-          <div class="telemetry-row">
-            <span class="row-label">❄️ Presión HVAC:</span>
-            <span class="row-value val-ok">ESTABLE</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CLIENTE 3: POLLO JUANES -->
-    <div id="card-pollo_juanes" class="voltex-card client-node">
-      <div class="card-top">
-        <div class="client-title">🍗 Pollo Juanes</div>
-        <div id="badge-pollo_juanes" class="badge-status badge-ok">NORMAL</div>
-      </div>
-
-      <div class="tab-bar">
-        <div class="tab-btn active" onclick="switchTab('pollo_juanes', 'frio', this)">CÁMARA FRIGORÍFICA</div>
-        <div class="tab-btn" onclick="switchTab('pollo_juanes', 'agua', this)">AGUA</div>
-      </div>
-
-      <div class="panel-group">
-        <div id="panel-pollo_juanes-frio" class="tab-panel active">
-          <div class="telemetry-row">
-            <span class="row-label">🌡️ Temp. Actual Cámara:</span>
-            <span id="temp-pollo_juanes" class="row-value val-ok">-18.5 °C</span>
-          </div>
-
-          <div class="telemetry-row">
-            <span class="row-label">⚙️ Umbral Máximo Alerta:</span>
-            <div class="threshold-control">
-              <button class="btn-step" onclick="modificarUmbralTemp(-1)">-</button>
-              <span id="val-umbral-temp" class="row-value val-warn">-12 °C</span>
-              <button class="btn-step" onclick="modificarUmbralTemp(1)">+</button>
+        <div class="panel-group">
+          <div id="panel-don_felix-agua" class="tab-panel active">
+            <div class="telemetry-row">
+              <span class="row-label">💧 Nivel Tanque Reservorio (Boya 50%):</span>
+              <span id="boya-don_felix" class="row-value val-ok">100% OK</span>
             </div>
           </div>
 
+          <div id="panel-don_felix-ascensores" class="tab-panel">
+            <div class="telemetry-row">
+              <span class="row-label">🛗 Cuadro Maniobra Ascensor:</span>
+              <span id="ascensor-don_felix" class="row-value val-ok">PISO 0 / OPERATIVO</span>
+            </div>
+          </div>
+
+          <div id="panel-don_felix-frio" class="tab-panel">
+            <div class="telemetry-row">
+              <span class="row-label">❄️ Chiller Central:</span>
+              <span class="row-value val-warn">EN ESPERA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLIENTE 2: VESNA -->
+      <div id="card-vesna" class="voltex-card client-node">
+        <div class="card-top">
+          <div class="client-title-area">
+            <span id="name-vesna" class="client-title">🏢 Edificio Vesna</span>
+            <button class="btn-edit-client" onclick="abrirModalEditarCliente('vesna', 'Edificio Vesna')">⚙️ EDITAR</button>
+          </div>
+          <div id="badge-vesna" class="badge-status badge-ok">NORMAL</div>
+        </div>
+
+        <div class="tab-bar">
+          <div class="tab-btn active" onclick="switchTab('vesna', 'ascensores', this)">ASCENSORES</div>
+          <div class="tab-btn" onclick="switchTab('vesna', 'agua', this)">AGUA</div>
+          <div class="tab-btn" onclick="switchTab('vesna', 'frio', this)">CLIMATIZACIÓN</div>
+        </div>
+
+        <div class="panel-group">
+          <div id="panel-vesna-ascensores" class="tab-panel active">
+            <div class="telemetry-row">
+              <span class="row-label">🛗 Telemetría Monarch/Otis:</span>
+              <span id="ascensor-vesna" class="row-value val-ok">🛗 PISO 1 (DETENIDO)</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="row-label">⚠️ Cadena de Seguridad:</span>
+              <span id="seguridad-vesna" class="row-value val-ok">CERRADA / OK</span>
+            </div>
+          </div>
+
+          <div id="panel-vesna-agua" class="tab-panel">
+            <div class="telemetry-row">
+              <span class="row-label">💧 Tanque Superior:</span>
+              <span class="row-value val-ok">NORMAL</span>
+            </div>
+          </div>
+
+          <div id="panel-vesna-frio" class="tab-panel">
+            <div class="telemetry-row">
+              <span class="row-label">❄️ Presión HVAC:</span>
+              <span class="row-value val-ok">ESTABLE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLIENTE 3: POLLO JUANES -->
+      <div id="card-pollo_juanes" class="voltex-card client-node">
+        <div class="card-top">
+          <div class="client-title-area">
+            <span id="name-pollo_juanes" class="client-title">🍗 Pollo Juanes</span>
+            <button class="btn-edit-client" onclick="abrirModalEditarCliente('pollo_juanes', 'Pollo Juanes')">⚙️ EDITAR</button>
+          </div>
+          <div id="badge-pollo_juanes" class="badge-status badge-ok">NORMAL</div>
+        </div>
+
+        <div class="tab-bar">
+          <div class="tab-btn active" onclick="switchTab('pollo_juanes', 'frio', this)">CÁMARA FRIGORÍFICA</div>
+          <div class="tab-btn" onclick="switchTab('pollo_juanes', 'agua', this)">AGUA</div>
+        </div>
+
+        <div class="panel-group">
+          <div id="panel-pollo_juanes-frio" class="tab-panel active">
+            <div class="telemetry-row">
+              <span class="row-label">🌡️ Temp. Actual Cámara:</span>
+              <span id="temp-pollo_juanes" class="row-value val-ok">-18.5 °C</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="row-label">⚙️ Umbral Configurado:</span>
+              <span id="disp-umbral-pollo_juanes" class="row-value val-warn">-12 °C</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="row-label">🚪 Sensor Puerta Industrial:</span>
+              <span id="puerta-pollo_juanes" class="row-value val-ok">CERRADA</span>
+            </div>
+          </div>
+
+          <div id="panel-pollo_juanes-agua" class="tab-panel">
+            <div class="telemetry-row">
+              <span class="row-label">💧 Reservorio Lavado:</span>
+              <span class="row-value val-ok">NORMAL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="section-control-header" class="section-header">
+        <h2>Automatización de Accesos & Control</h2>
+        <div class="line"></div>
+      </div>
+
+      <!-- CONTROL INDEPENDIENTE: PORTONES -->
+      <div id="card-casa_portones" class="voltex-card control-card">
+        <div class="card-top">
+          <div class="client-title-area">
+            <span class="client-title">🏠 Control de Portones & Residencia</span>
+          </div>
+          <div class="badge-status badge-ok" style="background: rgba(139, 92, 246, 0.2); color: var(--voltex-purple); border-color: rgba(139, 92, 246, 0.4);">ONLINE</div>
+        </div>
+
+        <div class="panel-group">
           <div class="telemetry-row">
-            <span class="row-label">🚪 Sensor Puerta Industrial:</span>
-            <span id="puerta-pollo_juanes" class="row-value val-ok">CERRADA</span>
+            <span class="row-label">🚗 Portón Vehicular Principal:</span>
+            <span id="estado-porton-vehicular" class="row-value val-ok">CERRADO</span>
           </div>
           <div class="telemetry-row">
-            <span class="row-label">⚡ Térmico Compresor:</span>
-            <span id="termico-pollo_juanes" class="row-value val-ok">NORMAL</span>
+            <span class="row-label">🚪 Portón Peatonal Electromecánico:</span>
+            <span id="estado-porton-peatonal" class="row-value val-ok">BLOQUEADO</span>
           </div>
         </div>
 
-        <div id="panel-pollo_juanes-agua" class="tab-panel">
-          <div class="telemetry-row">
-            <span class="row-label">💧 Reservorio Lavado:</span>
-            <span class="row-value val-ok">NORMAL</span>
-          </div>
+        <div class="control-actions-grid">
+          <button class="btn-command" onclick="accionarPorton('vehicular')">
+            <span>⚡ ACCIONAR PORTÓN</span>
+            <span style="font-size: 0.7rem; opacity: 0.7;">PULSO VEHICULAR</span>
+          </button>
+          <button class="btn-command" onclick="accionarPorton('peatonal')">
+            <span>🔓 APERTURA PEATONAL</span>
+            <span style="font-size: 0.7rem; opacity: 0.7;">PULSO CERRADURA</span>
+          </button>
         </div>
       </div>
     </div>
 
-    <div id="section-control-header" class="section-header">
-      <h2>Automatización de Accesos & Control</h2>
-      <div class="line"></div>
+    <!-- SECCIÓN 2: FINANZAS & GESTIÓN DE COBROS B2B -->
+    <div id="section-view-finanzas" style="display: none;">
+      <div class="section-header">
+        <h2>Balance Financiero & Cobranzas</h2>
+        <div class="line"></div>
+      </div>
+
+      <div class="finance-grid">
+        <div class="stat-card">
+          <span class="stat-label">INGRESOS MES</span>
+          <span class="stat-val val-ok">₲ 8.500.000</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">GASTOS OPERATIVOS</span>
+          <span class="stat-val val-alert">₲ 2.100.000</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">BALANCE NETO</span>
+          <span class="stat-val val-ok">₲ 6.400.000</span>
+        </div>
+      </div>
+
+      <div class="voltex-card">
+        <h3 style="font-size: 1rem; color: var(--voltex-cyan); margin-bottom: 12px;">📋 Estado de Cuentas por Cliente</h3>
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Plan Telemetría</th>
+              <th>Monto</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Don Félix</td>
+              <td>Agua + Ascensores</td>
+              <td>₲ 2.500.000</td>
+              <td><span class="badge-status badge-ok">AL DÍA</span></td>
+            </tr>
+            <tr>
+              <td>Edificio Vesna</td>
+              <td>Ascensores Monarch</td>
+              <td>₲ 3.000.000</td>
+              <td><span class="badge-status badge-ok">AL DÍA</span></td>
+            </tr>
+            <tr>
+              <td>Pollo Juanes</td>
+              <td>Cámara Frigorífica</td>
+              <td>₲ 3.000.000</td>
+              <td><span class="badge-status badge-alert">EN MORA (5 DÍAS)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- CONTROL INDEPENDIENTE: PORTONES / CASA -->
-    <div id="card-casa_portones" class="voltex-card control-card">
-      <div class="card-top">
-        <div class="client-title">🏠 Control de Portones & Residencia</div>
-        <div id="badge-casa_portones" class="badge-status badge-ok" style="background: rgba(139, 92, 246, 0.2); color: var(--voltex-purple); border-color: rgba(139, 92, 246, 0.4);">ONLINE</div>
+    <!-- SECCIÓN 3: INVENTARIO DE HARDWARE & MATERIALES -->
+    <div id="section-view-inventario" style="display: none;">
+      <div class="section-header">
+        <h2>Stock de Materiales & Nodos ESP32</h2>
+        <div class="line"></div>
       </div>
 
-      <div class="panel-group">
-        <div class="telemetry-row">
-          <span class="row-label">🚗 Portón Vehicular Principal:</span>
-          <span id="estado-porton-vehicular" class="row-value val-ok">CERRADO</span>
-        </div>
-        <div class="telemetry-row">
-          <span class="row-label">🚪 Portón Peatonal Electromecánico:</span>
-          <span id="estado-porton-peatonal" class="row-value val-ok">BLOQUEADO</span>
-        </div>
-      </div>
-
-      <div class="control-actions-grid">
-        <button class="btn-command" onclick="accionarPorton('vehicular')">
-          <span>⚡ ACCIONAR PORTÓN</span>
-          <span style="font-size: 0.7rem; opacity: 0.7;">PULSO VEHICULAR</span>
-        </button>
-        <button class="btn-command" onclick="accionarPorton('peatonal')">
-          <span>🔓 APERTURA PEATONAL</span>
-          <span style="font-size: 0.7rem; opacity: 0.7;">PULSO CERRADURA</span>
-        </button>
+      <div class="voltex-card">
+        <h3 style="font-size: 1rem; color: var(--voltex-purple); margin-bottom: 12px;">📦 Control de Hardware IoT</h3>
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Stock</th>
+              <th>Costo Unit.</th>
+              <th>Total Valorizado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Módulo ESP32 DevKit v1</td>
+              <td>12 Unid.</td>
+              <td>₲ 45.000</td>
+              <td>₲ 540.000</td>
+            </tr>
+            <tr>
+              <td>Fuente Switching 12V 5A</td>
+              <td>8 Unid.</td>
+              <td>₲ 65.000</td>
+              <td>₲ 520.000</td>
+            </tr>
+            <tr>
+              <td>Módulo Relé Industrial 4-Ch</td>
+              <td>5 Unid.</td>
+              <td>₲ 35.000</td>
+              <td>₲ 175.000</td>
+            </tr>
+            <tr>
+              <td>Sensor Temp. DS18B20 Inox</td>
+              <td>15 Unid.</td>
+              <td>₲ 25.000</td>
+              <td>₲ 375.000</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
   </div>
 
-  <!-- MODAL ESTILO SMART LIFE PARA APROVISIONAR ESP32 -->
+  <!-- MODAL EDITAR CONFIGURACIÓN DE CLIENTE -->
+  <div id="modal-edit-client" class="modal-overlay">
+    <div class="modal-body">
+      <div class="modal-header">
+        <span id="modal-edit-title" class="modal-title">⚙️ Configurar Cliente</span>
+        <button class="btn-close-modal" onclick="cerrarModalEditarCliente()">&times;</button>
+      </div>
+
+      <input type="hidden" id="edit-client-id">
+
+      <div class="form-group">
+        <label class="form-label">Nombre Comercial de la Empresa:</label>
+        <input type="text" id="edit-client-name" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Umbral Alerta Temperatura (°C):</label>
+        <input type="number" id="edit-client-temp" class="form-input" value="-12">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Estado de Pago / Cobranza:</label>
+        <select id="edit-client-billing" class="form-select">
+          <option value="aldia">Al Día (Acceso Habilitado)</option>
+          <option value="mora">En Mora (Enviar Notificación de Pago)</option>
+        </select>
+      </div>
+
+      <button class="btn-save-settings" onclick="guardarConfiguracionCliente()">GUARDAR Y APLICAR CAMBIOS</button>
+    </div>
+  </div>
+
+  <!-- MODAL SMART LIFE AGREGAR DISPOSITIVO -->
   <div id="modal-add-device" class="modal-overlay">
     <div class="modal-body">
       <div class="modal-header">
-        <span class="modal-title">➕ Catálogo VOLTEX - Aprovisionar Nodo</span>
+        <span class="modal-title">➕ Aprovisionar Nodo ESP32</span>
         <button class="btn-close-modal" onclick="cerrarModalAgregarDispositivo()">&times;</button>
       </div>
 
       <div class="form-group">
-        <label class="form-label">1. Seleccionar Empresa / Cliente Target:</label>
+        <label class="form-label">Empresa / Cliente Target:</label>
         <select id="new-dev-client" class="form-select">
           <option value="don_felix">Don Félix</option>
           <option value="vesna">Edificio Vesna</option>
           <option value="pollo_juanes">Pollo Juanes</option>
           <option value="casa">Casa / Residencia</option>
-          <option value="nuevo">+ Crear Nueva Empresa...</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label class="form-label">2. Tipo de Plantilla de Dispositivo:</label>
-        <div class="device-template-grid">
-          <div class="template-item selected" onclick="seleccionarPlantilla(this, 'agua')">
-            <span class="template-icon">💧</span>
-            <span class="template-name">Nivel de Agua</span>
-          </div>
-          <div class="template-item" onclick="seleccionarPlantilla(this, 'ascensor')">
-            <span class="template-icon">🛗</span>
-            <span class="template-name">Ascensores</span>
-          </div>
-          <div class="template-item" onclick="seleccionarPlantilla(this, 'frio')">
-            <span class="template-icon">❄️</span>
-            <span class="template-name">Cámara Frío</span>
-          </div>
-          <div class="template-item" onclick="seleccionarPlantilla(this, 'acceso')">
-            <span class="template-icon">🚗</span>
-            <span class="template-name">Portón / Acceso</span>
-          </div>
-        </div>
+        <label class="form-label">Identificador MAC del ESP32:</label>
+        <input type="text" id="new-dev-mac" class="form-input" placeholder="Ej: VOLTEX-NODE-01">
       </div>
 
-      <div class="form-group">
-        <label class="form-label">3. Identificador o MAC del ESP32:</label>
-        <input type="text" id="new-dev-mac" class="form-input" placeholder="Ej: ESP32-WATER-NODE-01">
-      </div>
-
-      <button class="btn-submit-device" onclick="guardarNuevoDispositivo()">VINCULAR DISPOSITIVO A VOLTEX</button>
+      <button class="btn-save-settings" onclick="guardarNuevoDispositivo()">VINCULAR A VOLTEX</button>
     </div>
   </div>
 
   <footer>
-    VOLTEX IoT Telemetry Platform &bull; Software Industrial v4.0 &bull; Asunción, PY
+    VOLTEX IoT Telemetry & Enterprise ERP Platform &bull; v5.0 &bull; Asunción, PY
   </footer>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -835,80 +854,56 @@
     let alarmInterval = null;
     let estadoAlertaActual = false;
     let swRegistration = null;
-    let umbralTemperaturaActual = -12;
-    let plantillaSeleccionada = 'agua';
 
-    const TIEMPO_GRACIA_DESCONEXION_MS = 60 * 60 * 1000; 
-    let offlineTimerDonFelix = null;
+    // NAVEGACIÓN ENTRE MÓDULOS DE VISTA (TELEMETRÍA / FINANZAS / INVENTARIO)
+    function switchViewSection(sectionId, btnElement) {
+      document.querySelectorAll('.main-nav .nav-btn').forEach(b => b.classList.remove('active'));
+      btnElement.classList.add('active');
 
-    function aplicarFiltroUsuario() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const currentUser = urlParams.get('user');
-      const userLabel = document.getElementById('user-view-label');
+      document.getElementById('section-view-telemetria').style.display = (sectionId === 'telemetria') ? 'block' : 'none';
+      document.getElementById('section-view-finanzas').style.display = (sectionId === 'finanzas') ? 'block' : 'none';
+      document.getElementById('section-view-inventario').style.display = (sectionId === 'inventario') ? 'block' : 'none';
+    }
 
-      if (!currentUser || currentUser === 'admin') {
-        userLabel.innerText = "ADMIN PANEL";
-        return;
+    // MODAL DE EDICIÓN INDIVIDUAL DE CLIENTE
+    function abrirModalEditarCliente(clientId, clientName) {
+      document.getElementById('edit-client-id').value = clientId;
+      document.getElementById('edit-client-name').value = clientName;
+      document.getElementById('modal-edit-client').classList.add('active');
+    }
+
+    function cerrarModalEditarCliente() {
+      document.getElementById('modal-edit-client').classList.remove('active');
+    }
+
+    function guardarConfiguracionCliente() {
+      const clientId = document.getElementById('edit-client-id').value;
+      const newName = document.getElementById('edit-client-name').value;
+      const newTemp = document.getElementById('edit-client-temp').value;
+
+      // Actualizar interfaz en vivo
+      const nameElem = document.getElementById(`name-${clientId}`);
+      if (nameElem) nameElem.innerText = `🏢 ${newName}`;
+
+      // Actualizar Umbral en Firebase
+      if (clientId === 'pollo_juanes') {
+        db.ref('clientes/pollo_juanes/config/temp_maxima').set(parseFloat(newTemp));
+        document.getElementById('disp-umbral-pollo_juanes').innerText = `${newTemp} °C`;
       }
 
-      document.querySelectorAll('.voltex-card').forEach(card => card.style.display = 'none');
-      document.getElementById('section-telemetria-header').style.display = 'none';
-      document.getElementById('section-control-header').style.display = 'none';
-
-      if (currentUser === 'casa') {
-        userLabel.innerText = "ACCESOS RESIDENCIA";
-        document.getElementById('card-casa_portones').style.display = 'block';
-        document.getElementById('section-control-header').style.display = 'flex';
-      } else if (currentUser === 'don_felix') {
-        userLabel.innerText = "DON FÉLIX - TELEMETRÍA";
-        document.getElementById('card-don_felix').style.display = 'block';
-        document.getElementById('section-telemetria-header').style.display = 'flex';
-      } else if (currentUser === 'vesna') {
-        userLabel.innerText = "EDIFICIO VESNA";
-        document.getElementById('card-vesna').style.display = 'block';
-        document.getElementById('section-telemetria-header').style.display = 'flex';
-      } else if (currentUser === 'pollo_juanes') {
-        userLabel.innerText = "POLLO JUANES - CÁMARAS";
-        document.getElementById('card-pollo_juanes').style.display = 'block';
-        document.getElementById('section-telemetria-header').style.display = 'flex';
-      }
+      alert(`✅ Configuración de ${newName} actualizada exitosamente.`);
+      cerrarModalEditarCliente();
     }
 
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then(reg => { swRegistration = reg; })
-          .catch(err => console.error('Error Service Worker:', err));
-      });
-    }
-
-    // GESTIÓN DEL MODAL AGREGAR DISPOSITIVO
-    function abrirModalAgregarDispositivo() {
-      document.getElementById('modal-add-device').classList.add('active');
-    }
-
-    function cerrarModalAgregarDispositivo() {
-      document.getElementById('modal-add-device').classList.remove('active');
-    }
-
-    function seleccionarPlantilla(element, tipo) {
-      document.querySelectorAll('.template-item').forEach(el => el.classList.remove('selected'));
-      element.classList.add('selected');
-      plantillaSeleccionada = tipo;
-    }
+    // AGREGAR DISPOSITIVO SMART LIFE
+    function abrirModalAgregarDispositivo() { document.getElementById('modal-add-device').classList.add('active'); }
+    function cerrarModalAgregarDispositivo() { document.getElementById('modal-add-device').classList.remove('active'); }
 
     function guardarNuevoDispositivo() {
-      const cliente = document.getElementById('new-dev-client').value;
-      const macID = document.getElementById('new-dev-mac').value || "ESP32-GENERIC-ID";
-
-      // Registro en Firebase bajo el árbol del cliente
-      db.ref(`clientes/${cliente}/dispositivos/${macID}`).set({
-        tipo: plantillaSeleccionada,
-        registrado: true,
-        fecha_alta: new Date().toISOString()
-      });
-
-      alert(`✅ Dispositivo ${macID} (${plantillaSeleccionada.toUpperCase()}) vinculado exitosamente a ${cliente.toUpperCase()}`);
+      const client = document.getElementById('new-dev-client').value;
+      const mac = document.getElementById('new-dev-mac').value || "VOLTEX-ESP32-GEN";
+      db.ref(`clientes/${client}/dispositivos/${mac}`).set({ registrado: true, timestamp: new Date().toISOString() });
+      alert(`✅ Nodo ${mac} asignado a ${client.toUpperCase()}`);
       cerrarModalAgregarDispositivo();
     }
 
@@ -922,72 +917,6 @@
       tabElement.classList.add('active');
     }
 
-    function activarAlertasSegundoPlano() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-
-      if ("Notification" in window) {
-        Notification.requestPermission().then(permission => {
-          if (permission === "granted") alert("¡Sistema VOLTEX Push 24/7 Activado!");
-        });
-      }
-    }
-
-    function sonarSirena() {
-      if (!audioCtx) return;
-      try {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(980, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(420, audioCtx.currentTime + 0.35);
-        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.35);
-      } catch (e) {}
-    }
-
-    function dispararAlertasGlobales(titulo, mensaje) {
-      document.getElementById('btn-silenciar').style.display = 'flex';
-      if ("vibrate" in navigator) navigator.vibrate([600, 250, 600, 250, 600]);
-
-      if (swRegistration && "Notification" in window && Notification.permission === "granted") {
-        swRegistration.showNotification(titulo, {
-          body: mensaje,
-          icon: "https://img.icons8.com/fluency/96/flash-on.png",
-          vibrate: [500, 200, 500, 200, 500],
-          tag: "voltex-alerta-critica",
-          requireInteraction: true
-        });
-      }
-
-      if (!alarmInterval) {
-        sonarSirena();
-        alarmInterval = setInterval(sonarSirena, 550);
-      }
-    }
-
-    function apagarAlertasGlobales() {
-      if (alarmInterval) {
-        clearInterval(alarmInterval);
-        alarmInterval = null;
-      }
-      document.getElementById('btn-silenciar').style.display = 'none';
-    }
-
-    function silenciarAlarmaManualmente() {
-      apagarAlertasGlobales();
-    }
-
-    function modificarUmbralTemp(delta) {
-      umbralTemperaturaActual += delta;
-      document.getElementById('val-umbral-temp').innerText = `${umbralTemperaturaActual} °C`;
-      db.ref('clientes/pollo_juanes/config/temp_maxima').set(umbralTemperaturaActual);
-    }
-
     function accionarPorton(tipo) {
       const refPorton = db.ref(`casa/portones/${tipo}`);
       refPorton.set(true);
@@ -995,7 +924,7 @@
       alert(`⚡ Pulso enviado a Portón ${tipo.toUpperCase()}`);
     }
 
-    // TELEMETRÍA EN TIEMPO REAL REALTIME DATABASE
+    // TELEMETRÍA EN TIEMPO REAL CON DETECCIÓN DE CONEXIÓN
     db.ref('clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
       const data = snapshot.val();
       const card = document.getElementById('card-don_felix');
@@ -1011,26 +940,7 @@
         badge.innerText = 'OFFLINE';
         val.className = 'row-value val-offline';
         val.innerText = 'EQUIPO SIN INTERNET';
-        
-        estadoAlertaActual = false;
-        apagarAlertasGlobales();
-
-        if (!offlineTimerDonFelix) {
-          offlineTimerDonFelix = setTimeout(() => {
-            if (swRegistration && Notification.permission === "granted") {
-              swRegistration.showNotification("📡 AVISO DE CONEXIÓN - VOLTEX", {
-                body: "Don Félix: El equipo lleva más de 1 hora sin conexión a internet.",
-                icon: "https://img.icons8.com/fluency/96/flash-off.png"
-              });
-            }
-          }, TIEMPO_GRACIA_DESCONEXION_MS);
-        }
         return;
-      }
-
-      if (offlineTimerDonFelix) {
-        clearTimeout(offlineTimerDonFelix);
-        offlineTimerDonFelix = null;
       }
 
       if (faltaAgua) {
@@ -1039,70 +949,26 @@
         badge.innerText = '🚨 ALERTA CRÍTICA';
         val.className = 'row-value val-alert';
         val.innerText = '⚠️ MENOS DEL 50%';
-
-        if (!estadoAlertaActual) {
-          estadoAlertaActual = true;
-          dispararAlertasGlobales("🚨 VOLTEX: ALERTA CRÍTICA", "Don Félix: Tanque por debajo del 50%");
-        }
       } else {
         card.classList.remove('critical-alarm');
         badge.className = 'badge-status badge-ok';
         badge.innerText = 'NORMAL';
         val.className = 'row-value val-ok';
         val.innerText = '100% OK';
-        estadoAlertaActual = false;
-        apagarAlertasGlobales();
       }
     });
 
-    db.ref('clientes/pollo_juanes/config/temp_maxima').on('value', (snap) => {
-      if (snap.exists()) {
-        umbralTemperaturaActual = snap.val();
-        document.getElementById('val-umbral-temp').innerText = `${umbralTemperaturaActual} °C`;
-      }
-    });
-
-    db.ref('clientes/pollo_juanes/telemetria/frio').on('value', (snapshot) => {
-      const data = snapshot.val();
+    // POSICIÓN DE ASCENSORES EN VIVO
+    db.ref('clientes/vesna/telemetria/ascensor').on('value', (snap) => {
+      const data = snap.val();
       if (!data) return;
-
-      const tempVal = document.getElementById('temp-pollo_juanes');
-      const card = document.getElementById('card-pollo_juanes');
-      const badge = document.getElementById('badge-pollo_juanes');
-
-      if (data.temperatura !== undefined) {
-        tempVal.innerText = `${data.temperatura} °C`;
-        if (data.temperatura > umbralTemperaturaActual) {
-          tempVal.className = 'row-value val-alert';
-          card.classList.add('critical-alarm');
-          badge.className = 'badge-status badge-alert';
-          badge.innerText = '🚨 ALERTA TEMP';
-          if (!estadoAlertaActual) {
-            estadoAlertaActual = true;
-            dispararAlertasGlobales("🚨 VOLTEX: ALERTA FRÍO", `Pollo Juanes: Superó el umbral de ${umbralTemperaturaActual}°C`);
-          }
-        } else {
-          tempVal.className = 'row-value val-ok';
-          card.classList.remove('critical-alarm');
-          badge.className = 'badge-status badge-ok';
-          badge.innerText = 'NORMAL';
-          estadoAlertaActual = false;
-          apagarAlertasGlobales();
-        }
+      const ascVal = document.getElementById('ascensor-vesna');
+      if (ascVal && data.piso !== undefined) {
+        const enMov = data.movimiento ? "(EN MOVIMIENTO)" : "(DETENIDO)";
+        ascVal.innerText = `🛗 PISO ${data.piso} ${enMov}`;
+        ascVal.className = data.movimiento ? 'row-value val-warn' : 'row-value val-ok';
       }
     });
-
-    db.ref('casa/portones/estado').on('value', (snapshot) => {
-      const data = snapshot.val();
-      if (!data) return;
-      const veh = document.getElementById('estado-porton-vehicular');
-      if (veh && data.vehicular) {
-        veh.innerText = data.vehicular;
-        veh.className = (data.vehicular === "ABIERTO") ? "row-value val-warn" : "row-value val-ok";
-      }
-    });
-
-    window.onload = aplicarFiltroUsuario;
   </script>
 </body>
 </html>
