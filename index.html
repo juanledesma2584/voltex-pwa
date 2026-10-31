@@ -10,29 +10,47 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDKs v8 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <style>
-    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
-    .card-glow-red { box-shadow: 0 0 20px rgba(239, 68, 68, 0.35); border-color: rgba(239, 68, 68, 0.6); }
-    .card-glow-yellow { box-shadow: 0 0 20px rgba(234, 179, 8, 0.35); border-color: rgba(234, 179, 8, 0.6); }
-    .card-glow-green { box-shadow: 0 0 15px rgba(34, 197, 94, 0.25); border-color: rgba(30, 41, 59, 1); }
+    body { 
+      background-color: #0f172a; 
+      color: #f8fafc; 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+    }
+    .glow-normal { 
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.25); 
+      border-color: rgba(14, 165, 233, 0.5); 
+    }
+    .glow-critico { 
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.5); 
+      border-color: #f59e0b; 
+      animation: pulsoBorde 1.2s infinite alternate; 
+    }
+    @keyframes pulsoBorde {
+      0% { border-color: #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+      100% { border-color: #fef08a; box-shadow: 0 0 30px rgba(254, 240, 138, 0.8); }
+    }
   </style>
 </head>
 <body class="pb-24 min-h-screen">
 
-  <!-- ENCABEZADO -->
-  <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 p-4 sticky top-0 z-50 flex justify-between items-center shadow-lg">
+  <!-- ENCABEZADO CON BRANDING VOLTEX -->
+  <header class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 p-4 sticky top-0 z-50 flex justify-between items-center shadow-xl">
     <div class="flex items-center space-x-3">
-      <div id="indicador-conexion" class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" title="Conectado a Firebase"></div>
+      <div id="logo-voltex-bg" class="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center transition-all">
+        <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+      </div>
       <div>
         <h1 class="text-xl font-black tracking-wider text-amber-500 leading-none">VOLTEX</h1>
-        <p class="text-[10px] text-slate-400 font-medium tracking-wider uppercase mt-0.5">Telemetría Industrial IoT</p>
+        <p class="text-[10px] text-slate-400 font-bold tracking-wider uppercase mt-0.5">Telemetría Industrial IoT</p>
       </div>
     </div>
-    <span class="text-xs bg-slate-800 text-slate-300 font-semibold px-3 py-1 rounded-full border border-slate-700 shadow-inner">
+    <span class="text-xs bg-slate-800 text-slate-300 font-bold px-3 py-1 rounded-full border border-slate-700 shadow-inner">
       Juan Ledesma
     </span>
   </header>
@@ -40,103 +58,123 @@
   <!-- CONTENIDO PRINCIPAL -->
   <main class="p-4 max-w-md mx-auto space-y-5">
 
-    <!-- FILTROS POR RUBRO -->
+    <!-- FILTROS Y ACCIÓN DE ALTA -->
     <section>
       <div class="flex justify-between items-center mb-2">
-        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Filtrar por Rubro</p>
-        <button onclick="abrirModal()" class="text-xs bg-amber-500 text-slate-950 font-bold px-2.5 py-1 rounded-lg hover:bg-amber-400 transition">
+        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Filtrar por Rubro</p>
+        <button onclick="abrirModal()" class="text-xs bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-lg hover:bg-amber-400 transition shadow-md">
           + Agregar Cliente
         </button>
       </div>
-      <div class="grid grid-cols-4 gap-2 text-xs font-bold text-center">
-        <button onclick="filtrarRubro('todos')" id="btn-todos" class="py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold shadow-md transition-all">Todos</button>
-        <button onclick="filtrarRubro('agua')" id="btn-agua" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all">Agua</button>
-        <button onclick="filtrarRubro('frio')" id="btn-frio" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all">Frío</button>
-        <button onclick="filtrarRubro('ascensores')" id="btn-ascensores" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all">Ascensores</button>
+      <div class="grid grid-cols-5 gap-1.5 text-[11px] font-bold text-center">
+        <button onclick="filtrarRubro('todos')" id="btn-todos" class="py-2.5 rounded-xl bg-amber-500 text-slate-950 font-black shadow-md transition-all">Todos</button>
+        <button onclick="filtrarRubro('agua')" id="btn-agua" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 transition-all">Agua</button>
+        <button onclick="filtrarRubro('frio')" id="btn-frio" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 transition-all">Frío</button>
+        <button onclick="filtrarRubro('ascensores')" id="btn-ascensores" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 transition-all">Ascensor</button>
+        <button onclick="filtrarRubro('acceso')" id="btn-acceso" class="py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 transition-all">Portón</button>
       </div>
     </section>
 
-    <!-- MONITOR DE AGUA EN VIVO (DON FÉLIX) -->
-    <section id="panel-don-felix" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 transition-all duration-500 card-glow-green relative overflow-hidden">
+    <!-- PANEL PRINCIPAL MONITOREO DE AGUA (DON FÉLIX) -->
+    <section id="panel-don-felix" class="bg-slate-900 border-2 rounded-2xl p-5 transition-all duration-500 glow-normal relative overflow-hidden">
       <div class="flex justify-between items-start mb-4">
         <div>
           <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block mb-1">Módulo Nivel de Agua</span>
-          <h2 class="font-extrabold text-xl text-slate-100">Don Félix</h2>
+          <h2 class="font-black text-xl text-slate-100">Don Félix</h2>
         </div>
-        <span id="badge-estado" class="text-xs font-black px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider">
-          NORMAL
+        <span id="badge-estado" class="text-xs font-black px-3 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/40 uppercase tracking-wider">
+          [ OK ] NORMAL
         </span>
       </div>
 
-      <div class="space-y-3 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80">
+      <div class="space-y-4 bg-slate-950/80 p-4 rounded-xl border border-slate-800">
         <div class="flex justify-between items-center text-sm">
-          <span class="text-slate-400 font-medium">Estado del Tanque:</span>
-          <span id="texto-nivel-agua" class="font-bold text-emerald-400">Correcto (> 50%)</span>
+          <span class="text-slate-400 font-bold">Estado del Tanque:</span>
+          <span id="texto-nivel-agua" class="font-extrabold text-cyan-400 tracking-wide">[ OK ] CORRECTO (> 50%)</span>
         </div>
 
-        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden p-0.5 border border-slate-700/50">
-          <div id="barra-progreso" class="bg-emerald-500 h-2 rounded-full w-full transition-all duration-700 ease-out"></div>
+        <div class="w-full bg-slate-800 rounded-full h-3.5 overflow-hidden p-0.5 border border-slate-700">
+          <div id="barra-progreso" class="bg-cyan-400 h-2.5 rounded-full w-full transition-all duration-700"></div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80 text-xs">
-          <div class="flex items-center space-x-2">
-            <div id="indicador-boya-50" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-            <span class="text-slate-300">Boya 50% (Medio)</span>
-          </div>
-          <div class="flex items-center space-x-2">
-            <div id="indicador-boya-vacio" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-            <span class="text-slate-300">Boya Vacío (Crítico)</span>
-          </div>
+        <div class="pt-2 border-t border-slate-800/80 text-xs text-slate-300 flex justify-between items-center">
+          <span>Sensor Umbral 50%:</span>
+          <span id="indicador-contacto" class="font-bold text-cyan-400">Desconectado (Normal)</span>
         </div>
       </div>
 
-      <div class="mt-3 flex justify-between items-center text-[11px] text-slate-500">
+      <div class="mt-3 flex justify-between items-center text-[11px] text-slate-500 font-medium">
         <span>Hardware: ESP32 NodeMCU</span>
         <span id="ultima-actualizacion">Actualizado en vivo</span>
       </div>
     </section>
 
-    <!-- LISTADO DINÁMICO DE TODOS LOS CLIENTES -->
+    <!-- LISTADO DINÁMICO DE EMPRESAS MONITOREADAS -->
     <section class="space-y-3">
-      <h3 class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Instalaciones Monitoreadas</h3>
+      <h3 class="text-xs text-slate-400 font-bold uppercase tracking-wider">Instalaciones Monitoreadas</h3>
       <div id="lista-clientes" class="space-y-3">
-        <!-- Renderizado dinámico -->
+        <!-- Generado dinámicamente desde /clientes_lista/ -->
       </div>
     </section>
 
   </main>
 
-  <!-- MODAL PARA AGREGAR NUEVA EMPRESA -->
+  <!-- MODAL DE DETALLE INDIVIDUAL DE CLIENTE -->
+  <div id="modal-detalle" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden z-50 p-4 flex items-center justify-center">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 w-full max-w-md space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <div>
+          <h3 id="detalle-titulo" class="text-lg font-black text-slate-100">Cliente</h3>
+          <p id="detalle-rubros" class="text-xs text-amber-500 font-bold">Módulos contratados</p>
+        </div>
+        <button onclick="cerrarDetalle()" class="text-slate-400 hover:text-slate-100 font-bold text-lg p-1">✕</button>
+      </div>
+
+      <div id="detalle-contenido" class="space-y-3 py-2">
+        <!-- Carga dinámica de datos desde Firebase -->
+      </div>
+
+      <button onclick="cerrarDetalle()" class="w-full py-2.5 bg-slate-800 text-slate-300 font-bold text-xs rounded-xl hover:bg-slate-700 transition">
+        Cerrar Panel
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL PARA REGISTRAR NUEVA EMPRESA -->
   <div id="modal-cliente" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 w-full max-w-sm space-y-4">
       <h3 class="text-lg font-bold text-slate-100">Agregar Nueva Empresa</h3>
       
       <div>
-        <label class="text-xs text-slate-400 block mb-1">Nombre de la Empresa / Cliente</label>
+        <label class="text-xs text-slate-400 font-bold block mb-1">Nombre Comercial / Empresa</label>
         <input type="text" id="nuevo-nombre" placeholder="Ej. Vesna Ascensores" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
       </div>
 
       <div>
-        <label class="text-xs text-slate-400 block mb-2">Rubros Monitoreados</label>
+        <label class="text-xs text-slate-400 font-bold block mb-2">Rubros Monitoreados</label>
         <div class="space-y-2 text-sm text-slate-300">
           <label class="flex items-center space-x-2">
-            <input type="checkbox" id="check-agua" class="rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-0">
+            <input type="checkbox" id="check-agua" class="rounded bg-slate-950 border-slate-800 text-amber-500">
             <span>Tanques de Agua</span>
           </label>
           <label class="flex items-center space-x-2">
-            <input type="checkbox" id="check-frio" class="rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-0">
-            <span>Sistemas de Frío / Chillers</span>
+            <input type="checkbox" id="check-frio" class="rounded bg-slate-950 border-slate-800 text-amber-500">
+            <span>Sistemas de Frío</span>
           </label>
           <label class="flex items-center space-x-2">
-            <input type="checkbox" id="check-ascensores" class="rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-0">
+            <input type="checkbox" id="check-ascensores" class="rounded bg-slate-950 border-slate-800 text-amber-500">
             <span>Ascensores</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" id="check-acceso" class="rounded bg-slate-950 border-slate-800 text-amber-500">
+            <span>Control de Acceso / Portones</span>
           </label>
         </div>
       </div>
 
       <div class="flex justify-end space-x-2 pt-2">
-        <button onclick="cerrarModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold hover:bg-slate-700">Cancelar</button>
-        <button onclick="guardarCliente()" class="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold hover:bg-amber-400">Guardar</button>
+        <button onclick="cerrarModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">Cancelar</button>
+        <button onclick="guardarCliente()" class="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-black">Guardar Empresa</button>
       </div>
     </div>
   </div>
@@ -153,54 +191,56 @@
     let rubroActual = 'todos';
     let clientesData = {};
 
-    // Escucha de Telemetría para Don Félix
+    // Service Worker para Push
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('SW VOLTEX Activo:', reg.scope))
+          .catch((err) => console.error('SW Error:', err));
+      });
+    }
+
+    // Escucha en Tiempo Real - Telemetría Don Félix
     db.ref('/clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
       const data = snapshot.val() || {};
       const boyaMedio = data.boya_medio_tanque || false;
-      const boyaFalta = data.boya_falta_agua || false;
 
       const panel = document.getElementById('panel-don-felix');
       const badge = document.getElementById('badge-estado');
       const textoNivel = document.getElementById('texto-nivel-agua');
       const barra = document.getElementById('barra-progreso');
-      const indMedio = document.getElementById('indicador-boya-50');
-      const indVacio = document.getElementById('indicador-boya-vacio');
+      const indicadorContacto = document.getElementById('indicador-contacto');
       const textoHora = document.getElementById('ultima-actualizacion');
 
       const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       textoHora.innerText = 'Act. ' + horaActual;
 
-      if (boyaFalta) {
-        panel.className = "bg-slate-900 border rounded-2xl p-5 transition-all duration-500 card-glow-red relative overflow-hidden";
-        badge.className = "text-xs font-black px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/40 uppercase tracking-wider animate-pulse";
-        badge.innerText = "¡CRÍTICO!";
-        textoNivel.className = "font-bold text-red-400";
-        textoNivel.innerText = "TANQUE VACÍO (0%)";
-        barra.className = "bg-red-500 h-2 rounded-full w-1/12 transition-all duration-700 ease-out";
-        indMedio.className = "w-2.5 h-2.5 rounded-full bg-red-500";
-        indVacio.className = "w-2.5 h-2.5 rounded-full bg-red-500 animate-ping";
-      } else if (boyaMedio) {
-        panel.className = "bg-slate-900 border rounded-2xl p-5 transition-all duration-500 card-glow-yellow relative overflow-hidden";
-        badge.className = "text-xs font-black px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 uppercase tracking-wider";
-        badge.innerText = "ALERTA";
-        textoNivel.className = "font-bold text-amber-400";
-        textoNivel.innerText = "MEDIO TANQUE (< 50%)";
-        barra.className = "bg-amber-500 h-2 rounded-full w-1/2 transition-all duration-700 ease-out";
-        indMedio.className = "w-2.5 h-2.5 rounded-full bg-amber-500";
-        indVacio.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
+      if (boyaMedio) {
+        panel.className = "bg-slate-900 border-2 rounded-2xl p-5 transition-all duration-500 glow-critico relative overflow-hidden";
+        badge.className = "text-xs font-black px-3 py-1.5 rounded-full bg-amber-500 text-slate-950 border border-amber-300 uppercase tracking-wider animate-pulse";
+        badge.innerText = "[ 🚨 ALERTA CRÍTICA ]";
+        
+        textoNivel.className = "font-black text-amber-400 tracking-wide animate-pulse";
+        textoNivel.innerText = "[ ! ] BAJO 50% - ATENCIÓN";
+        
+        barra.className = "bg-amber-400 h-2.5 rounded-full w-1/3 transition-all duration-700";
+        indicadorContacto.className = "font-black text-amber-400";
+        indicadorContacto.innerText = "CERRADO (Alerta Activada)";
       } else {
-        panel.className = "bg-slate-900 border rounded-2xl p-5 transition-all duration-500 card-glow-green relative overflow-hidden";
-        badge.className = "text-xs font-black px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider";
-        badge.innerText = "NORMAL";
-        textoNivel.className = "font-bold text-emerald-400";
-        textoNivel.innerText = "Correcto (> 50%)";
-        barra.className = "bg-emerald-500 h-2 rounded-full w-full transition-all duration-700 ease-out";
-        indMedio.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
-        indVacio.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
+        panel.className = "bg-slate-900 border-2 rounded-2xl p-5 transition-all duration-500 glow-normal relative overflow-hidden";
+        badge.className = "text-xs font-black px-3 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/40 uppercase tracking-wider";
+        badge.innerText = "[ OK ] NORMAL";
+        
+        textoNivel.className = "font-extrabold text-cyan-400 tracking-wide";
+        textoNivel.innerText = "[ OK ] CORRECTO (> 50%)";
+        
+        barra.className = "bg-cyan-400 h-2.5 rounded-full w-full transition-all duration-700";
+        indicadorContacto.className = "font-bold text-cyan-400";
+        indicadorContacto.innerText = "Abierto (Normal)";
       }
     });
 
-    // Carga de la Lista de Clientes
+    // Carga Automática de Clientes desde /clientes_lista/
     db.ref('/clientes_lista').on('value', (snapshot) => {
       clientesData = snapshot.val() || {};
       renderizarClientes();
@@ -208,14 +248,14 @@
 
     function filtrarRubro(rubro) {
       rubroActual = rubro;
-      const botones = ['todos', 'agua', 'frio', 'ascensores'];
+      const botones = ['todos', 'agua', 'frio', 'ascensores', 'acceso'];
       
       botones.forEach(b => {
         const btn = document.getElementById(`btn-${b}`);
-        if (b === rubro) {
-          btn.className = "py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold shadow-md transition-all";
-        } else {
-          btn.className = "py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 transition-all";
+        if (btn) {
+          btn.className = (b === rubro) 
+            ? "py-2.5 rounded-xl bg-amber-500 text-slate-950 font-black shadow-md transition-all"
+            : "py-2.5 rounded-xl bg-slate-800 text-slate-300 border border-slate-700/60 transition-all";
         }
       });
 
@@ -227,11 +267,7 @@
       contenedor.innerHTML = '';
 
       const panelDonFelix = document.getElementById('panel-don-felix');
-      if (rubroActual === 'todos' || rubroActual === 'agua') {
-        panelDonFelix.style.display = 'block';
-      } else {
-        panelDonFelix.style.display = 'none';
-      }
+      panelDonFelix.style.display = (rubroActual === 'todos' || rubroActual === 'agua') ? 'block' : 'none';
 
       Object.keys(clientesData).forEach(key => {
         const cliente = clientesData[key];
@@ -240,15 +276,16 @@
         if (key === 'don_felix' && (rubroActual === 'todos' || rubroActual === 'agua')) return;
 
         const card = document.createElement('div');
-        card.className = 'bg-slate-900/90 border border-slate-800/80 rounded-xl p-4 flex justify-between items-center shadow-md';
+        card.className = 'bg-slate-900/90 border border-slate-800/80 rounded-xl p-4 flex justify-between items-center shadow-md hover:border-slate-700 transition cursor-pointer';
         
         let rubroTexto = [];
         if (cliente.agua) rubroTexto.push('Agua');
         if (cliente.frio) rubroTexto.push('Frío');
         if (cliente.ascensores) rubroTexto.push('Ascensores');
+        if (cliente.acceso) rubroTexto.push('Acceso/Portón');
 
         card.innerHTML = `
-          <div onclick="verDetalleCliente('${key}')" class="cursor-pointer flex-1">
+          <div onclick="verDetalleCliente('${key}')" class="flex-1">
             <h4 class="font-bold text-slate-200 text-base">${cliente.nombre || key}</h4>
             <p class="text-xs text-slate-400 mt-0.5">${rubroTexto.join(' • ')}</p>
           </div>
@@ -260,17 +297,76 @@
       });
     }
 
-    // Funciones del Modal y Gestión de Clientes
-    function abrirModal() {
-      document.getElementById('modal-cliente').classList.remove('hidden');
+    // Modal de Detalle
+    function verDetalleCliente(key) {
+      const cliente = clientesData[key];
+      if (!cliente) return;
+
+      document.getElementById('detalle-titulo').innerText = cliente.nombre || key;
+      
+      let rubros = [];
+      if (cliente.agua) rubros.push('Agua');
+      if (cliente.frio) rubros.push('Frío');
+      if (cliente.ascensores) rubros.push('Ascensores');
+      if (cliente.acceso) rubros.push('Acceso/Portón');
+      document.getElementById('detalle-rubros').innerText = 'Módulos: ' + rubros.join(' • ');
+
+      const contenedor = document.getElementById('detalle-contenido');
+      contenedor.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Conectando con el módulo...</p>';
+
+      document.getElementById('modal-detalle').classList.remove('hidden');
+
+      db.ref(`/clientes/${key}/telemetria`).on('value', (snapshot) => {
+        const telemetria = snapshot.val();
+        if (!telemetria) {
+          contenedor.innerHTML = `
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center space-y-2">
+              <span class="text-xs text-amber-500 font-bold block">[ MÓDULO PENDIENTE ]</span>
+              <p class="text-xs text-slate-400">Este cliente aún no registra transmisiones activas desde su ESP32.</p>
+            </div>`;
+        } else {
+          let htmlComandos = '';
+          if (cliente.acceso) {
+            htmlComandos = `
+              <div class="pt-2 border-t border-slate-800">
+                <button onclick="enviarComandoPorton('${key}')" class="w-full py-2.5 bg-cyan-500 text-slate-950 font-black text-xs rounded-xl shadow-md hover:bg-cyan-400 transition">
+                  🔓 ABRIR PORTÓN (COMANDO REMOTO)
+                </button>
+              </div>`;
+          }
+
+          contenedor.innerHTML = `
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 text-xs">
+              <div class="flex justify-between border-b border-slate-800 pb-2">
+                <span class="text-slate-400">Estado de Enlace:</span>
+                <span class="text-cyan-400 font-bold">[ OK ] EN LÍNEA</span>
+              </div>
+              <pre class="text-[11px] text-amber-400 overflow-x-auto">${JSON.stringify(telemetria, null, 2)}</pre>
+              ${htmlComandos}
+            </div>`;
+        }
+      });
     }
 
+    function enviarComandoPorton(key) {
+      db.ref(`/clientes/${key}/comandos`).set({
+        abrir_porton: true,
+        timestamp: Date.now()
+      }).then(() => alert("Comando de apertura enviado al ESP32."));
+    }
+
+    function cerrarDetalle() {
+      document.getElementById('modal-detalle').classList.add('hidden');
+    }
+
+    function abrirModal() { document.getElementById('modal-cliente').classList.remove('hidden'); }
     function cerrarModal() {
       document.getElementById('modal-cliente').classList.add('hidden');
       document.getElementById('nuevo-nombre').value = '';
       document.getElementById('check-agua').checked = false;
       document.getElementById('check-frio').checked = false;
       document.getElementById('check-ascensores').checked = false;
+      document.getElementById('check-acceso').checked = false;
     }
 
     function guardarCliente() {
@@ -278,32 +374,25 @@
       const agua = document.getElementById('check-agua').checked;
       const frio = document.getElementById('check-frio').checked;
       const ascensores = document.getElementById('check-ascensores').checked;
+      const acceso = document.getElementById('check-acceso').checked;
 
-      if (!nombre) {
-        alert("Por favor ingrese el nombre del cliente o empresa.");
-        return;
-      }
+      if (!nombre) return alert("Ingrese el nombre de la empresa.");
 
-      const key = nombre.toLowerCase().replace(/[^a-z0-0]/g, '_');
+      const key = nombre.toLowerCase().replace(/[^a-z0-9]/g, '_');
 
       db.ref('/clientes_lista/' + key).set({
         nombre: nombre,
         agua: agua,
         frio: frio,
-        ascensores: ascensores
-      }).then(() => {
-        cerrarModal();
-      });
+        ascensores: ascensores,
+        acceso: acceso
+      }).then(() => cerrarModal());
     }
 
     function eliminarCliente(key) {
-      if (confirm(`¿Desea eliminar la empresa de la lista?`)) {
+      if (confirm(`¿Desea eliminar este cliente de la lista?`)) {
         db.ref('/clientes_lista/' + key).remove();
       }
-    }
-
-    function verDetalleCliente(key) {
-      alert(`Detalle de ${clientesData[key]?.nombre || key}:\nEsperando conexión del hardware de telemetría para este módulo.`);
     }
   </script>
 </body>
