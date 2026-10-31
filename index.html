@@ -126,7 +126,7 @@
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
     }
 
-    /* BOTÓN ACTIVACIÓN PUSH Y SILENCIADOR DE ALARMA */
+    /* CONTROLES SUPERIORES */
     .controls-bar-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -178,11 +178,6 @@
     @keyframes pulse-silence-btn {
       from { transform: scale(1); }
       to { transform: scale(1.02); }
-    }
-
-    .btn-alert-setup:active, .btn-silence-alarm:active {
-      transform: scale(0.98);
-      opacity: 0.9;
     }
 
     /* SECCIÓN SEPARADORA DE CATEGORÍA */
@@ -288,7 +283,13 @@
       border: 1px solid rgba(239, 68, 68, 0.6);
     }
 
-    /* PESTAÑAS SUB-SISTEMAS ELEGANTES */
+    .badge-offline {
+      background: rgba(148, 163, 184, 0.2);
+      color: var(--text-secondary);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    /* PESTAÑAS SUB-SISTEMAS */
     .tab-bar {
       display: flex;
       gap: 6px;
@@ -365,6 +366,27 @@
     .val-alert { color: var(--status-alert); }
     .val-warn { color: var(--status-warn); }
 
+    /* CONTROLES DE SETEO DE TEMPERATURA DINÁMICA */
+    .threshold-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-step {
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid var(--voltex-cyan);
+      color: #fff;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     /* MÓDULO CONTROL INDEPENDIENTE (PORTONES/CASA) */
     .control-card {
       background: linear-gradient(135deg, rgba(13, 21, 39, 0.85) 0%, rgba(20, 31, 55, 0.85) 100%);
@@ -417,7 +439,6 @@
 </head>
 <body>
 
-  <!-- HEADER OFICIAL VOLTEX CON SVG EMBEBIDO -->
   <header>
     <div class="brand-container">
       <svg class="voltex-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -435,7 +456,6 @@
     </div>
   </header>
 
-  <!-- CONTROLES SUPERIORES (ACTIVACIÓN Y BOTÓN DE SILENCIAR ALARMA) -->
   <div class="controls-bar-grid">
     <button class="btn-alert-setup" onclick="activarAlertasSegundoPlano()">
       🔔 ACTIVAR TELEMETRÍA CRÍTICA Y PUSH 24/7
@@ -447,7 +467,6 @@
 
   <div class="app-viewport">
     
-    <!-- SECCIÓN 1: CLIENTES & TELEMETRÍA -->
     <div id="section-telemetria-header" class="section-header">
       <h2>Nodos de Telemetría Industrial</h2>
       <div class="line"></div>
@@ -531,7 +550,7 @@
       </div>
     </div>
 
-    <!-- CLIENTE 3: POLLO JUANES -->
+    <!-- CLIENTE 3: POLLO JUANES (CON SETEO DE UMBRAL DINÁMICO DE TEMPERATURA) -->
     <div id="card-pollo_juanes" class="voltex-card client-node">
       <div class="card-top">
         <div class="client-title">🍗 Pollo Juanes</div>
@@ -546,29 +565,39 @@
       <div class="panel-group">
         <div id="panel-pollo_juanes-frio" class="tab-panel active">
           <div class="telemetry-row">
-            <span class="row-label">🌡️ Temp. Cámara de Congelado:</span>
+            <span class="row-label">🌡️ Temp. Actual Cámara:</span>
             <span id="temp-pollo_juanes" class="row-value val-ok">-18.5 °C</span>
           </div>
+
+          <!-- CONTROL DE SETEO DE UMBRAL DE ALERTA -->
           <div class="telemetry-row">
-            <span class="row-label">🚪 Sensor de Puerta Industrial:</span>
+            <span class="row-label">⚙️ Umbral Máximo Alerta:</span>
+            <div class="threshold-control">
+              <button class="btn-step" onclick="modificarUmbralTemp(-1)">-</button>
+              <span id="val-umbral-temp" class="row-value val-warn">-12 °C</span>
+              <button class="btn-step" onclick="modificarUmbralTemp(1)">+</button>
+            </div>
+          </div>
+
+          <div class="telemetry-row">
+            <span class="row-label">🚪 Sensor Puerta Industrial:</span>
             <span id="puerta-pollo_juanes" class="row-value val-ok">CERRADA</span>
           </div>
           <div class="telemetry-row">
-            <span class="row-label">⚡ Protección Térmica Compresor:</span>
+            <span class="row-label">⚡ Térmico Compresor:</span>
             <span id="termico-pollo_juanes" class="row-value val-ok">NORMAL</span>
           </div>
         </div>
 
         <div id="panel-pollo_juanes-agua" class="tab-panel">
           <div class="telemetry-row">
-            <span class="row-label">💧 Reservorio Lavado Industrial:</span>
+            <span class="row-label">💧 Reservorio Lavado:</span>
             <span class="row-value val-ok">NORMAL</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SECCIÓN 2: MÓDULO INDEPENDIENTE DE CONTROL Y ACCESOS -->
     <div id="section-control-header" class="section-header">
       <h2>Automatización de Accesos & Control</h2>
       <div class="line"></div>
@@ -607,15 +636,13 @@
   </div>
 
   <footer>
-    VOLTEX IoT Telemetry Platform &bull; Software Industrial v3.1 &bull; Asunción, PY
+    VOLTEX IoT Telemetry Platform &bull; Software Industrial v3.2 &bull; Asunción, PY
   </footer>
 
-  <!-- Firebase Web SDK v8 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    // Conexión Realtime Database Firebase
     const firebaseConfig = {
       databaseURL: "https://voltex-iot-default-rtdb.firebaseio.com"
     };
@@ -627,8 +654,8 @@
     let alarmInterval = null;
     let estadoAlertaActual = false;
     let swRegistration = null;
+    let umbralTemperaturaActual = -12;
 
-    // 0. ENRUTAMIENTO MULTI-USUARIO POR URL PARAMS (?user=don_felix | ?user=casa | ?user=vesna)
     function aplicarFiltroUsuario() {
       const urlParams = new URLSearchParams(window.location.search);
       const currentUser = urlParams.get('user');
@@ -662,19 +689,14 @@
       }
     }
 
-    // 1. Registro de Service Worker para Notificaciones Push de Fondo
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
-          .then(reg => {
-            swRegistration = reg;
-            console.log('VOLTEX Service Worker registrado:', reg.scope);
-          })
-          .catch(err => console.error('Error en Service Worker:', err));
+          .then(reg => { swRegistration = reg; })
+          .catch(err => console.error('Error Service Worker:', err));
       });
     }
 
-    // 2. Control de Pestañas (Tabs)
     function switchTab(clientId, systemId, tabElement) {
       const card = document.getElementById(`card-${clientId}`);
       card.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -685,56 +707,37 @@
       tabElement.classList.add('active');
     }
 
-    // 3. Permisos de Sonido y Push
     function activarAlertasSegundoPlano() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
 
       if ("Notification" in window) {
         Notification.requestPermission().then(permission => {
-          if (permission === "granted") {
-            alert("¡Sistema VOLTEX 24/7 Activado! Las alertas sonarán incluso con el teléfono bloqueado.");
-          } else {
-            alert("Permiso de notificación denegado en el sistema.");
-          }
+          if (permission === "granted") alert("¡Sistema VOLTEX Push 24/7 Activado!");
         });
       }
     }
 
-    // 4. Sirena sonora industrial con Auto-Reset y Silenciador Manual
     function sonarSirena() {
       if (!audioCtx) return;
       try {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(980, audioCtx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(420, audioCtx.currentTime + 0.35);
-
         gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
-
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-
         osc.start();
         osc.stop(audioCtx.currentTime + 0.35);
-      } catch (e) {
-        console.log("AudioContext reiniciado:", e);
-      }
+      } catch (e) {}
     }
 
     function dispararAlertasGlobales(titulo, mensaje) {
       document.getElementById('btn-silenciar').style.display = 'flex';
-
-      if ("vibrate" in navigator) {
-        navigator.vibrate([600, 250, 600, 250, 600]);
-      }
+      if ("vibrate" in navigator) navigator.vibrate([600, 250, 600, 250, 600]);
 
       if (swRegistration && "Notification" in window && Notification.permission === "granted") {
         swRegistration.showNotification(titulo, {
@@ -762,29 +765,43 @@
 
     function silenciarAlarmaManualmente() {
       apagarAlertasGlobales();
-      alert("🔕 Sirena silenciada manualmente. El monitoreo continúa en pantalla.");
     }
 
-    // 5. Accionamiento independiente de Portones
+    // MODIFICAR Y GUARDAR UMBRAL EN FIREBASE EN TIEMPO REAL
+    function modificarUmbralTemp(delta) {
+      umbralTemperaturaActual += delta;
+      document.getElementById('val-umbral-temp').innerText = `${umbralTemperaturaActual} °C`;
+      db.ref('clientes/pollo_juanes/config/temp_maxima').set(umbralTemperaturaActual);
+    }
+
     function accionarPorton(tipo) {
       const refPorton = db.ref(`casa/portones/${tipo}`);
       refPorton.set(true);
       setTimeout(() => refPorton.set(false), 1500);
-      alert(`⚡ Pulso de activación enviado a Portón ${tipo.toUpperCase()}`);
+      alert(`⚡ Pulso enviado a Portón ${tipo.toUpperCase()}`);
     }
 
-    // 6. Suscripción a Firebase en Tiempo Real
-    
-    // Don Félix (Agua) - Con Autoreset Inmediato al normalizar la boya
+    // SUSCRIPCIONES REALTIME CON AUTO-RESET E INSPECCIÓN DE CONEXIÓN (HEARTBEAT)
+
+    // 1. Don Félix (Agua)
     db.ref('clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
       const data = snapshot.val();
-      if (!data) return;
-
-      const alerta = (data.boya_medio_tanque === true);
       const card = document.getElementById('card-don_felix');
       const badge = document.getElementById('badge-don_felix');
       const val = document.getElementById('boya-don_felix');
 
+      if (!data || data.online === false) {
+        badge.className = 'badge-status badge-offline';
+        badge.innerText = 'OFFLINE';
+        val.className = 'row-value val-warn';
+        val.innerText = 'NODO DESCONECTADO';
+        estadoAlertaActual = false;
+        apagarAlertasGlobales();
+        card.classList.remove('critical-alarm');
+        return;
+      }
+
+      const alerta = (data.boya_medio_tanque === true);
       if (alerta) {
         card.classList.add('critical-alarm');
         badge.className = 'badge-status badge-alert';
@@ -794,42 +811,45 @@
 
         if (!estadoAlertaActual) {
           estadoAlertaActual = true;
-          dispararAlertasGlobales("🚨 VOLTEX: ALERTA CRÍTICA", "Don Félix: El tanque descendió por debajo del 50%");
+          dispararAlertasGlobales("🚨 VOLTEX: ALERTA CRÍTICA", "Don Félix: Tanque por debajo del 50%");
         }
       } else {
-        // AUTORESET COMPLETO AL RESTABLECER BOYA A NORMAL
         card.classList.remove('critical-alarm');
         badge.className = 'badge-status badge-ok';
         badge.innerText = 'NORMAL';
         val.className = 'row-value val-ok';
         val.innerText = '100% OK';
-        
         estadoAlertaActual = false;
         apagarAlertasGlobales();
       }
     });
 
-    // Pollo Juanes (Frío)
+    // 2. Pollo Juanes (Frío con Umbral Dinámico)
+    db.ref('clientes/pollo_juanes/config/temp_maxima').on('value', (snap) => {
+      if (snap.exists()) {
+        umbralTemperaturaActual = snap.val();
+        document.getElementById('val-umbral-temp').innerText = `${umbralTemperaturaActual} °C`;
+      }
+    });
+
     db.ref('clientes/pollo_juanes/telemetria/frio').on('value', (snapshot) => {
       const data = snapshot.val();
       if (!data) return;
 
       const tempVal = document.getElementById('temp-pollo_juanes');
-      const puertaVal = document.getElementById('puerta-pollo_juanes');
-      const termicoVal = document.getElementById('termico-pollo_juanes');
       const card = document.getElementById('card-pollo_juanes');
       const badge = document.getElementById('badge-pollo_juanes');
 
       if (data.temperatura !== undefined) {
         tempVal.innerText = `${data.temperatura} °C`;
-        if (data.temperatura > -10) {
+        if (data.temperatura > umbralTemperaturaActual) {
           tempVal.className = 'row-value val-alert';
           card.classList.add('critical-alarm');
           badge.className = 'badge-status badge-alert';
           badge.innerText = '🚨 ALERTA TEMP';
           if (!estadoAlertaActual) {
             estadoAlertaActual = true;
-            dispararAlertasGlobales("🚨 VOLTEX: ALERTA FRÍO", "Pollo Juanes: Cámara frigorífica fuera de rango de seguridad");
+            dispararAlertasGlobales("🚨 VOLTEX: ALERTA FRÍO", `Pollo Juanes: Superó el umbral de ${umbralTemperaturaActual}°C`);
           }
         } else {
           tempVal.className = 'row-value val-ok';
@@ -840,19 +860,9 @@
           apagarAlertasGlobales();
         }
       }
-
-      if (data.puerta_abierta !== undefined) {
-        puertaVal.innerText = data.puerta_abierta ? "⚠️ ABIERTA" : "CERRADA";
-        puertaVal.className = data.puerta_abierta ? "row-value val-alert" : "row-value val-ok";
-      }
-
-      if (data.falla_termico !== undefined) {
-        termicoVal.innerText = data.falla_termico ? "🚨 DISPARADO" : "NORMAL";
-        termicoVal.className = data.falla_termico ? "row-value val-alert" : "row-value val-ok";
-      }
     });
 
-    // Portones Casa / Estado Realtime
+    // 3. Portones Casa
     db.ref('casa/portones/estado').on('value', (snapshot) => {
       const data = snapshot.val();
       if (!data) return;
@@ -863,7 +873,6 @@
       }
     });
 
-    // Ejecutar filtro al cargar la página
     window.onload = aplicarFiltroUsuario;
   </script>
 </body>
