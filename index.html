@@ -2,120 +2,185 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VOLTEX - Sistema Integrado de Telemetría e IoT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>VOLTEX - Industrial IoT & Telemetry Platform</title>
 
-  <!-- PWA & Favicon -->
-  <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/bolt.png">
+  <!-- PWA Metadata & Theme -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <style>
     :root {
-      --bg-main: #0f172a;
-      --card-bg: #1e293b;
-      --card-border: #334155;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent-cyan: #38bdf8;
-      --accent-blue: #2563eb;
-      --status-green: #22c55e;
-      --status-red: #ef4444;
-      --status-warn: #eab308;
+      --bg-gradient: linear-gradient(135deg, #070a12 0%, #0d1527 50%, #050811 100%);
+      --card-bg: rgba(18, 26, 43, 0.75);
+      --card-border: rgba(56, 189, 248, 0.15);
+      --card-glow: rgba(56, 189, 248, 0.05);
+      
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-dark: #090d16;
+      
+      --voltex-cyan: #38bdf8;
+      --voltex-blue: #2563eb;
+      --voltex-purple: #8b5cf6;
+      --status-ok: #22c55e;
+      --status-alert: #ef4444;
+      --status-warn: #f59e0b;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--bg-main);
-      color: var(--text-main);
+      background: var(--bg-gradient);
+      color: var(--text-primary);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       padding: 16px;
+      overflow-x: hidden;
     }
 
+    /* HEADER INDUSTRIAL CON LOGO SVG VECTORIAL DIRECTO */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--card-border);
+      padding: 12px 18px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
       margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
-    .brand {
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* LOGO VOLTEX INLINE SVG NO SE RUMPE NUNCA */
+    .voltex-logo-svg {
+      width: 38px;
+      height: 38px;
+      filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      background: linear-gradient(90deg, #ffffff 0%, var(--voltex-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--voltex-cyan);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--status-ok);
+      letter-spacing: 0.5px;
+    }
+
+    .status-pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--status-ok);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--status-ok);
+      animation: pulse-green 1.5s infinite;
+    }
+
+    @keyframes pulse-green {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+
+    /* BOTÓN ACTIVACIÓN PUSH AMBIENTAL */
+    .btn-alert-setup {
+      width: 100%;
+      max-width: 650px;
+      margin: 0 auto 24px auto;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+    }
+
+    .btn-alert-setup:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+
+    /* SECCIÓN SEPARADORA DE CATEGORÍA */
+    .section-header {
+      max-width: 650px;
+      margin: 0 auto 12px auto;
+      width: 100%;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .brand img {
-      width: 32px;
-      height: 32px;
-    }
-
-    .brand h1 {
-      font-size: 1.4rem;
+    .section-header h2 {
+      font-size: 0.85rem;
       font-weight: 800;
-      letter-spacing: 1px;
-      color: var(--text-main);
+      color: var(--text-secondary);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
     }
 
-    .brand h1 span {
-      color: var(--accent-cyan);
+    .section-header .line {
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
     }
 
-    .system-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
-      color: var(--status-green);
-      background: rgba(34, 197, 94, 0.1);
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1px solid rgba(34, 197, 94, 0.3);
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--status-green);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--status-green);
-    }
-
-    .btn-sound-activate {
-      width: 100%;
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-      color: #ffffff;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
-      transition: transform 0.1s ease, box-shadow 0.2s ease;
-    }
-
-    .btn-sound-activate:active {
-      transform: scale(0.98);
-    }
-
-    .client-list {
+    /* MAIN CONTAINER */
+    .app-viewport {
       display: flex;
       flex-direction: column;
       gap: 20px;
@@ -124,352 +189,390 @@
       width: 100%;
     }
 
-    .client-card {
-      background-color: var(--card-bg);
+    /* TARJETAS GLASSMORPHISM INDUSTRIAL */
+    .voltex-card {
+      background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 20px;
+      padding: 22px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
       position: relative;
       overflow: hidden;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .client-card.critical-alert {
-      border-color: var(--status-red);
-      animation: alert-pulse 1s infinite alternate;
+    .voltex-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--voltex-cyan), transparent);
+      opacity: 0.4;
     }
 
-    @keyframes alert-pulse {
-      0% {
-        box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
-        border-color: rgba(239, 68, 68, 0.4);
-      }
-      100% {
-        box-shadow: 0 0 25px rgba(239, 68, 68, 0.8);
-        border-color: rgba(239, 68, 68, 1);
-      }
+    .voltex-card.critical-alarm {
+      border-color: var(--status-alert) !important;
+      animation: alert-flash 0.9s infinite alternate;
     }
 
-    .card-title-bar {
+    @keyframes alert-flash {
+      0% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.2), inset 0 0 15px rgba(239, 68, 68, 0.1); }
+      100% { box-shadow: 0 0 35px rgba(239, 68, 68, 0.8), inset 0 0 25px rgba(239, 68, 68, 0.3); }
+    }
+
+    .card-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
-    .client-name {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-main);
+    .client-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .badge {
+    .badge-status {
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 5px 12px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .badge-ok {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--status-ok);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+    }
+
+    .badge-alert {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--status-alert);
+      border: 1px solid rgba(239, 68, 68, 0.6);
+    }
+
+    /* PESTAÑAS SUB-SISTEMAS ELEGANTES */
+    .tab-bar {
+      display: flex;
+      gap: 6px;
+      background: rgba(9, 13, 22, 0.7);
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin-bottom: 18px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 6px;
+      color: var(--text-secondary);
+      border-radius: 8px;
       font-size: 0.75rem;
       font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 12px;
-      text-transform: uppercase;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      user-select: none;
       letter-spacing: 0.5px;
     }
 
-    .badge-normal {
-      background: rgba(34, 197, 94, 0.15);
-      color: var(--status-green);
-      border: 1px solid rgba(34, 197, 94, 0.3);
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--voltex-cyan) 0%, var(--voltex-blue) 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
     }
 
-    .badge-danger {
-      background: rgba(239, 68, 68, 0.2);
-      color: var(--status-red);
-      border: 1px solid rgba(239, 68, 68, 0.5);
-    }
-
-    .badge-waiting {
-      background: rgba(148, 163, 184, 0.15);
-      color: var(--text-muted);
-      border: 1px solid rgba(148, 163, 184, 0.3);
-    }
-
-    .system-selector {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 16px;
-      background: rgba(15, 23, 42, 0.6);
-      padding: 4px;
-      border-radius: 10px;
-      border: 1px solid var(--card-border);
-    }
-
-    .sys-tab {
-      flex: 1;
-      padding: 8px 4px;
-      color: var(--text-muted);
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      user-select: none;
-    }
-
-    .sys-tab.active {
-      background: var(--accent-cyan);
-      color: #0f172a;
-      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
-    }
-
-    .telemetry-grid {
+    /* PANELES Y TELEMETRÍA */
+    .panel-group {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
-    .telemetry-panel {
+    .tab-panel {
       display: none;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
-    .telemetry-panel.active {
+    .tab-panel.active {
       display: flex;
     }
 
-    .telemetry-item {
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 12px 16px;
-      border-radius: 10px;
+    .telemetry-row {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 14px 18px;
+      border-radius: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .telemetry-label {
+    .row-label {
       font-size: 0.9rem;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      font-weight: 600;
     }
 
-    .telemetry-value {
-      font-size: 0.95rem;
-      font-weight: 700;
+    .row-value {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
     }
 
-    .val-ok { color: var(--status-green); }
-    .val-alert { color: var(--status-red); }
+    .val-ok { color: var(--status-ok); }
+    .val-alert { color: var(--status-alert); }
     .val-warn { color: var(--status-warn); }
 
-    .btn-action {
-      background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
-      color: #fff;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: opacity 0.2s ease;
+    /* MÓDULO CONTROL INDEPENDIENTE (PORTONES/CASA) */
+    .control-card {
+      background: linear-gradient(135deg, rgba(13, 21, 39, 0.85) 0%, rgba(20, 31, 55, 0.85) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.1);
     }
 
-    .btn-action:active {
-      opacity: 0.8;
+    .control-card::before {
+      background: linear-gradient(90deg, transparent, var(--voltex-purple), transparent);
+    }
+
+    .control-actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .btn-command {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      color: var(--text-primary);
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-command:active {
+      transform: scale(0.95);
+      background: var(--voltex-purple);
     }
 
     footer {
       margin-top: auto;
-      padding-top: 20px;
+      padding-top: 24px;
       text-align: center;
       font-size: 0.75rem;
-      color: var(--text-muted);
-      border-top: 1px solid var(--card-border);
+      color: var(--text-secondary);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      letter-spacing: 0.5px;
     }
   </style>
 </head>
 <body>
 
+  <!-- HEADER OFICIAL VOLTEX CON SVG EMBEBIDO -->
   <header>
-    <div class="brand">
-      <img src="https://img.icons8.com/fluency/48/bolt.png" alt="VOLTEX Logo">
-      <h1>VOLTEX <span>IoT</span></h1>
+    <div class="brand-container">
+      <svg class="voltex-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 5L15 25V75L50 95L85 75V25L50 5Z" stroke="#38bdf8" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M55 20L30 52H50L45 80L70 48H50L55 20Z" fill="#38bdf8"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-title">VOLTEX</span>
+        <span class="brand-subtitle">Industrial IoT</span>
+      </div>
     </div>
-    <div class="system-status">
-      <div class="dot"></div>
-      EN LÍNEA
+    <div class="header-status">
+      <div class="status-pulse-dot"></div>
+      SYSTEM ONLINE
     </div>
   </header>
 
-  <main class="client-list">
-    <!-- Botón Activar Sirena + Push -->
-    <button class="btn-sound-activate" onclick="solicitarPermisosPush()">
-      🔔 ACTIVAR SISTEMA DE ALERTAS EN SEGUNDO PLANO
-    </button>
+  <!-- BOTÓN ACTIVACIÓN ALERTAS PUSH -->
+  <button class="btn-alert-setup" onclick="activarAlertasSegundoPlano()">
+    🔔 ACTIVAR TELEMETRÍA CRÍTICA Y PUSH 24/7
+  </button>
 
-    <!-- 1. CLIENTE: DON FÉLIX -->
-    <div id="card-don_felix" class="client-card">
-      <div class="card-title-bar">
-        <div class="client-name">Don Félix</div>
-        <div id="badge-don_felix" class="badge badge-normal">NORMAL</div>
+  <div class="app-viewport">
+    
+    <!-- SECCIÓN 1: CLIENTES & TELEMETRÍA -->
+    <div class="section-header">
+      <h2>Nodos de Telemetría Industrial</h2>
+      <div class="line"></div>
+    </div>
+
+    <!-- CLIENTE 1: DON FÉLIX -->
+    <div id="card-don_felix" class="voltex-card">
+      <div class="card-top">
+        <div class="client-title">🏢 Don Félix</div>
+        <div id="badge-don_felix" class="badge-status badge-ok">NORMAL</div>
       </div>
 
-      <div class="system-selector">
-        <div class="sys-tab active" onclick="switchTab('don_felix', 'agua', this)">AGUA</div>
-        <div class="sys-tab" onclick="switchTab('don_felix', 'ascensores', this)">ASCENSORES</div>
-        <div class="sys-tab" onclick="switchTab('don_felix', 'frio', this)">FRÍO</div>
+      <div class="tab-bar">
+        <div class="tab-btn active" onclick="switchTab('don_felix', 'agua', this)">AGUA</div>
+        <div class="tab-btn" onclick="switchTab('don_felix', 'ascensores', this)">ASCENSORES</div>
+        <div class="tab-btn" onclick="switchTab('don_felix', 'frio', this)">CLIMATIZACIÓN</div>
       </div>
 
-      <div class="telemetry-grid">
-        <div id="panel-don_felix-agua" class="telemetry-panel active">
-          <div class="telemetry-item">
-            <div class="telemetry-label">💧 Nivel Tanque (Boya 50%):</div>
-            <div id="boya-don_felix" class="telemetry-value val-ok">100% OK</div>
+      <div class="panel-group">
+        <div id="panel-don_felix-agua" class="tab-panel active">
+          <div class="telemetry-row">
+            <span class="row-label">💧 Nivel Tanque Reservorio (Boya 50%):</span>
+            <span id="boya-don_felix" class="row-value val-ok">100% OK</span>
           </div>
         </div>
 
-        <div id="panel-don_felix-ascensores" class="telemetry-panel">
-          <div class="telemetry-item">
-            <div class="telemetry-label">🛗 Estado Ascensor Principal:</div>
-            <div id="ascensor-don_felix" class="telemetry-value val-ok">OPERATIVO / PISO 0</div>
+        <div id="panel-don_felix-ascensores" class="tab-panel">
+          <div class="telemetry-row">
+            <span class="row-label">🛗 Cuadro Maniobra Ascensor:</span>
+            <span class="row-value val-ok">PISO 0 / OPERATIVO</span>
           </div>
         </div>
 
-        <div id="panel-don_felix-frio" class="telemetry-panel">
-          <div class="telemetry-item">
-            <div class="telemetry-label">❄️ Temperatura Ambiente:</div>
-            <div id="temp-don_felix" class="telemetry-value val-ok">SIN MODULO</div>
+        <div id="panel-don_felix-frio" class="tab-panel">
+          <div class="telemetry-row">
+            <span class="row-label">❄️ Chiller Central:</span>
+            <span class="row-value val-warn">EN ESPERA</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 2. CLIENTE: VESNA -->
-    <div id="card-vesna" class="client-card">
-      <div class="card-title-bar">
-        <div class="client-name">Vesna</div>
-        <div id="badge-vesna" class="badge badge-normal">NORMAL</div>
+    <!-- CLIENTE 2: VESNA -->
+    <div id="card-vesna" class="voltex-card">
+      <div class="card-top">
+        <div class="client-title">🏢 Edificio Vesna</div>
+        <div id="badge-vesna" class="badge-status badge-ok">NORMAL</div>
       </div>
 
-      <div class="system-selector">
-        <div class="sys-tab active" onclick="switchTab('vesna', 'ascensores', this)">ASCENSORES</div>
-        <div class="sys-tab" onclick="switchTab('vesna', 'agua', this)">AGUA</div>
-        <div class="sys-tab" onclick="switchTab('vesna', 'frio', this)">FRÍO</div>
+      <div class="tab-bar">
+        <div class="tab-btn active" onclick="switchTab('vesna', 'ascensores', this)">ASCENSORES</div>
+        <div class="tab-btn" onclick="switchTab('vesna', 'agua', this)">AGUA</div>
+        <div class="tab-btn" onclick="switchTab('vesna', 'frio', this)">CLIMATIZACIÓN</div>
       </div>
 
-      <div class="telemetry-grid">
-        <div id="panel-vesna-ascensores" class="telemetry-panel active">
-          <div class="telemetry-item">
-            <div class="telemetry-label">🛗 Cuadro de Maniobra Monarch/Otis:</div>
-            <div id="ascensor-vesna" class="telemetry-value val-ok">NORMAL (PISO 1)</div>
+      <div class="panel-group">
+        <div id="panel-vesna-ascensores" class="tab-panel active">
+          <div class="telemetry-row">
+            <span class="row-label">🛗 Telemetría Monarch/Otis:</span>
+            <span id="ascensor-vesna" class="row-value val-ok">PISO 1 / NORMAL</span>
           </div>
-          <div class="telemetry-item">
-            <div class="telemetry-label">⚠️ Serie de Seguridad:</div>
-            <div id="seguridad-vesna" class="telemetry-value val-ok">CERRADA / OK</div>
+          <div class="telemetry-row">
+            <span class="row-label">⚠️ Cadena de Seguridad:</span>
+            <span id="seguridad-vesna" class="row-value val-ok">CERRADA / OK</span>
           </div>
         </div>
 
-        <div id="panel-vesna-agua" class="telemetry-panel">
-          <div class="telemetry-item">
-            <div class="telemetry-label">💧 Tanque Superior:</div>
-            <div id="boya-vesna" class="telemetry-value val-ok">NORMAL</div>
+        <div id="panel-vesna-agua" class="tab-panel">
+          <div class="telemetry-row">
+            <span class="row-label">💧 Tanque Superior:</span>
+            <span class="row-value val-ok">NORMAL</span>
           </div>
         </div>
 
-        <div id="panel-vesna-frio" class="telemetry-panel">
-          <div class="telemetry-item">
-            <div class="telemetry-label">❄️ Sensor de Temperatura:</div>
-            <div id="temp-vesna" class="telemetry-value val-ok">N/A</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. CLIENTE: POLLO JUANES -->
-    <div id="card-pollo_juanes" class="client-card">
-      <div class="card-title-bar">
-        <div class="client-name">Pollo Juanes</div>
-        <div id="badge-pollo_juanes" class="badge badge-normal">NORMAL</div>
-      </div>
-
-      <div class="system-selector">
-        <div class="sys-tab active" onclick="switchTab('pollo_juanes', 'frio', this)">CÁMARA FRIGORÍFICA</div>
-        <div class="sys-tab" onclick="switchTab('pollo_juanes', 'agua', this)">AGUA</div>
-      </div>
-
-      <div class="telemetry-grid">
-        <div id="panel-pollo_juanes-frio" class="telemetry-panel active">
-          <div class="telemetry-item">
-            <div class="telemetry-label">🌡️ Temp. Cámara Frigorífica:</div>
-            <div id="temp-pollo_juanes" class="telemetry-value val-ok">-18.5 °C</div>
-          </div>
-          <div class="telemetry-item">
-            <div class="telemetry-label">🚪 Puerta Cámara:</div>
-            <div id="puerta-pollo_juanes" class="telemetry-value val-ok">CERRADA</div>
-          </div>
-          <div class="telemetry-item">
-            <div class="telemetry-label">⚡ Falla Térmica Compresor:</div>
-            <div id="termico-pollo_juanes" class="telemetry-value val-ok">NORMAL</div>
-          </div>
-        </div>
-
-        <div id="panel-pollo_juanes-agua" class="telemetry-panel">
-          <div class="telemetry-item">
-            <div class="telemetry-label">💧 Reservorio Lavado:</div>
-            <div id="boya-pollo_juanes" class="telemetry-value val-ok">NORMAL</div>
+        <div id="panel-vesna-frio" class="tab-panel">
+          <div class="telemetry-row">
+            <span class="row-label">❄️ Presión HVAC:</span>
+            <span class="row-value val-ok">ESTABLE</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 4. CONTROL: CASA / PORTONES -->
-    <div id="card-casa_portones" class="client-card">
-      <div class="card-title-bar">
-        <div class="client-name">Casa / Portones</div>
-        <div id="badge-casa_portones" class="badge badge-normal">ONLINE</div>
+    <!-- CLIENTE 3: POLLO JUANES -->
+    <div id="card-pollo_juanes" class="voltex-card">
+      <div class="card-top">
+        <div class="client-title">🍗 Pollo Juanes</div>
+        <div id="badge-pollo_juanes" class="badge-status badge-ok">NORMAL</div>
       </div>
 
-      <div class="telemetry-grid">
-        <div class="telemetry-panel active">
-          <div class="telemetry-item">
-            <div class="telemetry-label">🚗 Portón Vehicular Acceso:</div>
-            <div id="estado-porton-vehicular" class="telemetry-value val-ok">CERRADO</div>
+      <div class="tab-bar">
+        <div class="tab-btn active" onclick="switchTab('pollo_juanes', 'frio', this)">CÁMARA FRIGORÍFICA</div>
+        <div class="tab-btn" onclick="switchTab('pollo_juanes', 'agua', this)">AGUA</div>
+      </div>
+
+      <div class="panel-group">
+        <div id="panel-pollo_juanes-frio" class="tab-panel active">
+          <div class="telemetry-row">
+            <span class="row-label">🌡️ Temp. Cámara de Congelado:</span>
+            <span id="temp-pollo_juanes" class="row-value val-ok">-18.5 °C</span>
           </div>
-          <div class="telemetry-item">
-            <div class="telemetry-label">🔘 Accionamiento Remoto:</div>
-            <button class="btn-action" onclick="accionarPorton('vehicular')">ABRIR / CERRAR</button>
+          <div class="telemetry-row">
+            <span class="row-label">🚪 Sensor de Puerta Industrial:</span>
+            <span id="puerta-pollo_juanes" class="row-value val-ok">CERRADA</span>
           </div>
-          <div class="telemetry-item">
-            <div class="telemetry-label">🚪 Portón Peatonal:</div>
-            <div id="estado-porton-peatonal" class="telemetry-value val-ok">BLOQUEADO</div>
+          <div class="telemetry-row">
+            <span class="row-label">⚡ Protección Térmica Compresor:</span>
+            <span id="termico-pollo_juanes" class="row-value val-ok">NORMAL</span>
+          </div>
+        </div>
+
+        <div id="panel-pollo_juanes-agua" class="tab-panel">
+          <div class="telemetry-row">
+            <span class="row-label">💧 Reservorio Lavado Industrial:</span>
+            <span class="row-value val-ok">NORMAL</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 5. CLIENTE: JUAN LEDESMA (ADMIN) -->
-    <div id="card-juan_ledesma" class="client-card">
-      <div class="card-title-bar">
-        <div class="client-name">Juan Ledesma (Admin Telemetría)</div>
-        <div class="badge badge-normal">SISTEMA OK</div>
+    <!-- SECCIÓN 2: MÓDULO INDEPENDIENTE DE CONTROL Y ACCESOS -->
+    <div class="section-header">
+      <h2>Automatización de Accesos & Control</h2>
+      <div class="line"></div>
+    </div>
+
+    <!-- CONTROL INDEPENDIENTE: PORTONES / CASA -->
+    <div id="card-casa_portones" class="voltex-card control-card">
+      <div class="card-top">
+        <div class="client-title">🏠 Control de Portones & Residencia</div>
+        <div id="badge-casa_portones" class="badge-status badge-ok" style="background: rgba(139, 92, 246, 0.2); color: var(--voltex-purple); border-color: rgba(139, 92, 246, 0.4);">ONLINE</div>
       </div>
-      <div class="telemetry-grid">
-        <div class="telemetry-panel active">
-          <div class="telemetry-item">
-            <div class="telemetry-label">📡 Nodos ESP32 Activos:</div>
-            <div class="telemetry-value val-ok">3 NODOS</div>
-          </div>
-          <div class="telemetry-item">
-            <div class="telemetry-label">⚡ Base de Datos Firebase RTDB:</div>
-            <div class="telemetry-value val-ok">CONECTADO</div>
-          </div>
+
+      <div class="panel-group">
+        <div class="telemetry-row">
+          <span class="row-label">🚗 Portón Vehicular Principal:</span>
+          <span id="estado-porton-vehicular" class="row-value val-ok">CERRADO</span>
+        </div>
+        <div class="telemetry-row">
+          <span class="row-label">🚪 Portón Peatonal Electromecánico:</span>
+          <span id="estado-porton-peatonal" class="row-value val-ok">BLOQUEADO</span>
         </div>
       </div>
+
+      <div class="control-actions-grid">
+        <button class="btn-command" onclick="accionarPorton('vehicular')">
+          <span>⚡ ACCIONAR PORTÓN</span>
+          <span style="font-size: 0.7rem; opacity: 0.7;">PULSO VEHICULAR</span>
+        </button>
+        <button class="btn-command" onclick="accionarPorton('peatonal')">
+          <span>🔓 APERTURA PEATONAL</span>
+          <span style="font-size: 0.7rem; opacity: 0.7;">PULSO CERRADURA</span>
+        </button>
+      </div>
     </div>
-  </main>
+
+  </div>
 
   <footer>
-    VOLTEX IoT Telemetry Platform v2.4 &bull; Desarrollado para Control Industrial
+    VOLTEX IoT Telemetry Platform &bull; Software Industrial v3.0 &bull; Asunción, PY
   </footer>
 
   <!-- Firebase Web SDK v8 -->
@@ -477,7 +580,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    // Inicialización de Firebase
+    // Conexión Realtime Database Firebase
     const firebaseConfig = {
       databaseURL: "https://voltex-iot-default-rtdb.firebaseio.com"
     };
@@ -490,38 +593,31 @@
     let estadoAlertaActual = false;
     let swRegistration = null;
 
-    // Registro de Service Worker para Notificaciones de Fondo
+    // 1. Registro de Service Worker para Notificaciones Push de Fondo
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
           .then(reg => {
             swRegistration = reg;
-            console.log('VOLTEX Service Worker registrado con éxito');
+            console.log('VOLTEX Service Worker registrado:', reg.scope);
           })
-          .catch(err => console.error('Error al registrar Service Worker:', err));
+          .catch(err => console.error('Error en Service Worker:', err));
       });
     }
 
-    // Navegación dinámica entre pestañas (AGUA, ASCENSORES, FRÍO)
+    // 2. Control de Pestañas (Tabs)
     function switchTab(clientId, systemId, tabElement) {
       const card = document.getElementById(`card-${clientId}`);
-      
-      // Ocultar todos los paneles del cliente
-      const panels = card.querySelectorAll('.telemetry-panel');
-      panels.forEach(p => p.classList.remove('active'));
+      card.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      card.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
 
-      // Desactivar pestañas
-      const tabs = card.querySelectorAll('.sys-tab');
-      tabs.forEach(t => t.classList.remove('active'));
-
-      // Activar el seleccionado
       const targetPanel = document.getElementById(`panel-${clientId}-${systemId}`);
       if (targetPanel) targetPanel.classList.add('active');
       tabElement.classList.add('active');
     }
 
-    // Solicitar permisos Push al SO
-    function solicitarPermisosPush() {
+    // 3. Permisos de Sonido y Push
+    function activarAlertasSegundoPlano() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
@@ -532,23 +628,23 @@
       if ("Notification" in window) {
         Notification.requestPermission().then(permission => {
           if (permission === "granted") {
-            alert("¡Alertas Push y Sonido activados correctamente!");
+            alert("¡Sistema VOLTEX 24/7 Activado! Las alertas sonarán incluso con el teléfono bloqueado.");
           } else {
-            alert("Permiso de notificaciones denegado.");
+            alert("Permiso de notificación denegado en el sistema.");
           }
         });
       }
     }
 
-    // Sirena industrial sonora
+    // 4. Sirena sonora industrial
     function sonarSirena() {
       if (!audioCtx) return;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
 
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(950, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(450, audioCtx.currentTime + 0.35);
+      osc.frequency.setValueAtTime(980, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(420, audioCtx.currentTime + 0.35);
 
       gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
@@ -568,9 +664,9 @@
       if (swRegistration && "Notification" in window && Notification.permission === "granted") {
         swRegistration.showNotification(titulo, {
           body: mensaje,
-          icon: "https://img.icons8.com/fluency/48/bolt.png",
+          icon: "https://img.icons8.com/fluency/96/flash-on.png",
           vibrate: [500, 200, 500, 200, 500],
-          tag: "alerta-voltex-critica",
+          tag: "voltex-alerta-critica",
           requireInteraction: true
         });
       }
@@ -588,17 +684,17 @@
       }
     }
 
-    // Funciones para accionar portones
+    // 5. Accionamiento independiente de Portones
     function accionarPorton(tipo) {
       const refPorton = db.ref(`casa/portones/${tipo}`);
       refPorton.set(true);
-      setTimeout(() => refPorton.set(false), 2000);
-      alert(`Comando de pulso enviado a Portón ${tipo.toUpperCase()}`);
+      setTimeout(() => refPorton.set(false), 1500);
+      alert(`⚡ Pulso de activación enviado a Portón ${tipo.toUpperCase()}`);
     }
 
-    // Suscripción Realtime Database Firebase
+    // 6. Suscripción a Firebase en Tiempo Real
     
-    // 1. Don Félix (Agua)
+    // Don Félix (Agua)
     db.ref('clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
       const data = snapshot.val();
       if (!data) return;
@@ -609,28 +705,28 @@
       const val = document.getElementById('boya-don_felix');
 
       if (alerta) {
-        card.classList.add('critical-alert');
-        badge.className = 'badge badge-danger';
+        card.classList.add('critical-alarm');
+        badge.className = 'badge-status badge-alert';
         badge.innerText = '🚨 ALERTA CRÍTICA';
-        val.className = 'telemetry-value val-alert';
+        val.className = 'row-value val-alert';
         val.innerText = '⚠️ MENOS DEL 50%';
 
         if (!estadoAlertaActual) {
           estadoAlertaActual = true;
-          dispararAlertasGlobales("🚨 ALERTA VOLTEX", "Don Félix: Nivel de agua cayó del 50%");
+          dispararAlertasGlobales("🚨 VOLTEX: ALERTA CRÍTICA", "Don Félix: El tanque descendió por debajo del 50%");
         }
       } else {
-        card.classList.remove('critical-alert');
-        badge.className = 'badge badge-normal';
+        card.classList.remove('critical-alarm');
+        badge.className = 'badge-status badge-ok';
         badge.innerText = 'NORMAL';
-        val.className = 'telemetry-value val-ok';
+        val.className = 'row-value val-ok';
         val.innerText = '100% OK';
         estadoAlertaActual = false;
         apagarAlertasGlobales();
       }
     });
 
-    // 2. Pollo Juanes (Cámara Frigorífica)
+    // Pollo Juanes (Frío)
     db.ref('clientes/pollo_juanes/telemetria/frio').on('value', (snapshot) => {
       const data = snapshot.val();
       if (!data) return;
@@ -644,38 +740,38 @@
       if (data.temperatura !== undefined) {
         tempVal.innerText = `${data.temperatura} °C`;
         if (data.temperatura > -10) {
-          tempVal.className = 'telemetry-value val-alert';
-          card.classList.add('critical-alert');
-          badge.className = 'badge badge-danger';
+          tempVal.className = 'row-value val-alert';
+          card.classList.add('critical-alarm');
+          badge.className = 'badge-status badge-alert';
           badge.innerText = '🚨 ALERTA TEMP';
-          dispararAlertasGlobales("🚨 ALERTA TEMPERATURA", "Pollo Juanes: Cámara frigorífica superó el umbral seguro");
+          dispararAlertasGlobales("🚨 VOLTEX: ALERTA FRÍO", "Pollo Juanes: Cámara frigorífica fuera de rango de seguridad");
         } else {
-          tempVal.className = 'telemetry-value val-ok';
-          card.classList.remove('critical-alert');
-          badge.className = 'badge badge-normal';
+          tempVal.className = 'row-value val-ok';
+          card.classList.remove('critical-alarm');
+          badge.className = 'badge-status badge-ok';
           badge.innerText = 'NORMAL';
         }
       }
 
       if (data.puerta_abierta !== undefined) {
         puertaVal.innerText = data.puerta_abierta ? "⚠️ ABIERTA" : "CERRADA";
-        puertaVal.className = data.puerta_abierta ? "telemetry-value val-alert" : "telemetry-value val-ok";
+        puertaVal.className = data.puerta_abierta ? "row-value val-alert" : "row-value val-ok";
       }
 
       if (data.falla_termico !== undefined) {
-        termicoVal.innerText = data.falla_termico ? "🚨 FALLA DISPARADA" : "NORMAL";
-        termicoVal.className = data.falla_termico ? "telemetry-value val-alert" : "telemetry-value val-ok";
+        termicoVal.innerText = data.falla_termico ? "🚨 DISPARADO" : "NORMAL";
+        termicoVal.className = data.falla_termico ? "row-value val-alert" : "row-value val-ok";
       }
     });
 
-    // 3. Portones Casa
+    // Portones Casa / Estado Realtime
     db.ref('casa/portones/estado').on('value', (snapshot) => {
       const data = snapshot.val();
       if (!data) return;
       const veh = document.getElementById('estado-porton-vehicular');
       if (veh && data.vehicular) {
         veh.innerText = data.vehicular;
-        veh.className = (data.vehicular === "ABIERTO") ? "telemetry-value val-warn" : "telemetry-value val-ok";
+        veh.className = (data.vehicular === "ABIERTO") ? "row-value val-warn" : "row-value val-ok";
       }
     });
   </script>
