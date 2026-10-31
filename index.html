@@ -7,6 +7,7 @@
 
   <!-- PWA & Favicon -->
   <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/bolt.png">
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -270,8 +271,8 @@
 
   <main class="client-list">
     <!-- Botón Activar Sirena + Push -->
-    <button class="btn-sound-activate" onclick="activarPermisosYAudio()">
-      🔔 ACTIVAR ALERTAS SONORAS Y NOTIFICACIONES
+    <button class="btn-sound-activate" onclick="solicitarPermisosPush()">
+      🔔 ACTIVAR SISTEMA DE ALERTAS EN SEGUNDO PLANO
     </button>
 
     <!-- Cliente 1: Don Félix -->
@@ -345,13 +346,25 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Variables de audio y control de alarmas
     let audioCtx = null;
     let alarmInterval = null;
     let estadoAlertaActual = false;
+    let swRegistration = null;
 
-    // Habilitación de notificaciones push y AudioContext por clic del usuario
-    function activarPermisosYAudio() {
+    // 1. Registro del Service Worker para Notificaciones de Fondo
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => {
+            swRegistration = reg;
+            console.log('VOLTEX Service Worker registrado con éxito:', reg.scope);
+          })
+          .catch(err => console.error('Error al registrar Service Worker:', err));
+      });
+    }
+
+    // 2. Solicitar permisos de notificación persistentes al sistema operativo
+    function solicitarPermisosPush() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
@@ -362,17 +375,15 @@
       if ("Notification" in window) {
         Notification.requestPermission().then(permission => {
           if (permission === "granted") {
-            alert("¡Alertas sonoras y Notificaciones Push activadas con éxito!");
+            alert("¡Permisos activados! Las notificaciones Push llegarán incluso con el teléfono bloqueado.");
           } else {
-            alert("Permiso de notificaciones denegado.");
+            alert("Permiso de notificaciones denegado. Actívalo en la configuración de Chrome/Android.");
           }
         });
-      } else {
-        alert("Tu navegador no soporta notificaciones Push.");
       }
     }
 
-    // Sirena industrial generada por código Web Audio API
+    // Sirena industrial generada por Web Audio API (cuando la app está abierta)
     function sonarSirena() {
       if (!audioCtx) return;
 
@@ -394,21 +405,23 @@
     }
 
     function dispararAlertasGlobales() {
-      // 1. Vibrador de hardware en celular
+      // A) Vibración del teléfono
       if ("vibrate" in navigator) {
         navigator.vibrate([600, 250, 600, 250, 600]);
       }
 
-      // 2. Notificación flotante Push en Android/Windows
-      if ("Notification" in window && Notification.permission === "granted") {
-        new Notification("🚨 ¡ALERTA CRÍTICA VOLTEX!", {
+      // B) Lógica para enviar Notificación al Service Worker de Fondo
+      if (swRegistration && "Notification" in window && Notification.permission === "granted") {
+        swRegistration.showNotification("🚨 ¡ALERTA CRÍTICA VOLTEX!", {
           body: "Cliente: Don Félix - El nivel de agua descendió bajo el 50%.",
           icon: "https://img.icons8.com/fluency/48/bolt.png",
-          tag: "alerta-agua-don-felix"
+          vibrate: [500, 200, 500, 200, 500],
+          tag: "alerta-agua-don-felix",
+          requireInteraction: true
         });
       }
 
-      // 3. Loop de sirena continua
+      // C) Sirena continua mientras la app esté abierta
       if (!alarmInterval) {
         sonarSirena();
         alarmInterval = setInterval(sonarSirena, 550);
@@ -422,7 +435,7 @@
       }
     }
 
-    // Suscripción en Tiempo Real a Firebase (/clientes/don_felix/telemetria/agua)
+    // Suscripción en Tiempo Real a Firebase
     const refAguaDonFelix = db.ref('clientes/don_felix/telemetria/agua');
 
     refAguaDonFelix.on('value', (snapshot) => {
@@ -436,7 +449,6 @@
       const boyaVal = document.getElementById('boya-don_felix');
 
       if (alertaActiva) {
-        // Estado de ALERTA
         card.classList.add('critical-alert');
         badge.className = 'badge badge-danger';
         badge.innerText = '🚨 ALERTA CRÍTICA';
@@ -449,7 +461,6 @@
           dispararAlertasGlobales();
         }
       } else {
-        // Estado NORMAL
         card.classList.remove('critical-alert');
         badge.className = 'badge badge-normal';
         badge.innerText = 'NORMAL';
