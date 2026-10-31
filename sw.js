@@ -10,12 +10,12 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim());
 });
 
-// Escuchar eventos Push desde Firebase
+// Escuchar eventos Push desde Firebase / Servidor
 self.addEventListener('push', (event) => {
   let payload = {
-    title: "🚨 ¡ALERTA CRÍTICA VOLTEX!",
-    body: "El nivel de agua descendió bajo el 50%.",
-    icon: "https://img.icons8.com/fluency/48/bolt.png"
+    title: "⚡ VOLTEX SYSTEM ALERT",
+    body: "Se ha detectado una anomalía crítica en uno de los nodos de telemetría.",
+    icon: "https://img.icons8.com/fluency/96/flash-on.png"
   };
 
   if (event.data) {
@@ -28,12 +28,12 @@ self.addEventListener('push', (event) => {
 
   const options = {
     body: payload.body,
-    icon: payload.icon || "https://img.icons8.com/fluency/48/bolt.png",
-    badge: "https://img.icons8.com/fluency/48/bolt.png",
-    vibrate: [500, 200, 500, 200, 500, 200, 1000],
-    tag: "alerta-voltex-critica",
+    icon: payload.icon,
+    badge: payload.icon,
+    vibrate: [600, 200, 600, 200, 600, 200, 1000],
+    tag: "voltex-critical-alert",
     renotify: true,
-    requireInteraction: true, // Mantiene la notificación fija en pantalla hasta que se atienda
+    requireInteraction: true,
     data: { url: "/" }
   };
 
