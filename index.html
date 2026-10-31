@@ -28,6 +28,7 @@
       --status-ok: #22c55e;
       --status-alert: #ef4444;
       --status-warn: #f59e0b;
+      --status-offline: #64748b;
     }
 
     * {
@@ -279,9 +280,9 @@
     }
 
     .badge-offline {
-      background: rgba(148, 163, 184, 0.2);
-      color: var(--text-secondary);
-      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(100, 116, 139, 0.2);
+      color: var(--status-offline);
+      border: 1px solid rgba(100, 116, 139, 0.4);
     }
 
     .tab-bar {
@@ -358,6 +359,7 @@
     .val-ok { color: var(--status-ok); }
     .val-alert { color: var(--status-alert); }
     .val-warn { color: var(--status-warn); }
+    .val-offline { color: var(--status-offline); }
 
     .threshold-control {
       display: flex;
@@ -626,12 +628,11 @@
   </div>
 
   <footer>
-    VOLTEX IoT Telemetry Platform &bull; Software Industrial v3.3 &bull; Asunción, PY
+    VOLTEX IoT Telemetry Platform &bull; Software Industrial v3.4 &bull; Asunción, PY
   </footer>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -646,6 +647,10 @@
     let estadoAlertaActual = false;
     let swRegistration = null;
     let umbralTemperaturaActual = -12;
+
+    // Control de Tolerancia / Desconexión (1 Hora = 3600000 ms)
+    const TIEMPO_GRACIA_DESCONEXION_MS = 60 * 60 * 1000; 
+    let offlineTimerDonFelix = null;
 
     function aplicarFiltroUsuario() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -698,18 +703,13 @@
       tabElement.classList.add('active');
     }
 
-    // REGISTRO DE TOKEN PUSH DE SEGUNDO PLANO EN FIREBASE
     function activarAlertasSegundoPlano() {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
 
       if ("Notification" in window) {
         Notification.requestPermission().then(permission => {
-          if (permission === "granted") {
-            alert("¡Dispositivo vinculado con éxito! Recibirás alertas Push nativas incluso con la app cerrada o el celular bloqueado.");
-          } else {
-            alert("Permiso de notificaciones denegado en el navegador.");
-          }
+          if (permission === "granted") alert("¡Sistema VOLTEX Push 24/7 Activado!");
         });
       }
     }
@@ -776,7 +776,7 @@
       alert(`⚡ Pulso enviado a Portón ${tipo.toUpperCase()}`);
     }
 
-    // REALTIME DATABASE LISTENERS
+    // REALTIME LISTENERS CON CONTROL DE DESCONEXIÓN Y LÓGICA DE SENSORES
 
     // 1. Don Félix (Agua)
     db.ref('clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
@@ -785,19 +785,42 @@
       const badge = document.getElementById('badge-don_felix');
       const val = document.getElementById('boya-don_felix');
 
+      // CASO A: Nodo Desconectado / Sin Internet (No activa la sirena)
       if (!data || data.online === false) {
+        card.classList.remove('critical-alarm');
         badge.className = 'badge-status badge-offline';
         badge.innerText = 'OFFLINE';
-        val.className = 'row-value val-warn';
-        val.innerText = 'NODO DESCONECTADO';
+        val.className = 'row-value val-offline';
+        val.innerText = 'EQUIPO SIN INTERNET';
+        
+        // Apaga sirena si estaba sonando por desconexión previa
         estadoAlertaActual = false;
         apagarAlertasGlobales();
-        card.classList.remove('critical-alarm');
+
+        // Iniciar temporizador de 1 hora para aviso de mantenimiento al cliente
+        if (!offlineTimerDonFelix) {
+          offlineTimerDonFelix = setTimeout(() => {
+            if (swRegistration && Notification.permission === "granted") {
+              swRegistration.showNotification("📡 AVISO DE CONEXIÓN - VOLTEX", {
+                body: "Don Félix: El equipo lleva más de 1 hora sin conexión a internet.",
+                icon: "https://img.icons8.com/fluency/96/flash-off.png"
+              });
+            }
+          }, TIEMPO_GRACIA_DESCONEXION_MS);
+        }
         return;
       }
 
-      const alerta = (data.boya_medio_tanque === true);
-      if (alerta) {
+      // Si volvió la conexión, limpia el temporizador offline
+      if (offlineTimerDonFelix) {
+        clearTimeout(offlineTimerDonFelix);
+        offlineTimerDonFelix = null;
+      }
+
+      // CASO B: Nodo Conectado (Evalúa falla real del sensor G18)
+      const faltaAguaReal = (data.boya_medio_tanque === true);
+
+      if (faltaAguaReal) {
         card.classList.add('critical-alarm');
         badge.className = 'badge-status badge-alert';
         badge.innerText = '🚨 ALERTA CRÍTICA';
@@ -809,6 +832,7 @@
           dispararAlertasGlobales("🚨 VOLTEX: ALERTA CRÍTICA", "Don Félix: Tanque por debajo del 50%");
         }
       } else {
+        // Nivel normal (Boya 100% OK)
         card.classList.remove('critical-alarm');
         badge.className = 'badge-status badge-ok';
         badge.innerText = 'NORMAL';
@@ -819,7 +843,7 @@
       }
     });
 
-    // 2. Pollo Juanes
+    // 2. Pollo Juanes (Frío)
     db.ref('clientes/pollo_juanes/config/temp_maxima').on('value', (snap) => {
       if (snap.exists()) {
         umbralTemperaturaActual = snap.val();
