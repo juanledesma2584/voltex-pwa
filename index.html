@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VOLTEX - Sistema de Telemetría e IoT</title>
+  <title>VOLTEX - Sistema Integrado de Telemetría e IoT</title>
 
   <!-- PWA & Favicon -->
   <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/bolt.png">
@@ -118,8 +118,8 @@
     .client-list {
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      max-width: 600px;
+      gap: 20px;
+      max-width: 650px;
       margin: 0 auto;
       width: 100%;
     }
@@ -158,7 +158,7 @@
     }
 
     .client-name {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--text-main);
     }
@@ -184,10 +184,55 @@
       border: 1px solid rgba(239, 68, 68, 0.5);
     }
 
+    .badge-waiting {
+      background: rgba(148, 163, 184, 0.15);
+      color: var(--text-muted);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .system-selector {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+    }
+
+    .sys-tab {
+      flex: 1;
+      padding: 8px 4px;
+      color: var(--text-muted);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .sys-tab.active {
+      background: var(--accent-cyan);
+      color: #0f172a;
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+    }
+
     .telemetry-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .telemetry-panel {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .telemetry-panel.active {
+      display: flex;
     }
 
     .telemetry-item {
@@ -213,37 +258,24 @@
       font-weight: 700;
     }
 
-    .val-ok {
-      color: var(--status-green);
-    }
+    .val-ok { color: var(--status-green); }
+    .val-alert { color: var(--status-red); }
+    .val-warn { color: var(--status-warn); }
 
-    .val-alert {
-      color: var(--status-red);
-    }
-
-    .system-selector {
-      margin-top: 16px;
-      display: flex;
-      gap: 8px;
-    }
-
-    .sys-tab {
-      flex: 1;
-      padding: 8px;
-      background: #0f172a;
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
+    .btn-action {
+      background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
       border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-align: center;
+      font-weight: 700;
       cursor: pointer;
+      font-size: 0.85rem;
+      transition: opacity 0.2s ease;
     }
 
-    .sys-tab.active {
-      background: var(--accent-cyan);
-      color: #0f172a;
-      border-color: var(--accent-cyan);
+    .btn-action:active {
+      opacity: 0.8;
     }
 
     footer {
@@ -275,55 +307,162 @@
       🔔 ACTIVAR SISTEMA DE ALERTAS EN SEGUNDO PLANO
     </button>
 
-    <!-- Cliente 1: Don Félix -->
+    <!-- 1. CLIENTE: DON FÉLIX -->
     <div id="card-don_felix" class="client-card">
       <div class="card-title-bar">
         <div class="client-name">Don Félix</div>
         <div id="badge-don_felix" class="badge badge-normal">NORMAL</div>
       </div>
 
+      <div class="system-selector">
+        <div class="sys-tab active" onclick="switchTab('don_felix', 'agua', this)">AGUA</div>
+        <div class="sys-tab" onclick="switchTab('don_felix', 'ascensores', this)">ASCENSORES</div>
+        <div class="sys-tab" onclick="switchTab('don_felix', 'frio', this)">FRÍO</div>
+      </div>
+
       <div class="telemetry-grid">
-        <div class="telemetry-item">
-          <div class="telemetry-label">
-            💧 Nivel Tanque (Boya 50%):
-          </div>
-          <div id="boya-don_felix" class="telemetry-value val-ok">
-            100% OK
+        <div id="panel-don_felix-agua" class="telemetry-panel active">
+          <div class="telemetry-item">
+            <div class="telemetry-label">💧 Nivel Tanque (Boya 50%):</div>
+            <div id="boya-don_felix" class="telemetry-value val-ok">100% OK</div>
           </div>
         </div>
+
+        <div id="panel-don_felix-ascensores" class="telemetry-panel">
+          <div class="telemetry-item">
+            <div class="telemetry-label">🛗 Estado Ascensor Principal:</div>
+            <div id="ascensor-don_felix" class="telemetry-value val-ok">OPERATIVO / PISO 0</div>
+          </div>
+        </div>
+
+        <div id="panel-don_felix-frio" class="telemetry-panel">
+          <div class="telemetry-item">
+            <div class="telemetry-label">❄️ Temperatura Ambiente:</div>
+            <div id="temp-don_felix" class="telemetry-value val-ok">SIN MODULO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. CLIENTE: VESNA -->
+    <div id="card-vesna" class="client-card">
+      <div class="card-title-bar">
+        <div class="client-name">Vesna</div>
+        <div id="badge-vesna" class="badge badge-normal">NORMAL</div>
       </div>
 
       <div class="system-selector">
-        <div class="sys-tab active">AGUA</div>
-        <div class="sys-tab" style="opacity: 0.4;">ASCENSORES</div>
-        <div class="sys-tab" style="opacity: 0.4;">FRÍO</div>
+        <div class="sys-tab active" onclick="switchTab('vesna', 'ascensores', this)">ASCENSORES</div>
+        <div class="sys-tab" onclick="switchTab('vesna', 'agua', this)">AGUA</div>
+        <div class="sys-tab" onclick="switchTab('vesna', 'frio', this)">FRÍO</div>
       </div>
-    </div>
 
-    <!-- Cliente 2: Vesna -->
-    <div id="card-vesna" class="client-card" style="opacity: 0.7;">
-      <div class="card-title-bar">
-        <div class="client-name">Vesna</div>
-        <div class="badge badge-normal">EN ESPERA</div>
-      </div>
       <div class="telemetry-grid">
-        <div class="telemetry-item">
-          <div class="telemetry-label">💧 Nivel Tanque:</div>
-          <div class="telemetry-value val-ok">SIN MODULO</div>
+        <div id="panel-vesna-ascensores" class="telemetry-panel active">
+          <div class="telemetry-item">
+            <div class="telemetry-label">🛗 Cuadro de Maniobra Monarch/Otis:</div>
+            <div id="ascensor-vesna" class="telemetry-value val-ok">NORMAL (PISO 1)</div>
+          </div>
+          <div class="telemetry-item">
+            <div class="telemetry-label">⚠️ Serie de Seguridad:</div>
+            <div id="seguridad-vesna" class="telemetry-value val-ok">CERRADA / OK</div>
+          </div>
+        </div>
+
+        <div id="panel-vesna-agua" class="telemetry-panel">
+          <div class="telemetry-item">
+            <div class="telemetry-label">💧 Tanque Superior:</div>
+            <div id="boya-vesna" class="telemetry-value val-ok">NORMAL</div>
+          </div>
+        </div>
+
+        <div id="panel-vesna-frio" class="telemetry-panel">
+          <div class="telemetry-item">
+            <div class="telemetry-label">❄️ Sensor de Temperatura:</div>
+            <div id="temp-vesna" class="telemetry-value val-ok">N/A</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Cliente 3: Juan Ledesma -->
-    <div id="card-juan_ledesma" class="client-card" style="opacity: 0.7;">
+    <!-- 3. CLIENTE: POLLO JUANES -->
+    <div id="card-pollo_juanes" class="client-card">
       <div class="card-title-bar">
-        <div class="client-name">Juan Ledesma</div>
-        <div class="badge badge-normal">EN ESPERA</div>
+        <div class="client-name">Pollo Juanes</div>
+        <div id="badge-pollo_juanes" class="badge badge-normal">NORMAL</div>
+      </div>
+
+      <div class="system-selector">
+        <div class="sys-tab active" onclick="switchTab('pollo_juanes', 'frio', this)">CÁMARA FRIGORÍFICA</div>
+        <div class="sys-tab" onclick="switchTab('pollo_juanes', 'agua', this)">AGUA</div>
+      </div>
+
+      <div class="telemetry-grid">
+        <div id="panel-pollo_juanes-frio" class="telemetry-panel active">
+          <div class="telemetry-item">
+            <div class="telemetry-label">🌡️ Temp. Cámara Frigorífica:</div>
+            <div id="temp-pollo_juanes" class="telemetry-value val-ok">-18.5 °C</div>
+          </div>
+          <div class="telemetry-item">
+            <div class="telemetry-label">🚪 Puerta Cámara:</div>
+            <div id="puerta-pollo_juanes" class="telemetry-value val-ok">CERRADA</div>
+          </div>
+          <div class="telemetry-item">
+            <div class="telemetry-label">⚡ Falla Térmica Compresor:</div>
+            <div id="termico-pollo_juanes" class="telemetry-value val-ok">NORMAL</div>
+          </div>
+        </div>
+
+        <div id="panel-pollo_juanes-agua" class="telemetry-panel">
+          <div class="telemetry-item">
+            <div class="telemetry-label">💧 Reservorio Lavado:</div>
+            <div id="boya-pollo_juanes" class="telemetry-value val-ok">NORMAL</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. CONTROL: CASA / PORTONES -->
+    <div id="card-casa_portones" class="client-card">
+      <div class="card-title-bar">
+        <div class="client-name">Casa / Portones</div>
+        <div id="badge-casa_portones" class="badge badge-normal">ONLINE</div>
+      </div>
+
+      <div class="telemetry-grid">
+        <div class="telemetry-panel active">
+          <div class="telemetry-item">
+            <div class="telemetry-label">🚗 Portón Vehicular Acceso:</div>
+            <div id="estado-porton-vehicular" class="telemetry-value val-ok">CERRADO</div>
+          </div>
+          <div class="telemetry-item">
+            <div class="telemetry-label">🔘 Accionamiento Remoto:</div>
+            <button class="btn-action" onclick="accionarPorton('vehicular')">ABRIR / CERRAR</button>
+          </div>
+          <div class="telemetry-item">
+            <div class="telemetry-label">🚪 Portón Peatonal:</div>
+            <div id="estado-porton-peatonal" class="telemetry-value val-ok">BLOQUEADO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. CLIENTE: JUAN LEDESMA (ADMIN) -->
+    <div id="card-juan_ledesma" class="client-card">
+      <div class="card-title-bar">
+        <div class="client-name">Juan Ledesma (Admin Telemetría)</div>
+        <div class="badge badge-normal">SISTEMA OK</div>
       </div>
       <div class="telemetry-grid">
-        <div class="telemetry-item">
-          <div class="telemetry-label">💧 Nivel Tanque:</div>
-          <div class="telemetry-value val-ok">SIN MODULO</div>
+        <div class="telemetry-panel active">
+          <div class="telemetry-item">
+            <div class="telemetry-label">📡 Nodos ESP32 Activos:</div>
+            <div class="telemetry-value val-ok">3 NODOS</div>
+          </div>
+          <div class="telemetry-item">
+            <div class="telemetry-label">⚡ Base de Datos Firebase RTDB:</div>
+            <div class="telemetry-value val-ok">CONECTADO</div>
+          </div>
         </div>
       </div>
     </div>
@@ -351,19 +490,37 @@
     let estadoAlertaActual = false;
     let swRegistration = null;
 
-    // 1. Registro del Service Worker para Notificaciones de Fondo
+    // Registro de Service Worker para Notificaciones de Fondo
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
           .then(reg => {
             swRegistration = reg;
-            console.log('VOLTEX Service Worker registrado con éxito:', reg.scope);
+            console.log('VOLTEX Service Worker registrado con éxito');
           })
           .catch(err => console.error('Error al registrar Service Worker:', err));
       });
     }
 
-    // 2. Solicitar permisos de notificación persistentes al sistema operativo
+    // Navegación dinámica entre pestañas (AGUA, ASCENSORES, FRÍO)
+    function switchTab(clientId, systemId, tabElement) {
+      const card = document.getElementById(`card-${clientId}`);
+      
+      // Ocultar todos los paneles del cliente
+      const panels = card.querySelectorAll('.telemetry-panel');
+      panels.forEach(p => p.classList.remove('active'));
+
+      // Desactivar pestañas
+      const tabs = card.querySelectorAll('.sys-tab');
+      tabs.forEach(t => t.classList.remove('active'));
+
+      // Activar el seleccionado
+      const targetPanel = document.getElementById(`panel-${clientId}-${systemId}`);
+      if (targetPanel) targetPanel.classList.add('active');
+      tabElement.classList.add('active');
+    }
+
+    // Solicitar permisos Push al SO
     function solicitarPermisosPush() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -375,18 +532,17 @@
       if ("Notification" in window) {
         Notification.requestPermission().then(permission => {
           if (permission === "granted") {
-            alert("¡Permisos activados! Las notificaciones Push llegarán incluso con el teléfono bloqueado.");
+            alert("¡Alertas Push y Sonido activados correctamente!");
           } else {
-            alert("Permiso de notificaciones denegado. Actívalo en la configuración de Chrome/Android.");
+            alert("Permiso de notificaciones denegado.");
           }
         });
       }
     }
 
-    // Sirena industrial generada por Web Audio API (cuando la app está abierta)
+    // Sirena industrial sonora
     function sonarSirena() {
       if (!audioCtx) return;
-
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
 
@@ -404,24 +560,21 @@
       osc.stop(audioCtx.currentTime + 0.35);
     }
 
-    function dispararAlertasGlobales() {
-      // A) Vibración del teléfono
+    function dispararAlertasGlobales(titulo, mensaje) {
       if ("vibrate" in navigator) {
         navigator.vibrate([600, 250, 600, 250, 600]);
       }
 
-      // B) Lógica para enviar Notificación al Service Worker de Fondo
       if (swRegistration && "Notification" in window && Notification.permission === "granted") {
-        swRegistration.showNotification("🚨 ¡ALERTA CRÍTICA VOLTEX!", {
-          body: "Cliente: Don Félix - El nivel de agua descendió bajo el 50%.",
+        swRegistration.showNotification(titulo, {
+          body: mensaje,
           icon: "https://img.icons8.com/fluency/48/bolt.png",
           vibrate: [500, 200, 500, 200, 500],
-          tag: "alerta-agua-don-felix",
+          tag: "alerta-voltex-critica",
           requireInteraction: true
         });
       }
 
-      // C) Sirena continua mientras la app esté abierta
       if (!alarmInterval) {
         sonarSirena();
         alarmInterval = setInterval(sonarSirena, 550);
@@ -435,41 +588,94 @@
       }
     }
 
-    // Suscripción en Tiempo Real a Firebase
-    const refAguaDonFelix = db.ref('clientes/don_felix/telemetria/agua');
+    // Funciones para accionar portones
+    function accionarPorton(tipo) {
+      const refPorton = db.ref(`casa/portones/${tipo}`);
+      refPorton.set(true);
+      setTimeout(() => refPorton.set(false), 2000);
+      alert(`Comando de pulso enviado a Portón ${tipo.toUpperCase()}`);
+    }
 
-    refAguaDonFelix.on('value', (snapshot) => {
+    // Suscripción Realtime Database Firebase
+    
+    // 1. Don Félix (Agua)
+    db.ref('clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
       const data = snapshot.val();
       if (!data) return;
 
-      const alertaActiva = (data.boya_medio_tanque === true);
-
+      const alerta = (data.boya_medio_tanque === true);
       const card = document.getElementById('card-don_felix');
       const badge = document.getElementById('badge-don_felix');
-      const boyaVal = document.getElementById('boya-don_felix');
+      const val = document.getElementById('boya-don_felix');
 
-      if (alertaActiva) {
+      if (alerta) {
         card.classList.add('critical-alert');
         badge.className = 'badge badge-danger';
         badge.innerText = '🚨 ALERTA CRÍTICA';
-
-        boyaVal.className = 'telemetry-value val-alert';
-        boyaVal.innerText = '⚠️ MENOS DEL 50%';
+        val.className = 'telemetry-value val-alert';
+        val.innerText = '⚠️ MENOS DEL 50%';
 
         if (!estadoAlertaActual) {
           estadoAlertaActual = true;
-          dispararAlertasGlobales();
+          dispararAlertasGlobales("🚨 ALERTA VOLTEX", "Don Félix: Nivel de agua cayó del 50%");
         }
       } else {
         card.classList.remove('critical-alert');
         badge.className = 'badge badge-normal';
         badge.innerText = 'NORMAL';
-
-        boyaVal.className = 'telemetry-value val-ok';
-        boyaVal.innerText = '100% OK';
-
+        val.className = 'telemetry-value val-ok';
+        val.innerText = '100% OK';
         estadoAlertaActual = false;
         apagarAlertasGlobales();
+      }
+    });
+
+    // 2. Pollo Juanes (Cámara Frigorífica)
+    db.ref('clientes/pollo_juanes/telemetria/frio').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (!data) return;
+
+      const tempVal = document.getElementById('temp-pollo_juanes');
+      const puertaVal = document.getElementById('puerta-pollo_juanes');
+      const termicoVal = document.getElementById('termico-pollo_juanes');
+      const card = document.getElementById('card-pollo_juanes');
+      const badge = document.getElementById('badge-pollo_juanes');
+
+      if (data.temperatura !== undefined) {
+        tempVal.innerText = `${data.temperatura} °C`;
+        if (data.temperatura > -10) {
+          tempVal.className = 'telemetry-value val-alert';
+          card.classList.add('critical-alert');
+          badge.className = 'badge badge-danger';
+          badge.innerText = '🚨 ALERTA TEMP';
+          dispararAlertasGlobales("🚨 ALERTA TEMPERATURA", "Pollo Juanes: Cámara frigorífica superó el umbral seguro");
+        } else {
+          tempVal.className = 'telemetry-value val-ok';
+          card.classList.remove('critical-alert');
+          badge.className = 'badge badge-normal';
+          badge.innerText = 'NORMAL';
+        }
+      }
+
+      if (data.puerta_abierta !== undefined) {
+        puertaVal.innerText = data.puerta_abierta ? "⚠️ ABIERTA" : "CERRADA";
+        puertaVal.className = data.puerta_abierta ? "telemetry-value val-alert" : "telemetry-value val-ok";
+      }
+
+      if (data.falla_termico !== undefined) {
+        termicoVal.innerText = data.falla_termico ? "🚨 FALLA DISPARADA" : "NORMAL";
+        termicoVal.className = data.falla_termico ? "telemetry-value val-alert" : "telemetry-value val-ok";
+      }
+    });
+
+    // 3. Portones Casa
+    db.ref('casa/portones/estado').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (!data) return;
+      const veh = document.getElementById('estado-porton-vehicular');
+      if (veh && data.vehicular) {
+        veh.innerText = data.vehicular;
+        veh.className = (data.vehicular === "ABIERTO") ? "telemetry-value val-warn" : "telemetry-value val-ok";
       }
     });
   </script>
