@@ -126,11 +126,18 @@
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
     }
 
-    /* BOTÓN ACTIVACIÓN PUSH AMBIENTAL */
-    .btn-alert-setup {
-      width: 100%;
+    /* BOTÓN ACTIVACIÓN PUSH Y SILENCIADOR DE ALARMA */
+    .controls-bar-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
       max-width: 650px;
       margin: 0 auto 24px auto;
+      width: 100%;
+    }
+
+    .btn-alert-setup {
+      width: 100%;
       background: linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #ffffff;
@@ -149,7 +156,31 @@
       transition: all 0.2s ease;
     }
 
-    .btn-alert-setup:active {
+    .btn-silence-alarm {
+      display: none;
+      width: 100%;
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.9) 0%, rgba(185, 28, 28, 0.9) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+      animation: pulse-silence-btn 1s infinite alternate;
+    }
+
+    @keyframes pulse-silence-btn {
+      from { transform: scale(1); }
+      to { transform: scale(1.02); }
+    }
+
+    .btn-alert-setup:active, .btn-silence-alarm:active {
       transform: scale(0.98);
       opacity: 0.9;
     }
@@ -404,10 +435,15 @@
     </div>
   </header>
 
-  <!-- BOTÓN ACTIVACIÓN ALERTAS PUSH -->
-  <button class="btn-alert-setup" onclick="activarAlertasSegundoPlano()">
-    🔔 ACTIVAR TELEMETRÍA CRÍTICA Y PUSH 24/7
-  </button>
+  <!-- CONTROLES SUPERIORES (ACTIVACIÓN Y BOTÓN DE SILENCIAR ALARMA) -->
+  <div class="controls-bar-grid">
+    <button class="btn-alert-setup" onclick="activarAlertasSegundoPlano()">
+      🔔 ACTIVAR TELEMETRÍA CRÍTICA Y PUSH 24/7
+    </button>
+    <button id="btn-silenciar" class="btn-silence-alarm" onclick="silenciarAlarmaManualmente()">
+      🔕 SILENCIAR SIRENA DE ALARMA (ACK)
+    </button>
+  </div>
 
   <div class="app-viewport">
     
@@ -571,7 +607,7 @@
   </div>
 
   <footer>
-    VOLTEX IoT Telemetry Platform &bull; Software Industrial v3.0 &bull; Asunción, PY
+    VOLTEX IoT Telemetry Platform &bull; Software Industrial v3.1 &bull; Asunción, PY
   </footer>
 
   <!-- Firebase Web SDK v8 -->
@@ -600,10 +636,9 @@
 
       if (!currentUser || currentUser === 'admin') {
         userLabel.innerText = "ADMIN PANEL";
-        return; // Muestra todo
+        return;
       }
 
-      // Ocultar todas las tarjetas por defecto
       document.querySelectorAll('.voltex-card').forEach(card => card.style.display = 'none');
       document.getElementById('section-telemetria-header').style.display = 'none';
       document.getElementById('section-control-header').style.display = 'none';
@@ -670,27 +705,33 @@
       }
     }
 
-    // 4. Sirena sonora industrial
+    // 4. Sirena sonora industrial con Auto-Reset y Silenciador Manual
     function sonarSirena() {
       if (!audioCtx) return;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
 
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(980, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(420, audioCtx.currentTime + 0.35);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(980, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(420, audioCtx.currentTime + 0.35);
 
-      gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
 
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
 
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.35);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.35);
+      } catch (e) {
+        console.log("AudioContext reiniciado:", e);
+      }
     }
 
     function dispararAlertasGlobales(titulo, mensaje) {
+      document.getElementById('btn-silenciar').style.display = 'flex';
+
       if ("vibrate" in navigator) {
         navigator.vibrate([600, 250, 600, 250, 600]);
       }
@@ -716,6 +757,12 @@
         clearInterval(alarmInterval);
         alarmInterval = null;
       }
+      document.getElementById('btn-silenciar').style.display = 'none';
+    }
+
+    function silenciarAlarmaManualmente() {
+      apagarAlertasGlobales();
+      alert("🔕 Sirena silenciada manualmente. El monitoreo continúa en pantalla.");
     }
 
     // 5. Accionamiento independiente de Portones
@@ -728,7 +775,7 @@
 
     // 6. Suscripción a Firebase en Tiempo Real
     
-    // Don Félix (Agua)
+    // Don Félix (Agua) - Con Autoreset Inmediato al normalizar la boya
     db.ref('clientes/don_felix/telemetria/agua').on('value', (snapshot) => {
       const data = snapshot.val();
       if (!data) return;
@@ -750,11 +797,13 @@
           dispararAlertasGlobales("🚨 VOLTEX: ALERTA CRÍTICA", "Don Félix: El tanque descendió por debajo del 50%");
         }
       } else {
+        // AUTORESET COMPLETO AL RESTABLECER BOYA A NORMAL
         card.classList.remove('critical-alarm');
         badge.className = 'badge-status badge-ok';
         badge.innerText = 'NORMAL';
         val.className = 'row-value val-ok';
         val.innerText = '100% OK';
+        
         estadoAlertaActual = false;
         apagarAlertasGlobales();
       }
@@ -778,12 +827,17 @@
           card.classList.add('critical-alarm');
           badge.className = 'badge-status badge-alert';
           badge.innerText = '🚨 ALERTA TEMP';
-          dispararAlertasGlobales("🚨 VOLTEX: ALERTA FRÍO", "Pollo Juanes: Cámara frigorífica fuera de rango de seguridad");
+          if (!estadoAlertaActual) {
+            estadoAlertaActual = true;
+            dispararAlertasGlobales("🚨 VOLTEX: ALERTA FRÍO", "Pollo Juanes: Cámara frigorífica fuera de rango de seguridad");
+          }
         } else {
           tempVal.className = 'row-value val-ok';
           card.classList.remove('critical-alarm');
           badge.className = 'badge-status badge-ok';
           badge.innerText = 'NORMAL';
+          estadoAlertaActual = false;
+          apagarAlertasGlobales();
         }
       }
 
