@@ -95,7 +95,7 @@
     .card-small-body { display: flex; flex-direction: column; gap: 4px; }
     .card-small-val { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); }
 
-    /* SEGUNDA PANTALLA DE DETALLE INTERACTIVA */
+    /* SEGUNDA PANTALLA DE DETALLE */
     #device-detail-view { display: none; flex-direction: column; gap: 14px; }
     .detail-header-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.85); padding: 10px 14px; border-radius: 14px; border: 1px solid var(--card-border); }
     .btn-back { background: none; border: none; color: var(--voltex-cyan); font-size: 0.9rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; }
@@ -108,14 +108,12 @@
     .detail-hero-title { font-size: 1.1rem; font-weight: 900; color: var(--text-primary); }
     .detail-hero-subtitle { font-size: 0.65rem; font-weight: 700; color: var(--voltex-cyan); text-transform: uppercase; }
 
-    /* BOTONES DE ESTADO TIPO SMART LIFE QUE ABREN SUB-DATOS */
     .detail-status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .status-tile { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: border-color 0.2s ease; }
+    .status-tile { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; }
     .status-tile:active { border-color: var(--voltex-cyan); }
     .status-tile-label { font-size: 0.65rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; }
     .status-tile-value { font-size: 0.9rem; font-weight: 900; }
 
-    /* SECCIÓN DE SUB-DISPOSITIVOS (EJ. MÚLTIPLES ASCENSORES) */
     .subdevices-box { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
     .subdevice-item { display: flex; justify-content: space-between; align-items: center; background: rgba(7, 10, 18, 0.6); padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.04); }
     .btn-add-sub { background: rgba(56, 189, 248, 0.2); border: 1px solid var(--voltex-cyan); color: var(--voltex-cyan); padding: 8px; border-radius: 8px; font-weight: 800; font-size: 0.75rem; cursor: pointer; width: 100%; text-align: center; }
@@ -146,6 +144,10 @@
     .form-group { display: flex; flex-direction: column; gap: 4px; }
     .form-label { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); }
     .form-input, .form-select { background: #090d16; border: 1px solid var(--card-border); color: #fff; padding: 10px; border-radius: 8px; font-size: 0.85rem; outline: none; }
+    
+    /* CHECKBOXES MÚLTIPLES PARA TECNOLOGÍAS */
+    .tech-checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; background: rgba(9, 13, 22, 0.6); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+    .tech-check-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--text-primary); cursor: pointer; }
 
     .btn-whatsapp-clean { background: #25d366; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 800; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3); }
     .btn-save-settings { background: linear-gradient(135deg, var(--voltex-cyan) 0%, var(--voltex-blue) 100%); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; }
@@ -208,7 +210,7 @@
             <span id="grid-badge-don_felix" class="card-small-status badge-ok">NORMAL</span>
           </div>
           <div class="card-small-body">
-            <span class="card-small-val">💧 Agua: <strong>100% OK</strong></span>
+            <span class="card-small-val">🏢 Multi-Sistema</span>
             <span class="card-small-val" style="font-size:0.65rem; color:var(--voltex-cyan);">Ver detalle ➔</span>
           </div>
         </div>
@@ -220,7 +222,7 @@
             <span id="grid-badge-vesna" class="card-small-status badge-ok">NORMAL</span>
           </div>
           <div class="card-small-body">
-            <span class="card-small-val">🛗 Ascensor: <strong>PISO 1</strong></span>
+            <span class="card-small-val">🏢 Multi-Sistema</span>
             <span class="card-small-val" style="font-size:0.65rem; color:var(--voltex-cyan);">Ver detalle ➔</span>
           </div>
         </div>
@@ -232,7 +234,7 @@
             <span id="grid-badge-pollo_juanes" class="card-small-status badge-ok">NORMAL</span>
           </div>
           <div class="card-small-body">
-            <span class="card-small-val">🌡️ Frío: <strong>-18.5 °C</strong></span>
+            <span class="card-small-val">🍗 Frío & Agua</span>
             <span class="card-small-val" style="font-size:0.65rem; color:var(--voltex-cyan);">Ver detalle ➔</span>
           </div>
         </div>
@@ -244,14 +246,14 @@
             <span class="card-small-status" style="background:rgba(139,92,246,0.2); color:var(--voltex-purple);">ONLINE</span>
           </div>
           <div class="card-small-body">
-            <span class="card-small-val">🚗 Acceso: <strong>CERRADO</strong></span>
+            <span class="card-small-val">🚗 Acceso</span>
             <span class="card-small-val" style="font-size:0.65rem; color:var(--voltex-cyan);">Ver detalle ➔</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- PANTALLA 2: VISTA DE DETALLE INTERACTIVA (CON SUB-DISPOSITIVOS Y TELEMETRÍA) -->
+    <!-- PANTALLA 2: VISTA DE DETALLE INTERACTIVA CON MÚLTIPLES SUBSISTEMAS -->
     <div id="device-detail-view">
       <div class="detail-header-bar">
         <button class="btn-back" onclick="cerrarDetalleDispositivo()">⬅ Volver</button>
@@ -263,23 +265,23 @@
           <div id="detail-icon" class="detail-hero-icon">🏢</div>
           <div class="detail-hero-info">
             <div id="detail-title" class="detail-hero-title">Nombre del Dispositivo</div>
-            <div id="detail-brand-badge" class="detail-hero-subtitle">Marca: Otis</div>
+            <div id="detail-techs-badge" class="detail-hero-subtitle">Tecnologías Múltiples Activas</div>
           </div>
         </div>
       </div>
 
-      <!-- GRILLA DE BOTONES TIPO SMART LIFE QUE ABREN DESGLOSE -->
+      <!-- BOTONES DE ESTADO GENERAL -->
       <div class="detail-status-grid" id="detail-panels-container">
-        <!-- Inyectado dinámicamente -->
+        <!-- Dinámico -->
       </div>
 
-      <!-- SECCIÓN PARA AGREGAR MÚLTIPLES ASCENSORES / SUB-EQUIPOS -->
+      <!-- SECCIÓN DE SUBSISTEMAS MÚLTIPLES (AGUA, ASCENSORES, FRÍO, ETC.) -->
       <div class="subdevices-box">
-        <span style="font-size: 0.75rem; font-weight: 800; color: var(--voltex-cyan);">🛗 Subsistemas / Unidades Asociadas:</span>
+        <span style="font-size: 0.75rem; font-weight: 800; color: var(--voltex-cyan);">⚙️ Módulos Tecnológicos Instalados en el Predio:</span>
         <div id="subdevices-list" style="display: flex; flex-direction: column; gap: 6px;">
-          <!-- Lista dinámica de sub-equipos -->
+          <!-- Lista dinámica -->
         </div>
-        <button class="btn-add-sub" onclick="abrirModalSubDispositivo()">➕ Agregar Sub-dispositivo (Ej. Ascensor 2)</button>
+        <button class="btn-add-sub" onclick="abrirModalSubDispositivo()">➕ Agregar Otro Subsistema (Ej. Segundo Ascensor / Tanque)</button>
       </div>
     </div>
 
@@ -369,7 +371,7 @@
 
   </div>
 
-  <!-- PANTALLA 3 / MODAL: CONFIGURACIÓN Y WHATSAPP -->
+  <!-- PANTALLA 3 / MODAL: CONFIGURACIÓN CON SELECCIÓN MÚLTIPLE (CHECKBOXES) -->
   <div id="modal-edit-client" class="modal-overlay">
     <div class="modal-body">
       <div class="modal-header">
@@ -380,19 +382,18 @@
       <input type="hidden" id="edit-client-key">
 
       <div class="form-group">
-        <label class="form-label">Nombre del Dispositivo:</label>
+        <label class="form-label">Nombre del Dispositivo / Edificio:</label>
         <input type="text" id="edit-client-name" class="form-input">
       </div>
 
       <div class="form-group">
-        <label class="form-label">Marca de Equipo / Sistema:</label>
-        <select id="edit-client-brand" class="form-select">
-          <option value="Monarch">Monarch</option>
-          <option value="Otis">Otis</option>
-          <option value="Sigma">Sigma</option>
-          <option value="Tanque de Agua">Tanque de Agua</option>
-          <option value="Cámara Frigorífica">Cámara Frigorífica</option>
-        </select>
+        <label class="form-label">Tecnologías / Subsistemas Activos (Selección Múltiple):</label>
+        <div class="tech-checkbox-grid">
+          <label class="tech-check-item"><input type="checkbox" id="chk-agua" value="Tanque / Bomba Agua"> 💧 Tanque / Agua</label>
+          <label class="tech-check-item"><input type="checkbox" id="chk-ascensor" value="Ascensores (Monarch/Otis)"> 🛗 Ascensores</label>
+          <label class="tech-check-item"><input type="checkbox" id="chk-frio" value="Cámara Frigorífica"> 🌡️ Cámara Frío</label>
+          <label class="tech-check-item"><input type="checkbox" id="chk-porton" value="Portones / Accesos"> 🚗 Portones</label>
+        </div>
       </div>
 
       <div class="form-group">
@@ -416,22 +417,22 @@
     </div>
   </div>
 
-  <!-- MODAL AGREGAR SUB-DISPOSITIVO (EJ. SEGUNDO ASCENSOR) -->
+  <!-- MODAL AGREGAR SUBSISTEMA -->
   <div id="modal-sub-device" class="modal-overlay">
     <div class="modal-body">
       <div class="modal-header">
-        <span class="modal-title">➕ Agregar Subsistema / Unidad</span>
+        <span class="modal-title">➕ Agregar Subsistema Específico</span>
         <button class="btn-close-modal" onclick="cerrarModalSubDispositivo()">&times;</button>
       </div>
       <div class="form-group">
-        <label class="form-label">Nombre de la Unidad (Ej. Ascensor 2):</label>
-        <input type="text" id="sub-dev-name" class="form-input" placeholder="Ej: Ascensor Servicio B">
+        <label class="form-label">Nombre del Subsistema (Ej. Ascensor 2):</label>
+        <input type="text" id="sub-dev-name" class="form-input" placeholder="Ej: Tanque Superior o Ascensor B">
       </div>
       <div class="form-group">
         <label class="form-label">Estado Inicial:</label>
-        <input type="text" id="sub-dev-status" class="form-input" value="OPERATIVO / PISO 0">
+        <input type="text" id="sub-dev-status" class="form-input" value="OPERATIVO / 100% OK">
       </div>
-      <button class="btn-save-settings" onclick="guardarSubDispositivo()">AÑADIR UNIDAD</button>
+      <button class="btn-save-settings" onclick="guardarSubDispositivo()">AÑADIR SUBSISTEMA</button>
     </div>
   </div>
 
@@ -466,16 +467,6 @@
         <input type="text" id="new-dev-name" class="form-input" placeholder="Ej: Edificio Vista">
       </div>
       <div class="form-group">
-        <label class="form-label">Marca de Ascensor / Sistema:</label>
-        <select id="new-dev-brand" class="form-select">
-          <option value="Monarch">Monarch</option>
-          <option value="Otis">Otis</option>
-          <option value="Sigma">Sigma</option>
-          <option value="Tanque de Agua">Tanque de Agua</option>
-          <option value="Cámara Frigorífica">Cámara Frigorífica</option>
-        </select>
-      </div>
-      <div class="form-group">
         <label class="form-label">Estado Comercial:</label>
         <select id="new-dev-status" class="form-select">
           <option value="prueba">Fase de Prueba</option>
@@ -487,7 +478,7 @@
   </div>
 
   <footer>
-    VOLTEX IoT Telemetry & Enterprise ERP Platform &bull; v5.6 &bull; Asunción, PY
+    VOLTEX IoT Telemetry & Enterprise ERP Platform &bull; v5.7 &bull; Asunción, PY
   </footer>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -507,19 +498,19 @@
 
     let dispositivosData = {
       don_felix: { 
-        nombre: "Don Félix", marca: "Tanque de Agua", icono: "🏢", estado: "NORMAL", valor: "100% OK",
-        subsistemas: [ { nombre: "Tanque Principal", estado: "100% OK" }, { nombre: "Bomba Booster", estado: "OPERATIVA" } ]
+        nombre: "Don Félix", icono: "🏢", estado: "NORMAL", 
+        subsistemas: [ { nombre: "Tanque Principal", estado: "100% OK" }, { nombre: "Ascensor Monarch", estado: "PISO 0 / OPERATIVO" }, { nombre: "Bomba Booster", estado: "OPERATIVA" } ]
       },
       vesna: { 
-        nombre: "Edificio Vesna", marca: "Monarch", icono: "🏢", estado: "NORMAL", valor: "PISO 1",
-        subsistemas: [ { nombre: "Ascensor Principal (Monarch)", estado: "PISO 1 / DETENIDO" }, { nombre: "Ascensor Servicio", estado: "PLANTA BAJA" } ]
+        nombre: "Edificio Vesna", icono: "🏢", estado: "NORMAL", 
+        subsistemas: [ { nombre: "Ascensor Principal (Otis)", estado: "PISO 1" }, { nombre: "Tanque Superior", estado: "NORMAL" } ]
       },
       pollo_juanes: { 
-        nombre: "Pollo Juanes", marca: "Cámara Frigorífica", icono: "🍗", estado: "NORMAL", valor: "-18.5 °C",
-        subsistemas: [ { nombre: "Cámara Congelados", estado: "-18.5 °C" }, { nombre: "Sensor Puerta", estado: "CERRADA" } ]
+        nombre: "Pollo Juanes", icono: "🍗", estado: "NORMAL", 
+        subsistemas: [ { nombre: "Cámara Congelados", estado: "-18.5 °C" }, { nombre: "Tanque Lavado", estado: "NORMAL" } ]
       },
       portones: { 
-        nombre: "Portones", marca: "Automatización", icono: "🏠", estado: "ONLINE", valor: "CERRADO",
+        nombre: "Portones", icono: "🏠", estado: "ONLINE", 
         subsistemas: [ { nombre: "Portón Vehicular", estado: "CERRADO" }, { nombre: "Cerradura Peatonal", estado: "BLOQUEADA" } ]
       }
     };
@@ -557,7 +548,6 @@
       if(sectionId === 'inventario') renderizarInventario();
     }
 
-    // ABRIR SEGUNDA PANTALLA Y RENDERIZAR SUB-EQUIPOS E INTERACCIÓN
     function abrirDetalleDispositivo(key) {
       dispositivoActualKey = key;
       const dev = dispositivosData[key];
@@ -568,7 +558,10 @@
 
       document.getElementById('detail-icon').innerText = dev.icono;
       document.getElementById('detail-title').innerText = dev.nombre;
-      document.getElementById('detail-brand-badge').innerText = `Marca: ${dev.marca}`;
+      
+      // Resumen de tecnologías activas en el subtítulo
+      const techs = dev.subsistemas.map(s => s.nombre).join(" • ");
+      document.getElementById('detail-techs-badge').innerText = techs;
 
       renderizarPanelesDetalle(dev);
       renderizarSubDispositivos(dev);
@@ -577,13 +570,13 @@
     function renderizarPanelesDetalle(dev) {
       const container = document.getElementById('detail-panels-container');
       container.innerHTML = `
-        <div class="status-tile" onclick="alert('Telemetría en tiempo real: Conexión estable con ESP32, Voltaje 220V OK')">
+        <div class="status-tile" onclick="alert('Sistema en línea: Todos los sensores reportando sin anomalías')">
           <span class="status-tile-label">📊 Estado General</span>
           <span class="status-tile-value val-ok">${dev.estado}</span>
         </div>
-        <div class="status-tile" onclick="alert('Último reporte recibido hace 5 segundos desde la nube')">
+        <div class="status-tile" onclick="alert('Conexión Cloud ESP32: Estable, 220V OK')">
           <span class="status-tile-label">📶 Conexión Cloud</span>
-          <span class="status-tile-value val-ok">ONLINE / 220V</span>
+          <span class="status-tile-value val-ok">ONLINE</span>
         </div>
       `;
     }
@@ -592,7 +585,7 @@
       const list = document.getElementById('subdevices-list');
       list.innerHTML = '';
       if(!dev.subsistemas) dev.subsistemas = [];
-      dev.subsistemas.forEach((sub, idx) => {
+      dev.subsistemas.forEach((sub) => {
         list.innerHTML += `
           <div class="subdevice-item">
             <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">⚙️ ${sub.nombre}</span>
@@ -616,8 +609,10 @@
       if(dispositivosData[dispositivoActualKey]) {
         dispositivosData[dispositivoActualKey].subsistemas.push({ nombre: nombreSub, estado: estadoSub });
         renderizarSubDispositivos(dispositivosData[dispositivoActualKey]);
+        const techs = dispositivosData[dispositivoActualKey].subsistemas.map(s => s.nombre).join(" • ");
+        document.getElementById('detail-techs-badge').innerText = techs;
       }
-      alert(`✅ Subsistema "${nombreSub}" añadido correctamente.`);
+      alert(`✅ Subsistema "${nombreSub}" añadido.`);
       cerrarModalSubDispositivo();
     }
 
@@ -626,12 +621,18 @@
       document.getElementById('section-view-telemetria').style.display = 'block';
     }
 
-    // TERCERA PANTALLA / MODAL DE AJUSTES
+    // TERCERA PANTALLA / MODAL DE AJUSTES CON CHECKBOXES
     function abrirAjustesDesdeDetalle() {
       const dev = dispositivosData[dispositivoActualKey];
       document.getElementById('edit-client-key').value = dispositivoActualKey;
       document.getElementById('edit-client-name').value = dev.nombre;
-      document.getElementById('edit-client-brand').value = dev.marca;
+      
+      // Marcar checkboxes según los subsistemas existentes
+      document.getElementById('chk-agua').checked = dev.subsistemas.some(s => s.nombre.toLowerCase().includes('agua') || s.nombre.toLowerCase().includes('tanque') || s.nombre.toLowerCase().includes('bomba'));
+      document.getElementById('chk-ascensor').checked = dev.subsistemas.some(s => s.nombre.toLowerCase().includes('ascensor'));
+      document.getElementById('chk-frio').checked = dev.subsistemas.some(s => s.nombre.toLowerCase().includes('cámara') || s.nombre.toLowerCase().includes('frío'));
+      document.getElementById('chk-porton').checked = dev.subsistemas.some(s => s.nombre.toLowerCase().includes('portón') || s.nombre.toLowerCase().includes('cerradura'));
+
       document.getElementById('modal-edit-client').classList.add('active');
     }
 
@@ -651,16 +652,26 @@
     function guardarConfiguracionCliente() {
       const key = document.getElementById('edit-client-key').value;
       const newName = document.getElementById('edit-client-name').value;
-      const newBrand = document.getElementById('edit-client-brand').value;
 
       dispositivosData[key].nombre = newName;
-      dispositivosData[key].marca = newBrand;
+
+      // Reconstruir subsistemas basados en los checkboxes marcados si el usuario desea
+      let nuevosSubsistemas = [];
+      if(document.getElementById('chk-agua').checked) nuevosSubsistemas.push({ nombre: "Tanque / Bomba Agua", estado: "100% OK" });
+      if(document.getElementById('chk-ascensor').checked) nuevosSubsistemas.push({ nombre: "Ascensor Principal", estado: "PISO 0 / OPERATIVO" });
+      if(document.getElementById('chk-frio').checked) nuevosSubsistemas.push({ nombre: "Cámara Frigorífica", estado: "-18.5 °C" });
+      if(document.getElementById('chk-porton').checked) nuevosSubsistemas.push({ nombre: "Portón / Acceso", estado: "CERRADO" });
+
+      if(nuevosSubsistemas.length > 0) {
+        dispositivosData[key].subsistemas = nuevosSubsistemas;
+      }
 
       document.getElementById('detail-title').innerText = newName;
-      document.getElementById('detail-brand-badge').innerText = `Marca: ${newBrand}`;
+      const techs = dispositivosData[key].subsistemas.map(s => s.nombre).join(" • ");
+      document.getElementById('detail-techs-badge').innerText = techs;
       document.getElementById(`grid-name-${key}`).innerText = newName;
 
-      alert(`✅ Configuración guardada correctamente.`);
+      alert(`✅ Configuración y tecnologías actualizadas.`);
       cerrarModalEditarCliente();
     }
 
@@ -697,13 +708,12 @@
 
     function guardarNuevoDispositivo() {
       const name = document.getElementById('new-dev-name').value || "Nuevo Nodo";
-      const brand = document.getElementById('new-dev-brand').value;
       const status = document.getElementById('new-dev-status').value;
 
       if(status === 'activo') {
         if(stockHardware[0].stock > 0) stockHardware[0].stock -= 1;
       }
-      alert(`✅ Dispositivo "${name}" (${brand}) vinculado con éxito.`);
+      alert(`✅ Dispositivo "${name}" vinculado con éxito.`);
       cerrarModalAgregarDispositivo();
     }
   </script>
