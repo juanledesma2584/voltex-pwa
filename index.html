@@ -73,7 +73,7 @@
     .status-pulse-dot { width: 7px; height: 7px; background-color: var(--status-ok); border-radius: 50%; box-shadow: 0 0 8px var(--status-ok); animation: pulse-green 1.5s infinite; }
     @keyframes pulse-green { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
 
-    /* NAVEGACIÓN */
+    /* NAVEGACIÓN PRINCIPAL ESTILO SMART LIFE */
     .main-nav { display: flex; gap: 6px; margin-bottom: 16px; background: rgba(15, 23, 42, 0.7); padding: 5px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.05); }
     .nav-btn { flex: 1; padding: 10px 4px; background: transparent; border: none; color: var(--text-secondary); font-weight: 800; font-size: 0.72rem; border-radius: 10px; cursor: pointer; text-align: center; transition: all 0.2s ease; }
     .nav-btn.active { background: var(--voltex-cyan); color: #070a12; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3); }
@@ -88,8 +88,9 @@
 
     .app-viewport { display: flex; flex-direction: column; gap: 16px; max-width: 650px; margin: 0 auto; width: 100%; }
 
-    /* TARJETAS */
-    .voltex-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px; padding: 18px; backdrop-filter: blur(16px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); position: relative; overflow: hidden; }
+    /* GRILLA DE TARJETAS TIPO SMART LIFE */
+    .voltex-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px; padding: 18px; backdrop-filter: blur(16px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); position: relative; overflow: hidden; cursor: pointer; transition: transform 0.15s ease; }
+    .voltex-card:active { transform: scale(0.98); }
     .voltex-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--voltex-cyan), transparent); opacity: 0.4; }
     .voltex-card.critical-alarm { border-color: var(--status-alert) !important; animation: alert-flash 0.9s infinite alternate; }
     @keyframes alert-flash { 0% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.2); } 100% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.7); } }
@@ -97,7 +98,10 @@
     .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
     .client-title-area { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .client-title { font-size: 1.15rem; font-weight: 800; color: var(--text-primary); }
-    .btn-edit-client { background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: var(--voltex-cyan); padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+    
+    /* BOTÓN DE CONFIGURACIÓN / LÁPIZ ESTILO SMART LIFE */
+    .btn-edit-gear { background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: var(--voltex-cyan); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; }
+    
     .badge-status { font-size: 0.65rem; font-weight: 900; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase; }
     .badge-ok { background: rgba(34, 197, 94, 0.15); color: var(--status-ok); border: 1px solid rgba(34, 197, 94, 0.4); }
     .badge-alert { background: rgba(239, 68, 68, 0.2); color: var(--status-alert); border: 1px solid rgba(239, 68, 68, 0.6); }
@@ -105,7 +109,7 @@
 
     .tab-bar { display: flex; gap: 4px; background: rgba(9, 13, 22, 0.7); padding: 4px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05); margin-bottom: 14px; }
     .tab-btn { flex: 1; padding: 8px 4px; color: var(--text-secondary); border-radius: 7px; font-size: 0.7rem; font-weight: 800; text-align: center; cursor: pointer; }
-    .tab-btn.active { background: linear-gradient(135deg, var(--voltex-cyan) 0%, var(--voltex-blue) 100%); color: #ffffff; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3); }
+    .tab-btn.active { background: linear-gradient(135deg, var(--voltex-cyan) 0%, var(--voltex-blue) 100%); color: #ffffff; box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3); }
 
     .panel-group { display: flex; flex-direction: column; gap: 10px; }
     .tab-panel { display: none; flex-direction: column; gap: 10px; }
@@ -124,20 +128,19 @@
     .control-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
     .btn-command { background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); border: 1px solid rgba(139, 92, 246, 0.4); color: var(--text-primary); padding: 12px; border-radius: 10px; font-weight: 800; font-size: 0.8rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
 
-    /* FINANZAS */
+    /* FINANZAS Y COBROS CORREGIDOS PARA IPHONE (SIN DESALINEACIONES) */
     .finance-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
     .stat-card { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 4px; text-align: center; }
-    .stat-label { font-size: 0.6rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; }
-    .stat-val { font-size: 0.85rem; font-weight: 950; word-break: break-all; }
+    .stat-label { font-size: 0.58rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; }
+    .stat-val { font-size: 0.8rem; font-weight: 950; word-break: break-all; }
 
-    .table-custom { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 0.78rem; }
-    .table-custom th, .table-custom td { padding: 8px 6px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.08); word-break: break-word; }
+    .table-custom { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 0.75rem; }
+    .table-custom th, .table-custom td { padding: 8px 4px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.08); word-break: break-word; }
     .table-custom th { color: var(--text-secondary); font-weight: 800; }
 
-    /* BOTÓN WHATSAPP MINIMALISTA DENTRO DEL MODAL */
-    .btn-whatsapp-clean { background: #25d366; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 800; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3); }
+    .btn-action-table { background: rgba(56, 189, 248, 0.2); border: 1px solid var(--voltex-cyan); color: #fff; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.7rem; cursor: pointer; }
 
-    /* MODAL */
+    /* MODALES ESTILO SMART LIFE */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(7, 10, 18, 0.85); backdrop-filter: blur(12px); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
     .modal-overlay.active { display: flex; }
     .modal-body { background: #121a2b; border: 1px solid var(--voltex-cyan); border-radius: 18px; padding: 20px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); display: flex; flex-direction: column; gap: 14px; }
@@ -151,6 +154,7 @@
     .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
     .checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--text-primary); }
 
+    .btn-whatsapp-clean { background: #25d366; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 800; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3); }
     .btn-save-settings { background: linear-gradient(135deg, var(--voltex-cyan) 0%, var(--voltex-blue) 100%); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; }
     .btn-delete-client { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--status-alert); color: var(--status-alert); padding: 10px; border-radius: 10px; font-weight: 800; font-size: 0.8rem; cursor: pointer; }
 
@@ -177,11 +181,11 @@
     </div>
   </header>
 
-  <!-- NAVEGACIÓN -->
+  <!-- NAVEGACIÓN ESTILO SMART LIFE -->
   <nav class="main-nav">
-    <button class="nav-btn active" onclick="switchViewSection('telemetria', this)">📡 TELEMETRÍA</button>
+    <button class="nav-btn active" onclick="switchViewSection('telemetria', this)">📡 DISPOSITIVOS</button>
     <button class="nav-btn" onclick="switchViewSection('finanzas', this)">💼 COBROS & BALANCES</button>
-    <button class="nav-btn" onclick="switchViewSection('inventario', this)">📦 STOCK Y MATERIALES</button>
+    <button class="nav-btn" onclick="switchViewSection('inventario', this)">📦 STOCK & MATERIALES</button>
   </nav>
 
   <!-- ACCIONES RÁPIDAS -->
@@ -196,7 +200,7 @@
 
   <div class="app-viewport">
     
-    <!-- SECCIÓN 1: TELEMETRÍA -->
+    <!-- SECCIÓN 1: GRILLA DE DISPOSITIVOS PRINCIPAL (ESTILO SMART LIFE) -->
     <div id="section-view-telemetria">
       <div id="section-telemetria-header" class="section-header">
         <h2>Nodos de Telemetría Industrial</h2>
@@ -208,15 +212,17 @@
         <div class="card-top">
           <div class="client-title-area">
             <span id="name-don_felix" class="client-title">🏢 Don Félix</span>
-            <button class="btn-edit-client" onclick="abrirModalEditarCliente('don_felix', 'Don Félix')">⚙️ EDITAR</button>
           </div>
-          <div id="badge-don_felix" class="badge-status badge-ok">NORMAL</div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div id="badge-don_felix" class="badge-status badge-ok">NORMAL</div>
+            <button class="btn-edit-gear" onclick="event.stopPropagation(); abrirModalEditarCliente('don_felix', 'Don Félix')">⚙️</button>
+          </div>
         </div>
 
         <div class="tab-bar">
-          <div id="tab-btn-don_felix-agua" class="tab-btn active" onclick="switchTab('don_felix', 'agua', this)">AGUA</div>
-          <div id="tab-btn-don_felix-ascensores" class="tab-btn" onclick="switchTab('don_felix', 'ascensores', this)">ASCENSORES</div>
-          <div id="tab-btn-don_felix-frio" class="tab-btn" onclick="switchTab('don_felix', 'frio', this)">CLIMATIZACIÓN</div>
+          <div id="tab-btn-don_felix-agua" class="tab-btn active" onclick="event.stopPropagation(); switchTab('don_felix', 'agua', this)">AGUA</div>
+          <div id="tab-btn-don_felix-ascensores" class="tab-btn" onclick="event.stopPropagation(); switchTab('don_felix', 'ascensores', this)">ASCENSORES</div>
+          <div id="tab-btn-don_felix-frio" class="tab-btn" onclick="event.stopPropagation(); switchTab('don_felix', 'frio', this)">CLIMATIZACIÓN</div>
         </div>
 
         <div class="panel-group">
@@ -248,15 +254,17 @@
         <div class="card-top">
           <div class="client-title-area">
             <span id="name-vesna" class="client-title">🏢 Edificio Vesna</span>
-            <button class="btn-edit-client" onclick="abrirModalEditarCliente('vesna', 'Edificio Vesna')">⚙️ EDITAR</button>
           </div>
-          <div id="badge-vesna" class="badge-status badge-ok">NORMAL</div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div id="badge-vesna" class="badge-status badge-ok">NORMAL</div>
+            <button class="btn-edit-gear" onclick="event.stopPropagation(); abrirModalEditarCliente('vesna', 'Edificio Vesna')">⚙️</button>
+          </div>
         </div>
 
         <div class="tab-bar">
-          <div id="tab-btn-vesna-ascensores" class="tab-btn active" onclick="switchTab('vesna', 'ascensores', this)">ASCENSORES</div>
-          <div id="tab-btn-vesna-agua" class="tab-btn" onclick="switchTab('vesna', 'agua', this)">AGUA</div>
-          <div id="tab-btn-vesna-frio" class="tab-btn" onclick="switchTab('vesna', 'frio', this)">CLIMATIZACIÓN</div>
+          <div id="tab-btn-vesna-ascensores" class="tab-btn active" onclick="event.stopPropagation(); switchTab('vesna', 'ascensores', this)">ASCENSORES</div>
+          <div id="tab-btn-vesna-agua" class="tab-btn" onclick="event.stopPropagation(); switchTab('vesna', 'agua', this)">AGUA</div>
+          <div id="tab-btn-vesna-frio" class="tab-btn" onclick="event.stopPropagation(); switchTab('vesna', 'frio', this)">CLIMATIZACIÓN</div>
         </div>
 
         <div class="panel-group">
@@ -292,14 +300,16 @@
         <div class="card-top">
           <div class="client-title-area">
             <span id="name-pollo_juanes" class="client-title">🍗 Pollo Juanes</span>
-            <button class="btn-edit-client" onclick="abrirModalEditarCliente('pollo_juanes', 'Pollo Juanes')">⚙️ EDITAR</button>
           </div>
-          <div id="badge-pollo_juanes" class="badge-status badge-ok">NORMAL</div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div id="badge-pollo_juanes" class="badge-status badge-ok">NORMAL</div>
+            <button class="btn-edit-gear" onclick="event.stopPropagation(); abrirModalEditarCliente('pollo_juanes', 'Pollo Juanes')">⚙️</button>
+          </div>
         </div>
 
         <div class="tab-bar">
-          <div id="tab-btn-pollo_juanes-frio" class="tab-btn active" onclick="switchTab('pollo_juanes', 'frio', this)">CÁMARA FRÍO</div>
-          <div id="tab-btn-pollo_juanes-agua" class="tab-btn" onclick="switchTab('pollo_juanes', 'agua', this)">AGUA</div>
+          <div id="tab-btn-pollo_juanes-frio" class="tab-btn active" onclick="event.stopPropagation(); switchTab('pollo_juanes', 'frio', this)">CÁMARA FRÍO</div>
+          <div id="tab-btn-pollo_juanes-agua" class="tab-btn" onclick="event.stopPropagation(); switchTab('pollo_juanes', 'agua', this)">AGUA</div>
         </div>
 
         <div class="panel-group">
@@ -361,7 +371,7 @@
       </div>
     </div>
 
-    <!-- SECCIÓN 2: FINANZAS & COBROS -->
+    <!-- SECCIÓN 2: FINANZAS & COBROS (INTERACTIVO PARA CARGAR/ELIMINAR PAGOS) -->
     <div id="section-view-finanzas" style="display: none;">
       <div class="section-header">
         <h2>Balance Financiero & Cobranzas</h2>
@@ -370,55 +380,58 @@
 
       <div class="finance-grid">
         <div class="stat-card">
-          <span class="stat-label">INGRESOS MES</span>
-          <span class="stat-val val-ok">₲ 8.5M</span>
+          <span class="stat-label">INGRESOS</span>
+          <span id="stat-ingresos" class="stat-val val-ok">₲ 8.5M</span>
         </div>
         <div class="stat-card">
-          <span class="stat-label">GASTOS OPER.</span>
-          <span class="stat-val val-alert">₲ 2.1M</span>
+          <span class="stat-label">GASTOS</span>
+          <span id="stat-gastos" class="stat-val val-alert">₲ 2.1M</span>
         </div>
         <div class="stat-card">
-          <span class="stat-label">BALANCE NETO</span>
-          <span class="stat-val val-ok">₲ 6.4M</span>
+          <span class="stat-label">NETO</span>
+          <span id="stat-neto" class="stat-val val-ok">₲ 6.4M</span>
         </div>
       </div>
 
       <div class="voltex-card">
-        <h3 style="font-size: 0.95rem; color: var(--voltex-cyan); margin-bottom: 10px;">📋 Estado de Cuentas por Cliente</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <h3 style="font-size: 0.95rem; color: var(--voltex-cyan);">📋 Estado de Cuentas</h3>
+          <button class="btn-action-table" onclick="abrirModalPago()">➕ Cargar Pago</button>
+        </div>
         <table class="table-custom">
           <thead>
             <tr>
               <th>Cliente</th>
-              <th>Plan</th>
               <th>Monto</th>
               <th>Estado</th>
+              <th>Acción</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="tabla-cobros-body">
             <tr>
               <td>Don Félix</td>
-              <td>Ascensores</td>
               <td>₲ 2.5M</td>
               <td><span class="badge-status badge-ok">AL DÍA</span></td>
+              <td><button class="btn-action-table" onclick="eliminarFilaCobro(this)">🗑️</button></td>
             </tr>
             <tr>
               <td>Edificio Vesna</td>
-              <td>Ascensores Monarch</td>
               <td>₲ 3.0M</td>
               <td><span class="badge-status badge-ok">AL DÍA</span></td>
+              <td><button class="btn-action-table" onclick="eliminarFilaCobro(this)">🗑️</button></td>
             </tr>
             <tr>
               <td>Pollo Juanes</td>
-              <td>Cámara Fría</td>
               <td>₲ 3.0M</td>
               <td><span class="badge-status badge-alert">EN MORA</span></td>
+              <td><button class="btn-action-table" onclick="eliminarFilaCobro(this)">🗑️</button></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- SECCIÓN 3: STOCK Y MATERIALES -->
+    <!-- SECCIÓN 3: STOCK & MATERIALES -->
     <div id="section-view-inventario" style="display: none;">
       <div class="section-header">
         <h2>Stock & Activación Comercial</h2>
@@ -427,18 +440,18 @@
 
       <div class="voltex-card">
         <h3 style="font-size: 0.95rem; color: var(--voltex-purple); margin-bottom: 8px;">📦 Inventario de Módulos ESP32</h3>
-        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 12px;">Al activar el servicio comercial de un nodo, el sistema descuenta automáticamente 1 unidad del stock general.</p>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 12px;">Al activar comercialmente un nodo, se descuenta stock automáticamente.</p>
         
         <table class="table-custom">
           <thead>
             <tr>
               <th>Componente</th>
               <th>Stock</th>
-              <th>Acción Stock</th>
+              <th>Acción</th>
             </tr>
           </thead>
           <tbody id="inventory-table-body">
-            <!-- Dinámico con JS -->
+            <!-- Dinámico -->
           </tbody>
         </table>
       </div>
@@ -446,11 +459,11 @@
 
   </div>
 
-  <!-- MODAL EDITAR / ELIMINAR CLIENTE & WHATSAPP CLEAN -->
+  <!-- MODAL CONFIGURACIÓN / LÁPIZ (ESTILO TERCERA IMAGEN SMART LIFE) -->
   <div id="modal-edit-client" class="modal-overlay">
     <div class="modal-body">
       <div class="modal-header">
-        <span id="modal-edit-title" class="modal-title">⚙️ Editar Cliente / Módulos</span>
+        <span id="modal-edit-title" class="modal-title">⚙️ Ajustes del Dispositivo</span>
         <button class="btn-close-modal" onclick="cerrarModalEditarCliente()">&times;</button>
       </div>
 
@@ -458,7 +471,7 @@
       <input type="hidden" id="edit-client-key">
 
       <div class="form-group">
-        <label class="form-label">Nombre Comercial:</label>
+        <label class="form-label">Nombre del Dispositivo / Cliente:</label>
         <input type="text" id="edit-client-name" class="form-input">
       </div>
 
@@ -472,24 +485,43 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Estado de Pago / Facturación:</label>
+        <label class="form-label">Estado de Facturación / Pago:</label>
         <select id="edit-client-billing" class="form-select">
           <option value="aldia">Al Día (Activo)</option>
           <option value="mora">En Mora</option>
-          <option value="prueba">Fase de Prueba (Inactivo)</option>
+          <option value="prueba">Fase de Prueba</option>
         </select>
       </div>
 
-      <!-- BOTÓN LIMPIO Y DIRECTO DE WHATSAPP AQUÍ ADENTRO -->
+      <!-- BOTÓN LIMPIO ENVIAR POR WHATSAPP -->
       <div class="form-group" style="margin-top: 4px;">
-        <label class="form-label">Acceso Directo para Cliente (iPhone/Android):</label>
+        <label class="form-label">Compartir Acceso (Gerente / iPhone):</label>
         <button class="btn-whatsapp-clean" onclick="enviarWhatsAppCleanModal()">
           📤 Enviar por WhatsApp
         </button>
       </div>
 
       <button class="btn-save-settings" onclick="guardarConfiguracionCliente()">GUARDAR CAMBIOS</button>
-      <button class="btn-delete-client" onclick="eliminarClienteActual()">🗑️ ELIMINAR CLIENTE / NODO</button>
+      <button class="btn-delete-client" onclick="eliminarClienteActual()">🗑️ Eliminar Dispositivo</button>
+    </div>
+  </div>
+
+  <!-- MODAL CARGAR PAGO EN FINANZAS -->
+  <div id="modal-pago" class="modal-overlay">
+    <div class="modal-body">
+      <div class="modal-header">
+        <span class="modal-title">💰 Cargar Nuevo Pago / Ingreso</span>
+        <button class="btn-close-modal" onclick="cerrarModalPago()">&times;</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cliente:</label>
+        <input type="text" id="pago-cliente" class="form-input" placeholder="Ej: Don Félix">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Monto (Gs):</label>
+        <input type="text" id="pago-monto" class="form-input" placeholder="Ej: 2.5M">
+      </div>
+      <button class="btn-save-settings" onclick="registrarNuevoPago()">REGISTRAR PAGO</button>
     </div>
   </div>
 
@@ -500,7 +532,6 @@
         <span class="modal-title">➕ Aprovisionar Nodo ESP32</span>
         <button class="btn-close-modal" onclick="cerrarModalAgregarDispositivo()">&times;</button>
       </div>
-
       <div class="form-group">
         <label class="form-label">Cliente Destino:</label>
         <select id="new-dev-client" class="form-select">
@@ -509,26 +540,23 @@
           <option value="pollo_juanes">Pollo Juanes</option>
         </select>
       </div>
-
       <div class="form-group">
         <label class="form-label">Identificador MAC o ID del ESP32:</label>
         <input type="text" id="new-dev-mac" class="form-input" placeholder="Ej: ESP32-NODE-09">
       </div>
-
       <div class="form-group">
-        <label class="form-label">Estado Comercial Inicial:</label>
+        <label class="form-label">Estado Comercial:</label>
         <select id="new-dev-status" class="form-select">
-          <option value="prueba">Fase de Prueba (No descuenta stock aún)</option>
-          <option value="activo">Activo Comercial (Descuenta 1 unidad de stock)</option>
+          <option value="prueba">Fase de Prueba</option>
+          <option value="activo">Activo Comercial (Descuenta stock)</option>
         </select>
       </div>
-
       <button class="btn-save-settings" onclick="guardarNuevoDispositivo()">VINCULAR Y REGISTRAR</button>
     </div>
   </div>
 
   <footer>
-    VOLTEX IoT Telemetry & Enterprise ERP Platform &bull; v5.2 &bull; Asunción, PY
+    VOLTEX IoT Telemetry & Enterprise ERP Platform &bull; v5.3 &bull; Asunción, PY
   </footer>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -577,7 +605,7 @@
       if(sectionId === 'inventario') renderizarInventario();
     }
 
-    // MODAL EDITAR CLIENTE CON WHATSAPP LIMPIO ADENTRO
+    // MODAL AJUSTES / LÁPIZ
     function abrirModalEditarCliente(clientId, clientName) {
       document.getElementById('edit-client-id').value = clientId;
       document.getElementById('edit-client-key').value = clientId;
@@ -623,11 +651,37 @@
 
     function eliminarClienteActual() {
       const clientId = document.getElementById('edit-client-id').value;
-      if (confirm("¿Estás seguro de eliminar este nodo o cliente de prueba?")) {
+      if (confirm("¿Estás seguro de eliminar este dispositivo/cliente?")) {
         const card = document.getElementById(`card-${clientId}`);
         if(card) card.style.display = 'none';
-        alert("🗑️ Cliente/Nodo eliminado de la vista.");
+        alert("🗑️ Dispositivo eliminado de la vista.");
         cerrarModalEditarCliente();
+      }
+    }
+
+    // GESTIÓN DE PAGOS EN FINANZAS
+    function abrirModalPago() { document.getElementById('modal-pago').classList.add('active'); }
+    function cerrarModalPago() { document.getElementById('modal-pago').classList.remove('active'); }
+
+    function registrarNuevoPago() {
+      const cliente = document.getElementById('pago-cliente').value || "Cliente";
+      const monto = document.getElementById('pago-monto').value || "1.0M";
+      const tbody = document.getElementById('tabla-cobros-body');
+      tbody.innerHTML += `
+        <tr>
+          <td>${cliente}</td>
+          <td>₲ ${monto}</td>
+          <td><span class="badge-status badge-ok">AL DÍA</span></td>
+          <td><button class="btn-action-table" onclick="eliminarFilaCobro(this)">🗑️</button></td>
+        </tr>
+      `;
+      alert("✅ Pago registrado con éxito.");
+      cerrarModalPago();
+    }
+
+    function eliminarFilaCobro(btn) {
+      if(confirm("¿Eliminar este registro de cobro?")) {
+        btn.closest('tr').remove();
       }
     }
 
@@ -639,7 +693,7 @@
       if(estadoComercial === 'activo') {
         if(stockHardware[0].stock > 0) stockHardware[0].stock -= 1;
       }
-      alert(`✅ Dispositivo vinculado con éxito. Estado: ${estadoComercial.toUpperCase()}`);
+      alert(`✅ Dispositivo vinculado. Estado: ${estadoComercial.toUpperCase()}`);
       cerrarModalAgregarDispositivo();
     }
 
@@ -686,7 +740,7 @@
     });
 
     // ASCENSOR VESNA
-    db.ref('clientes/vesna/telemetria/ascensor').on('value', (snap) => {
+    db.ref('cards/vesna/telemetria/ascensor').on('value', (snap) => {
       const data = snap.val();
       if (!data) return;
       const ascVal = document.getElementById('ascensor-vesna');
