@@ -85,35 +85,40 @@
 
     .app-viewport { display: flex; flex-direction: column; gap: 12px; max-width: 650px; margin: 0 auto; width: 100%; }
 
-    /* GRILLA DE TARJETAS COMPACTAS */
+    /* GRILLA PRINCIPAL */
     .devices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .voltex-card-small { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 14px; backdrop-filter: blur(16px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); cursor: pointer; display: flex; flex-direction: column; gap: 8px; transition: transform 0.15s ease; position: relative; overflow: hidden; }
     .voltex-card-small:active { transform: scale(0.97); }
-    .voltex-card-small.critical-alarm { border-color: var(--status-alert) !important; animation: alert-flash 0.9s infinite alternate; }
-
     .card-small-top { display: flex; justify-content: space-between; align-items: center; }
     .card-small-title { font-size: 0.9rem; font-weight: 800; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
     .card-small-status { font-size: 0.55rem; font-weight: 900; padding: 3px 6px; border-radius: 10px; text-transform: uppercase; }
     .card-small-body { display: flex; flex-direction: column; gap: 4px; }
     .card-small-val { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); }
 
-    /* SEGUNDA PANTALLA DE DETALLE (MEJORADA Y RICA EN BOTONES/ESTADOS) */
+    /* SEGUNDA PANTALLA DE DETALLE INTERACTIVA */
     #device-detail-view { display: none; flex-direction: column; gap: 14px; }
     .detail-header-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.85); padding: 10px 14px; border-radius: 14px; border: 1px solid var(--card-border); }
     .btn-back { background: none; border: none; color: var(--voltex-cyan); font-size: 0.9rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .btn-gear-detail { background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: var(--voltex-cyan); width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; }
 
-    .detail-hero-card { background: linear-gradient(135deg, rgba(18, 26, 43, 0.95) 0%, rgba(10, 16, 28, 0.95) 100%); border: 1px solid var(--card-border); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    .detail-hero-icon { font-size: 2.5rem; background: rgba(56, 189, 248, 0.1); padding: 12px; border-radius: 14px; border: 1px solid rgba(56, 189, 248, 0.2); }
+    .detail-hero-card { background: linear-gradient(135deg, rgba(18, 26, 43, 0.95) 0%, rgba(10, 16, 28, 0.95) 100%); border: 1px solid var(--card-border); border-radius: 16px; padding: 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .detail-hero-left { display: flex; align-items: center; gap: 14px; }
+    .detail-hero-icon { font-size: 2.2rem; background: rgba(56, 189, 248, 0.1); padding: 10px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.2); }
     .detail-hero-info { display: flex; flex-direction: column; gap: 4px; }
-    .detail-hero-title { font-size: 1.15rem; font-weight: 900; color: var(--text-primary); }
-    .detail-hero-subtitle { font-size: 0.7rem; font-weight: 700; color: var(--voltex-cyan); text-transform: uppercase; }
+    .detail-hero-title { font-size: 1.1rem; font-weight: 900; color: var(--text-primary); }
+    .detail-hero-subtitle { font-size: 0.65rem; font-weight: 700; color: var(--voltex-cyan); text-transform: uppercase; }
 
-    /* GRILLA DE BOTONES DE ESTADO E INTERACCIÓN EN DETALLE */
+    /* BOTONES DE ESTADO TIPO SMART LIFE QUE ABREN SUB-DATOS */
     .detail-status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .status-tile { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
-    .status-tile-label { font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; }
-    .status-tile-value { font-size: 0.95rem; font-weight: 900; }
+    .status-tile { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: border-color 0.2s ease; }
+    .status-tile:active { border-color: var(--voltex-cyan); }
+    .status-tile-label { font-size: 0.65rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; }
+    .status-tile-value { font-size: 0.9rem; font-weight: 900; }
+
+    /* SECCIÓN DE SUB-DISPOSITIVOS (EJ. MÚLTIPLES ASCENSORES) */
+    .subdevices-box { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .subdevice-item { display: flex; justify-content: space-between; align-items: center; background: rgba(7, 10, 18, 0.6); padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.04); }
+    .btn-add-sub { background: rgba(56, 189, 248, 0.2); border: 1px solid var(--voltex-cyan); color: var(--voltex-cyan); padding: 8px; border-radius: 8px; font-weight: 800; font-size: 0.75rem; cursor: pointer; width: 100%; text-align: center; }
 
     .control-card { background: linear-gradient(135deg, rgba(13, 21, 39, 0.85) 0%, rgba(20, 31, 55, 0.85) 100%); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 16px; padding: 16px; }
     .control-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
@@ -130,7 +135,7 @@
     .table-custom th { color: var(--text-secondary); font-weight: 800; }
     .btn-action-table { background: rgba(56, 189, 248, 0.2); border: 1px solid var(--voltex-cyan); color: #fff; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.7rem; cursor: pointer; }
 
-    /* MODALES DE CONFIGURACIÓN Y PAGO */
+    /* MODALES */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(7, 10, 18, 0.85); backdrop-filter: blur(12px); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
     .modal-overlay.active { display: flex; }
     .modal-body { background: #121a2b; border: 1px solid var(--voltex-cyan); border-radius: 18px; padding: 20px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); display: flex; flex-direction: column; gap: 14px; }
@@ -246,7 +251,7 @@
       </div>
     </div>
 
-    <!-- PANTALLA 2: VISTA DE DETALLE RICA EN BOTONES Y ESTADOS -->
+    <!-- PANTALLA 2: VISTA DE DETALLE INTERACTIVA (CON SUB-DISPOSITIVOS Y TELEMETRÍA) -->
     <div id="device-detail-view">
       <div class="detail-header-bar">
         <button class="btn-back" onclick="cerrarDetalleDispositivo()">⬅ Volver</button>
@@ -254,16 +259,27 @@
       </div>
 
       <div class="detail-hero-card">
-        <div id="detail-icon" class="detail-hero-icon">🏢</div>
-        <div class="detail-hero-info">
-          <div id="detail-title" class="detail-hero-title">Nombre del Dispositivo</div>
-          <div id="detail-brand-badge" class="detail-hero-subtitle">Marca: Otis</div>
+        <div class="detail-hero-left">
+          <div id="detail-icon" class="detail-hero-icon">🏢</div>
+          <div class="detail-hero-info">
+            <div id="detail-title" class="detail-hero-title">Nombre del Dispositivo</div>
+            <div id="detail-brand-badge" class="detail-hero-subtitle">Marca: Otis</div>
+          </div>
         </div>
       </div>
 
-      <!-- GRILLA DE ESTADOS E INTERACCIÓN EN LA SEGUNDA PANTALLA -->
+      <!-- GRILLA DE BOTONES TIPO SMART LIFE QUE ABREN DESGLOSE -->
       <div class="detail-status-grid" id="detail-panels-container">
-        <!-- Inyectado dinámicamente con paneles estilo botones -->
+        <!-- Inyectado dinámicamente -->
+      </div>
+
+      <!-- SECCIÓN PARA AGREGAR MÚLTIPLES ASCENSORES / SUB-EQUIPOS -->
+      <div class="subdevices-box">
+        <span style="font-size: 0.75rem; font-weight: 800; color: var(--voltex-cyan);">🛗 Subsistemas / Unidades Asociadas:</span>
+        <div id="subdevices-list" style="display: flex; flex-direction: column; gap: 6px;">
+          <!-- Lista dinámica de sub-equipos -->
+        </div>
+        <button class="btn-add-sub" onclick="abrirModalSubDispositivo()">➕ Agregar Sub-dispositivo (Ej. Ascensor 2)</button>
       </div>
     </div>
 
@@ -400,6 +416,25 @@
     </div>
   </div>
 
+  <!-- MODAL AGREGAR SUB-DISPOSITIVO (EJ. SEGUNDO ASCENSOR) -->
+  <div id="modal-sub-device" class="modal-overlay">
+    <div class="modal-body">
+      <div class="modal-header">
+        <span class="modal-title">➕ Agregar Subsistema / Unidad</span>
+        <button class="btn-close-modal" onclick="cerrarModalSubDispositivo()">&times;</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nombre de la Unidad (Ej. Ascensor 2):</label>
+        <input type="text" id="sub-dev-name" class="form-input" placeholder="Ej: Ascensor Servicio B">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Estado Inicial:</label>
+        <input type="text" id="sub-dev-status" class="form-input" value="OPERATIVO / PISO 0">
+      </div>
+      <button class="btn-save-settings" onclick="guardarSubDispositivo()">AÑADIR UNIDAD</button>
+    </div>
+  </div>
+
   <!-- MODAL CARGAR PAGO -->
   <div id="modal-pago" class="modal-overlay">
     <div class="modal-body">
@@ -452,7 +487,7 @@
   </div>
 
   <footer>
-    VOLTEX IoT Telemetry & Enterprise ERP Platform &bull; v5.5 &bull; Asunción, PY
+    VOLTEX IoT Telemetry & Enterprise ERP Platform &bull; v5.6 &bull; Asunción, PY
   </footer>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -471,10 +506,22 @@
     ];
 
     let dispositivosData = {
-      don_felix: { nombre: "Don Félix", marca: "Tanque de Agua", icono: "🏢", estado: "NORMAL", valor: "100% OK" },
-      vesna: { nombre: "Edificio Vesna", marca: "Monarch", icono: "🏢", estado: "NORMAL", valor: "PISO 1" },
-      pollo_juanes: { nombre: "Pollo Juanes", marca: "Cámara Frigorífica", icono: "🍗", estado: "NORMAL", valor: "-18.5 °C" },
-      portones: { nombre: "Portones", marca: "Automatización", icono: "🏠", estado: "ONLINE", valor: "CERRADO" }
+      don_felix: { 
+        nombre: "Don Félix", marca: "Tanque de Agua", icono: "🏢", estado: "NORMAL", valor: "100% OK",
+        subsistemas: [ { nombre: "Tanque Principal", estado: "100% OK" }, { nombre: "Bomba Booster", estado: "OPERATIVA" } ]
+      },
+      vesna: { 
+        nombre: "Edificio Vesna", marca: "Monarch", icono: "🏢", estado: "NORMAL", valor: "PISO 1",
+        subsistemas: [ { nombre: "Ascensor Principal (Monarch)", estado: "PISO 1 / DETENIDO" }, { nombre: "Ascensor Servicio", estado: "PLANTA BAJA" } ]
+      },
+      pollo_juanes: { 
+        nombre: "Pollo Juanes", marca: "Cámara Frigorífica", icono: "🍗", estado: "NORMAL", valor: "-18.5 °C",
+        subsistemas: [ { nombre: "Cámara Congelados", estado: "-18.5 °C" }, { nombre: "Sensor Puerta", estado: "CERRADA" } ]
+      },
+      portones: { 
+        nombre: "Portones", marca: "Automatización", icono: "🏠", estado: "ONLINE", valor: "CERRADO",
+        subsistemas: [ { nombre: "Portón Vehicular", estado: "CERRADO" }, { nombre: "Cerradura Peatonal", estado: "BLOQUEADA" } ]
+      }
     };
 
     function renderizarInventario() {
@@ -510,7 +557,7 @@
       if(sectionId === 'inventario') renderizarInventario();
     }
 
-    // SEGUNDA PANTALLA DE DETALLE (PANEL RICO EN BOTONES Y ESTADOS)
+    // ABRIR SEGUNDA PANTALLA Y RENDERIZAR SUB-EQUIPOS E INTERACCIÓN
     function abrirDetalleDispositivo(key) {
       dispositivoActualKey = key;
       const dev = dispositivosData[key];
@@ -523,42 +570,55 @@
       document.getElementById('detail-title').innerText = dev.nombre;
       document.getElementById('detail-brand-badge').innerText = `Marca: ${dev.marca}`;
 
-      const panelsContainer = document.getElementById('detail-panels-container');
-      panelsContainer.innerHTML = '';
+      renderizarPanelesDetalle(dev);
+      renderizarSubDispositivos(dev);
+    }
 
-      if(key === 'don_felix') {
-        panelsContainer.innerHTML = `
-          <div class="status-tile"><span class="status-tile-label">💧 Nivel Tanque</span><span class="status-tile-value val-ok">100% OK</span></div>
-          <div class="status-tile"><span class="status-tile-label">⚡ Estado Bomba</span><span class="status-tile-value val-ok">OPERATIVA</span></div>
-          <div class="status-tile"><span class="status-tile-label">📶 Conexión WiFi</span><span class="status-tile-value val-ok">ESTABLE</span></div>
-          <div class="status-tile"><span class="status-tile-label">🚨 Alertas</span><span class="status-tile-value val-ok">SIN FALLAS</span></div>
-        `;
-      } else if(key === 'vesna') {
-        panelsContainer.innerHTML = `
-          <div class="status-tile"><span class="status-tile-label">🛗 Posición Cabina</span><span class="status-tile-value val-ok">PISO 1</span></div>
-          <div class="status-tile"><span class="status-tile-label">🔄 Movimiento</span><span class="status-tile-value val-warn">DETENIDO</span></div>
-          <div class="status-tile"><span class="status-tile-label">⚠️ Seguridades</span><span class="status-tile-value val-ok">CERRADAS</span></div>
-          <div class="status-tile"><span class="status-tile-label">🚪 Puertas</span><span class="status-tile-value val-ok">CERRADAS</span></div>
-        `;
-      } else if(key === 'pollo_juanes') {
-        panelsContainer.innerHTML = `
-          <div class="status-tile"><span class="status-tile-label">🌡️ Temperatura</span><span class="status-tile-value val-ok">-18.5 °C</span></div>
-          <div class="status-tile"><span class="status-tile-label">⚙️ Umbral Máx</span><span class="status-tile-value val-warn">-12 °C</span></div>
-          <div class="status-tile"><span class="status-tile-label">🚪 Puerta Cámara</span><span class="status-tile-value val-ok">CERRADA</span></div>
-          <div class="status-tile"><span class="status-tile-label">⚡ Compresor</span><span class="status-tile-value val-ok">EN MARCHA</span></div>
-        `;
-      } else if(key === 'portones') {
-        panelsContainer.innerHTML = `
-          <div style="grid-column: span 2;" class="status-tile">
-            <span class="status-tile-label">🚗 Portón Vehicular</span>
-            <span class="status-tile-value val-ok">CERRADO</span>
-          </div>
-          <div style="grid-column: span 2;" class="control-actions-grid">
-            <button class="btn-command" onclick="accionarPorton('vehicular')"><span>⚡ ACCIONAR PORTÓN</span></button>
-            <button class="btn-command" onclick="accionarPorton('peatonal')"><span>🔓 APERTURA PEATONAL</span></button>
+    function renderizarPanelesDetalle(dev) {
+      const container = document.getElementById('detail-panels-container');
+      container.innerHTML = `
+        <div class="status-tile" onclick="alert('Telemetría en tiempo real: Conexión estable con ESP32, Voltaje 220V OK')">
+          <span class="status-tile-label">📊 Estado General</span>
+          <span class="status-tile-value val-ok">${dev.estado}</span>
+        </div>
+        <div class="status-tile" onclick="alert('Último reporte recibido hace 5 segundos desde la nube')">
+          <span class="status-tile-label">📶 Conexión Cloud</span>
+          <span class="status-tile-value val-ok">ONLINE / 220V</span>
+        </div>
+      `;
+    }
+
+    function renderizarSubDispositivos(dev) {
+      const list = document.getElementById('subdevices-list');
+      list.innerHTML = '';
+      if(!dev.subsistemas) dev.subsistemas = [];
+      dev.subsistemas.forEach((sub, idx) => {
+        list.innerHTML += `
+          <div class="subdevice-item">
+            <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">⚙️ ${sub.nombre}</span>
+            <span style="font-size: 0.75rem; font-weight: 800; color: var(--status-ok);">${sub.estado}</span>
           </div>
         `;
+      });
+    }
+
+    function abrirModalSubDispositivo() {
+      document.getElementById('modal-sub-device').classList.add('active');
+    }
+    function cerrarModalSubDispositivo() {
+      document.getElementById('modal-sub-device').classList.remove('active');
+    }
+
+    function guardarSubDispositivo() {
+      const nombreSub = document.getElementById('sub-dev-name').value || "Nuevo Subsistema";
+      const estadoSub = document.getElementById('sub-dev-status').value || "OPERATIVO";
+      
+      if(dispositivosData[dispositivoActualKey]) {
+        dispositivosData[dispositivoActualKey].subsistemas.push({ nombre: nombreSub, estado: estadoSub });
+        renderizarSubDispositivos(dispositivosData[dispositivoActualKey]);
       }
+      alert(`✅ Subsistema "${nombreSub}" añadido correctamente.`);
+      cerrarModalSubDispositivo();
     }
 
     function cerrarDetalleDispositivo() {
@@ -645,13 +705,6 @@
       }
       alert(`✅ Dispositivo "${name}" (${brand}) vinculado con éxito.`);
       cerrarModalAgregarDispositivo();
-    }
-
-    function accionarPorton(tipo) {
-      const refPorton = db.ref(`casa/portones/${tipo}`);
-      refPorton.set(true);
-      setTimeout(() => refPorton.set(false), 1500);
-      alert(`⚡ Pulso enviado a Portón ${tipo.toUpperCase()}`);
     }
   </script>
 </body>
